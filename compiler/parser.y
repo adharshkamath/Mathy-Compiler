@@ -50,6 +50,20 @@
         }
         return;
     }
+    
+    int setType(char* token, char* type) {
+
+    }
+
+    int setBounds(char* token, int op_id, int lower, int upper) {
+
+    }
+
+    void printSymbolTable() {
+        for(int i=1; i<n; i++) {
+            printf("%s - %s\n", table[i].token, table[i].type);
+        }
+    }
       
 %} 
 
@@ -58,7 +72,7 @@
 
 %%
 
-program :   statements ;
+program :   statements { printSymbolTable(); };
 
 statements  :   statements statement
             |   %empty
@@ -68,8 +82,8 @@ statement   :   '\n'
             |   expression '\n'
             ;
 
-identifier_list :   identifier_list ',' identifier  { strcat(strcat($$, ","), $3); }
-                |   identifier                      { strcpy($$, $1); }
+identifier_list :   identifier_list ',' identifier  { strcat(strcat($$, ","), $3); insert($3, "float", "0"); }
+                |   identifier                      { strcpy($$, $1); insert($1, "float", "0"); }
                 |   initialize_id
                 ;
 
@@ -78,7 +92,7 @@ initialize_id   :   identifier '=' number ;
 identifier  :   IDENTIFIER dimensions
             ;
 
-dimensions  :   '[' offset ']' dimensions
+dimensions  :   '[' offset ']' dimensions   { strcat() }
             |   %empty
             ;
             
