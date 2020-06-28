@@ -4,13 +4,16 @@
     #include <string.h>
     #include <stdlib.h>
     #include <stdbool.h>
+    #include <getopt.h>
     #define YYSTYPE char*
+    extern FILE *yyin;
     extern int yylex(void);
     int yyerror(const char *msg);
     bool success = true; 
     int errors = 0;
     int yycolumn = 0;
     int n=1;
+    char type[15] = "float";
 
     struct symbolTable {
         char token[100];
@@ -82,8 +85,8 @@ statement   :   '\n'
             |   expression '\n'
             ;
 
-identifier_list :   identifier_list ',' identifier  { strcat(strcat($$, ","), $3); insert($3, "float", "0"); }
-                |   identifier                      { strcpy($$, $1); insert($1, "float", "0"); }
+identifier_list :   identifier_list ',' identifier  { strcat(strcat($$, ","), $3); insert($3, type, "0"); }
+                |   identifier                      { strcpy($$, $1); insert($1, type, "0"); }
                 |   initialize_id
                 ;
 
@@ -92,7 +95,7 @@ initialize_id   :   identifier '=' number ;
 identifier  :   IDENTIFIER dimensions
             ;
 
-dimensions  :   '[' offset ']' dimensions   { strcat() }
+dimensions  :   '[' offset ']' dimensions
             |   %empty
             ;
             
@@ -113,20 +116,8 @@ expression  :   term
             |   UNARY_OPERATOR  identifier
             |   term OPERATOR expression
             |   identifier '=' expression
-            |   forall_stmt precisions        { if(strlen($2)>0) printf("Precision List FORALL : %s\n",$2); }
-            |   prod_sum_stmt precisions     { if(strlen($2)>0) printf("Precision List PROD/SUM : %s\n",$2); }
-            ;
-
-precisions  :   '!' precision_list      { strcpy($$,$2); }
-            |   %empty      { $$ = ""; printf("Default precision\n"); }
-            ;
-
-precision_list  :   precision_list ',' precision    { strcat(strcat($$, ","), $3); }
-                |   precision
-                |   %empty
-                ;
-
-precision   :   IDENTIFIER ':' PRECISION    { strcat(strcat($$, ","), $3); }
+            |   forall_stmt
+            |   prod_sum_stmt
             ;
 
 term    :   identifier
@@ -149,7 +140,39 @@ bound   :   INT_CONSTANT COMPARISON identifier_list COMPARISON INT_CONSTANT ;
 
 %% 
   
-int main() {
+int main(int argc, char **argv) {
+    int opt;
+    while((opt = getopt(argc, argv, "t:")) != -1) {
+        if(opt == 't') {
+            if(strcmp(optarg, "float") == 0);
+            else if(strcmp(optarg, "double") == 0) {
+                strcpy(type, optarg);
+            }
+            else if(strcmp(optarg, "long double") == 0) {
+                strcpy(type, optarg);
+            }
+            else {
+                fprintf(stderr, "Invalid type selected");
+            }
+        }
+        else {
+            fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
+        }
+    }
+
+    if(optind == argc) {
+        fprintf(stderr, "Enter the name of the file to be compiled!\n");
+        fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
+        exit(1);
+    }
+
+    yyin = fopen(argv[optind], "r");
+    if(yyin == NULL) {
+        fprintf(stderr, "File %s does not exist!\n", argv[optind]);
+        fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
+        exit(1);
+    }
+
     extern int yylineno;
     yyparse();
     if(success) {
