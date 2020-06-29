@@ -85,8 +85,8 @@ statement   :   '\n'
             |   expression '\n'
             ;
 
-identifier_list :   identifier_list ',' identifier  { strcat(strcat($$, ","), $3); insert($3, type, "0"); }
-                |   identifier                      { strcpy($$, $1); insert($1, type, "0"); }
+identifier_list :   identifier_list ',' identifier
+                |   identifier
                 |   initialize_id
                 ;
 
@@ -115,7 +115,7 @@ expression  :   term
             |   identifier UNARY_OPERATOR
             |   UNARY_OPERATOR  identifier
             |   term OPERATOR expression
-            |   identifier '=' expression
+            |   identifier '=' expression       { strcpy($$, $1); insert($1, type, "0"); }
             |   forall_stmt
             |   prod_sum_stmt
             ;
