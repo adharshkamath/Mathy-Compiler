@@ -54,9 +54,6 @@
         return;
     }
     
-    int setType(char* token, char* type) {
-
-    }
 
     int setBounds(char* token, int op_id, int lower, int upper) {
 
@@ -120,7 +117,7 @@ expression  :   term
             |   prod_sum_stmt
             ;
 
-term    :   identifier
+term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
         |   number
         ;
 
@@ -148,29 +145,31 @@ int main(int argc, char **argv) {
             else if(strcmp(optarg, "double") == 0) {
                 strcpy(type, optarg);
             }
-            else if(strcmp(optarg, "long double") == 0) {
+            else if(strcmp(optarg, "long_double") == 0) {
                 strcpy(type, optarg);
             }
             else {
-                fprintf(stderr, "Invalid type selected");
+                fprintf(stderr, "Invalid type '%s' selected\n", optarg);
+                exit(1);
             }
         }
         else {
             fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
+            exit(2);
         }
     }
 
     if(optind == argc) {
         fprintf(stderr, "Enter the name of the file to be compiled!\n");
         fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
-        exit(1);
+        exit(3);
     }
 
     yyin = fopen(argv[optind], "r");
     if(yyin == NULL) {
         fprintf(stderr, "File %s does not exist!\n", argv[optind]);
         fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
-        exit(1);
+        exit(4);
     }
 
     extern int yylineno;
