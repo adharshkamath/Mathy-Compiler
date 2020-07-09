@@ -9,6 +9,6 @@ make
 ```
 Then
 ```
-./test < (_input_)
+./test filename
 ```
 A sample file has been given in the compiler directory (testing.mcp)
