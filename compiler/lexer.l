@@ -3,7 +3,7 @@
 	#include <stdio.h> 
 	#include <stdlib.h>
     #define YYSTYPE char* 
-	#include "y.tab.h"
+	#include "parser.tab.h"
 	extern int yycolumn;
 	extern int yyleng;
 %}

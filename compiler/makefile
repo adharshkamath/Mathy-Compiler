@@ -1,8 +1,8 @@
 frontend: lexer parser
-	gcc lex.yy.c y.tab.c -o test
+	g++ lex.yy.c parser.tab.c -o test
 
 lexer: lexer.l
-	lex lexer.l
+	flex lexer.l
 
 parser: parser.y
-	yacc -d parser.y -Wno-yacc
+	bison -d parser.y
