@@ -109,8 +109,6 @@ number      :   INT_CONSTANT
             ;
 
 expression  :   term
-            |   identifier UNARY_OPERATOR
-            |   UNARY_OPERATOR  identifier
             |   term OPERATOR expression
             |   identifier '=' expression       { strcpy($$, $1); insert($1, type, "0"); }
             |   forall_stmt
