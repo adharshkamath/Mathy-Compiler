@@ -1,5 +1,8 @@
 forall(i) where 0<i,j,k<10 {
     a[i+2][90] = 2 + a[i]
+    forall(j) where 10<=j<=100 {
+        b[j] = 2 + j
+    }
 }
 
 sum = sigma(a[i] * a[i]) where 0<i<10
