@@ -6,6 +6,7 @@
     #include <stdbool.h>
     #include <getopt.h>
     #define YYSTYPE char*
+    #define FORALL_NESTS 10
     extern FILE *yyin;
     extern int yylex(void);
     int yyerror(const char *msg);
@@ -24,6 +25,11 @@
         long double ldval;
         struct arraySize* arrSize;
     } table[200];
+
+    struct control {
+        char* token;
+        int lowerBound, upperBound;
+    };
 
     struct arraySize {
         int size;
@@ -64,6 +70,14 @@
             printf("%s - %s\n", table[i].token, table[i].type);
         }
     }
+
+    int yywrite() {
+        FILE *fptr;
+        fptr = fopen("output.c", "w");
+        char *basic = "#include<stdio.h>\n#include<stdlib.h>\n#include<omp.h>\n\nint main() {\n}";
+        fprintf(fptr, "%s", basic);
+        fclose(fptr);
+    }
       
 %} 
 
@@ -81,13 +95,6 @@ statements  :   statements statement
 statement   :   '\n'
             |   expression '\n'
             ;
-
-identifier_list :   identifier_list ',' identifier
-                |   identifier
-                |   initialize_id
-                ;
-
-initialize_id   :   identifier '=' number ;
 
 identifier  :   IDENTIFIER dimensions
             ;
@@ -119,7 +126,7 @@ term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
         |   number
         ;
 
-forall_stmt :   FORALL '(' identifier_list ')' WHERE bounds '{' statements '}' ;
+forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bounds '{' statements '}' ;
 
 prod_sum_stmt  :   control '(' expression ')' WHERE bounds ;
 
@@ -131,7 +138,7 @@ bounds  :   bounds ',' bound
         |   bound
         ;
 
-bound   :   INT_CONSTANT COMPARISON identifier_list COMPARISON INT_CONSTANT ;
+bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT ;
 
 %% 
   
@@ -174,6 +181,7 @@ int main(int argc, char **argv) {
     yyparse();
     if(success) {
         printf("OK\n");
+        yywrite();
     }
     else {
         printf("\nParsing failed due to %d error(s)\n", errors);
