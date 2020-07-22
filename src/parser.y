@@ -126,19 +126,15 @@ term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
         |   number
         ;
 
-forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bounds '{' statements '}' ;
+forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' ;
 
-prod_sum_stmt  :   control '(' expression ')' WHERE bounds ;
+prod_sum_stmt  :   control '(' expression ')' WHERE bound ;
 
 control :   PRODUCT 
         |   SIGMA
         ;
 
-bounds  :   bounds ',' bound
-        |   bound
-        ;
-
-bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT ;
+bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT {  };
 
 %% 
   
