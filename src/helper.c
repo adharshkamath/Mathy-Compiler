@@ -49,3 +49,17 @@ int isPresent(char *token) {
 int setBounds(char* token, int op_id, int lower, int upper) {
 
 }
+
+int hash(char* lexeme) {
+    size_t i = 0;
+    int length = strlen(lexeme), hash = 0;
+    while (i != length) {
+        hash += lexeme[i++];
+        hash += hash << 10;
+        hash ^= hash >> 6;
+    }
+    hash += hash << 3;
+    hash ^= hash >> 11;
+    hash += hash << 15;
+    return (hash % HASH_TABLE_SIZE + HASH_TABLE_SIZE) % HASH_TABLE_SIZE;
+}
