@@ -5,8 +5,8 @@
     #include <stdlib.h>
     #include <stdbool.h>
     #include <getopt.h>
+    #include "helper.h"
     #define YYSTYPE char*
-    #define FORALL_NESTS 10
     extern FILE *yyin;
     extern int yylex(void);
     int yyerror(const char *msg);
@@ -15,69 +15,7 @@
     int yycolumn = 0;
     int n=1;
     char type[15] = "float";
-
-    struct symbolTable {
-        char token[100];
-        char type[10];
-        bool isArray;
-        float fval;
-        double dval;
-        long double ldval;
-        struct arraySize* arrSize;
-    } table[200];
-
-    struct control {
-        char* token;
-        int lowerBound, upperBound;
-    };
-
-    struct arraySize {
-        int size;
-        struct arraySize* next;
-    };
-
-    int isPresent(char *token) {
-        for(int i=1; i<n; i++) {
-            if(!strcmp(table[i].token, token)) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    void insert(char* token, char* type, char* value) {
-        if(!isPresent(token)){
-            strcpy(table[n].token, token);
-            strcpy(table[n].type, type);
-            if(strcmp(type, "float") == 0)
-                table[n].fval = strtof(value, NULL);
-            if(strcmp(type, "long_double") == 0)
-                table[n].ldval = strtold(value, NULL);
-            if(strcmp(type, "double") == 0)
-                table[n].dval = strtod(value, NULL);
-            n++;
-        }
-        return;
-    }
-    
-
-    int setBounds(char* token, int op_id, int lower, int upper) {
-
-    }
-
-    void printSymbolTable() {
-        for(int i=1; i<n; i++) {
-            printf("%s - %s\n", table[i].token, table[i].type);
-        }
-    }
-
-    int yywrite() {
-        FILE *fptr;
-        fptr = fopen("output.c", "w");
-        char *basic = "#include<stdio.h>\n#include<stdlib.h>\n#include<omp.h>\n\nint main() {\n}";
-        fprintf(fptr, "%s", basic);
-        fclose(fptr);
-    }
+    int c = 1;
       
 %} 
 
@@ -107,8 +45,8 @@ offset  :   offset_type
         |   offset_type OPERATOR offset
         ;
 
-offset_type :   INT_CONSTANT
-            |   IDENTIFIER
+offset_type :   INT_CONSTANT    { $$ = $1; printf("Offset no. %d is a constant = %s\n",c++,$1); }
+            |   IDENTIFIER      { $$ = $1; printf("Offset no. %d is = %s\n",c++,$1); }
             ;
 
 number      :   INT_CONSTANT
