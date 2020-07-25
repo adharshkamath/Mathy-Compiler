@@ -16,11 +16,13 @@
     int n=1;
     char type[15] = "float";
     int c = 1;
+    char *curid;
       
 %} 
 
 
-%token IDENTIFIER INT_CONSTANT FLOAT_CONSTANT UNARY_OPERATOR OPERATOR COMPARISON FORALL SIGMA PRODUCT WHERE PRECISION
+%token IDENTIFIER INT_CONSTANT FLOAT_CONSTANT UNARY_OPERATOR OPERATOR COMPARISON FORALL SIGMA PRODUCT WHERE
+
 
 %%
 
@@ -34,19 +36,19 @@ statement   :   '\n'
             |   expression '\n'
             ;
 
-identifier  :   IDENTIFIER dimensions
+identifier  :   IDENTIFIER { curid = $1; } dimensions   {  }
             ;
 
-dimensions  :   '[' offset ']' dimensions
+dimensions  :   dimensions '[' offset ']' { $2 = "["; $4 = "]"; strcat(curid, $2); strcat(curid, $3); strcat(curid, $4); }
             |   %empty
             ;
             
-offset  :   offset_type 
-        |   offset_type OPERATOR offset
+offset  :   offset_type { strcpy($$, $1); }
+        |   offset OPERATOR offset_type { strcpy($$, strcat(strcat($1, $2), $3)); }
         ;
 
-offset_type :   INT_CONSTANT    { $$ = $1; printf("Offset no. %d is a constant = %s\n",c++,$1); }
-            |   IDENTIFIER      { $$ = $1; printf("Offset no. %d is = %s\n",c++,$1); }
+offset_type :   INT_CONSTANT    { strcpy($$, $1); }
+            |   IDENTIFIER      { strcpy($$, $1); }
             ;
 
 number      :   INT_CONSTANT
@@ -61,10 +63,10 @@ expression  :   term
             ;
 
 term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
-        |   number
+        |   number      { strcpy($$, $1); }
         ;
 
-forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' ;
+forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' {  };
 
 prod_sum_stmt  :   control '(' expression ')' WHERE bound ;
 

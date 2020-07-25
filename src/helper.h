@@ -25,6 +25,18 @@ struct bound {
     int lowerBound, upperBound;
 };
 
+struct forAll {
+    struct bound forBound;
+    void* next;
+    bool parent;
+    char* expr;
+};
+
+struct sigma_prod {
+    char* rhs, *lhs;
+    struct bound sum_prod_bound;
+};
+
 struct arraySize {
     int size;
     struct arraySize* next;

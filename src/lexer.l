@@ -24,17 +24,16 @@ PRECISION			(float|double|long_double)
 \n 						{ yycolumn = 0; yylineno++; return yytext[0]; }
 {SINGLE_CHAR}   		{ yycolumn++; return yytext[0]; }
 {INT_CONSTANT}			{ yycolumn += yyleng; yylval = strdup(yytext); return INT_CONSTANT; }
-{FLOAT_CONSTANT}		{ yycolumn += yyleng; return FLOAT_CONSTANT; }
-{OPERATOR} 				{ yycolumn += yyleng; return OPERATOR; }
+{FLOAT_CONSTANT}		{ yycolumn += yyleng; yylval = strdup(yytext); return FLOAT_CONSTANT; }
+{OPERATOR} 				{ yycolumn += yyleng; yylval = strdup(yytext); return OPERATOR; }
 {COMPARISON}			{ yycolumn += yyleng; yylval = strdup(yytext); return COMPARISON; }
 "forall"				{ yycolumn += yyleng; return FORALL; }
 "sigma"					{ yycolumn += yyleng; return SIGMA; }
 "product"				{ yycolumn += yyleng; return PRODUCT; }
 "where"					{ yycolumn += yyleng; return WHERE; }
-{PRECISION}				{ yycolumn += yyleng; yylval = strdup(yytext); return PRECISION; }
 {IDENTIFIER}			{ yycolumn += yyleng; yylval = strdup(yytext); return IDENTIFIER; }
 {WHITESPACE}    		{ yycolumn += yyleng; }
-.						{ yycolumn += 1; return yytext[0];}
+.						{ yycolumn += 1; yylval = strdup(yytext); return yytext[0];}
 
 
 %%
