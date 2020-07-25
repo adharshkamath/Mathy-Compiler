@@ -17,6 +17,7 @@
     char type[15] = "float";
     int c = 1;
     char *curid;
+    void *curr_stmt;
       
 %} 
 
@@ -33,7 +34,7 @@ statements  :   statements statement
             ;
 
 statement   :   '\n'
-            |   expression '\n'
+            |   expression '\n' { printf("statement expr %s\n", $1); }
             ;
 
 identifier  :   IDENTIFIER { curid = $1; } dimensions   {  }
@@ -55,9 +56,9 @@ number      :   INT_CONSTANT
             |   FLOAT_CONSTANT
             ;
 
-expression  :   term
-            |   term OPERATOR expression
-            |   identifier '=' expression       { strcpy($$, $1); insert($1, type, "0"); }
+expression  :   term    { $$ = $1; }
+            |   term OPERATOR expression    { strcat($1, $2); strcat($1, $3); $$=$1; }
+            |   identifier '=' expression       { $2 = "="; insert($1, type, "0"); }
             |   forall_stmt
             |   prod_sum_stmt
             ;
@@ -66,12 +67,12 @@ term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
         |   number      { strcpy($$, $1); }
         ;
 
-forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' {  };
+forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' { $$ = "forall"; };
 
-prod_sum_stmt  :   control '(' expression ')' WHERE bound ;
+prod_sum_stmt  :   control '(' expression ')' WHERE bound { printf("Control expr %s\n", $3); };
 
-control :   PRODUCT 
-        |   SIGMA
+control :   PRODUCT { $$ = "prod"; }
+        |   SIGMA { $$ = "sigma"; }
         ;
 
 bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT {  };
