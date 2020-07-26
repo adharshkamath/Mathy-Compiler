@@ -28,7 +28,7 @@ RIGHT_CURLY			"}"
 %%
 
 \n 						{ yycolumn = 0; yylineno++; return yytext[0]; }
-{SINGLE_CHAR}   		{ yycolumn++; return yytext[0]; }
+{SINGLE_CHAR}   		{ yycolumn++; yylval = strdup(yytext); return yytext[0]; }
 {INT_CONSTANT}			{ yycolumn += yyleng; yylval = strdup(yytext); return INT_CONSTANT; }
 {FLOAT_CONSTANT}		{ yycolumn += yyleng; yylval = strdup(yytext); return FLOAT_CONSTANT; }
 {OPERATOR} 				{ yycolumn += yyleng; yylval = strdup(yytext); return OPERATOR; }
