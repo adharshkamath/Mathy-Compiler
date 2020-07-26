@@ -6,7 +6,6 @@
     #include <stdbool.h>
     #include <getopt.h>
     #include "helper.h"
-    #define YYSTYPE char*
     extern FILE *yyin;
     extern int yylex(void);
     int yyerror(const char *msg);
@@ -22,8 +21,20 @@
 %} 
 
 
-%token IDENTIFIER INT_CONSTANT FLOAT_CONSTANT UNARY_OPERATOR OPERATOR COMPARISON FORALL SIGMA PRODUCT WHERE
+%token IDENTIFIER INT_CONSTANT FLOAT_CONSTANT UNARY_OPERATOR OPERATOR COMPARISON FORALL SIGMA PRODUCT WHERE LEFT_SQUARE	RIGHT_SQUARE LEFT_PAREN	RIGHT_PAREN	RIGHT_CURLY LEFT_CURLY
 
+%union {
+    struct tableEntry id;
+    union node gen_expr;
+    struct bound loop_bound;
+    char* string;
+};
+
+%type <string> INT_CONSTANT FLOAT_CONSTANT UNARY_OPERATOR OPERATOR COMPARISON WHERE IDENTIFIER
+%type <string> LEFT_SQUARE	RIGHT_SQUARE LEFT_PAREN	RIGHT_PAREN	RIGHT_CURLY LEFT_CURLY dimensions offset offset_type control number
+%type <id> identifier
+%type <loop_bound> bound
+%type <gen_expr> expression forall_stmt prod_sum_stmt term
 
 %%
 
@@ -34,13 +45,13 @@ statements  :   statements statement
             ;
 
 statement   :   '\n'
-            |   expression '\n' { printf("statement expr %s\n", $1); }
+            |   expression '\n' {  }
             ;
 
-identifier  :   IDENTIFIER { curid = $1; } dimensions   {  }
+identifier  :   IDENTIFIER { curid = $1; newIdentifier(curid, type, "0"); } dimensions   {  }
             ;
 
-dimensions  :   dimensions '[' offset ']' { $2 = "["; $4 = "]"; strcat(curid, $2); strcat(curid, $3); strcat(curid, $4); }
+dimensions  :   dimensions LEFT_SQUARE offset RIGHT_SQUARE { strcat(curid, $2); strcat(curid, $3); strcat(curid, $4); }
             |   %empty
             ;
             
@@ -58,24 +69,26 @@ number      :   INT_CONSTANT
 
 expression  :   term    { $$ = $1; }
             |   term OPERATOR expression    { strcat($1, $2); strcat($1, $3); $$=$1; }
-            |   identifier '=' expression       { $2 = "="; insert($1, type, "0"); }
+            |   identifier '=' expression       {  }
             |   forall_stmt
             |   prod_sum_stmt
             ;
 
-term    :   identifier          { strcpy($$, $1); insert($1, type, "0"); }
+term    :   identifier          { strcpy($$, $1); }
         |   number      { strcpy($$, $1); }
         ;
 
-forall_stmt :   FORALL '(' IDENTIFIER ')' WHERE bound '{' statements '}' { $$ = "forall"; };
+forall_stmt :   FORALL LEFT_PAREN IDENTIFIER RIGHT_PAREN WHERE bound {  } LEFT_CURLY statements RIGHT_CURLY { printf("Forall %s %s %s %s\n", $3, $5, $6, $8); };
 
-prod_sum_stmt  :   control '(' expression ')' WHERE bound { printf("Control expr %s\n", $3); };
+prod_sum_stmt  :   control LEFT_PAREN expression RIGHT_PAREN WHERE bound { printf("Control expr %s\n", $3); };
 
 control :   PRODUCT { $$ = "prod"; }
         |   SIGMA { $$ = "sigma"; }
         ;
 
-bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT {  };
+bound   :   INT_CONSTANT COMPARISON IDENTIFIER COMPARISON INT_CONSTANT { $$.lowerBound = atoi($1); 
+                                                                            $$.upperBound = atoi($5); 
+                                                                            $$.token = $3; };
 
 %% 
   

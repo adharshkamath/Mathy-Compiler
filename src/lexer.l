@@ -10,14 +10,20 @@
 
 
 WHITESPACE			[ \t\v\f]
-SINGLE_CHAR			[=(){};,!]
+SINGLE_CHAR			[=;,!]
 CONTROL_STMT		forall|product|sigma|where
 IDENTIFIER 			[a-zA-Z_]([a-zA-Z0-9_])*
 INT_CONSTANT		[0-9]+
 FLOAT_CONSTANT 		[1-9][0-9]*(\.[0-9]+)?|0(\.[0-9]+)?
 OPERATOR 			(=|\+|\-|\/|\*|%)
-COMPARISON 			>=|>|<|<=
+COMPARISON 			<|<=
 PRECISION			(float|double|long_double)
+LEFT_SQUARE			"["
+RIGHT_SQUARE		"]"
+LEFT_PAREN			"("
+RIGHT_PAREN			")"
+LEFT_CURLY			"{"
+RIGHT_CURLY			"}"
 
 %%
 
@@ -33,6 +39,12 @@ PRECISION			(float|double|long_double)
 "where"					{ yycolumn += yyleng; return WHERE; }
 {IDENTIFIER}			{ yycolumn += yyleng; yylval = strdup(yytext); return IDENTIFIER; }
 {WHITESPACE}    		{ yycolumn += yyleng; }
+{LEFT_SQUARE}			{ yycolumn += yyleng; yylval = strdup(yytext); return LEFT_SQUARE; }
+{RIGHT_SQUARE}			{ yycolumn += yyleng; yylval = strdup(yytext); return RIGHT_SQUARE; }
+{LEFT_PAREN}			{ yycolumn += yyleng; yylval = strdup(yytext); return LEFT_PAREN; }
+{RIGHT_PAREN}			{ yycolumn += yyleng; yylval = strdup(yytext); return RIGHT_PAREN; }
+{LEFT_CURLY}			{ yycolumn += yyleng; yylval = strdup(yytext); return LEFT_CURLY; }
+{RIGHT_CURLY}			{ yycolumn += yyleng; yylval = strdup(yytext); return RIGHT_CURLY; }
 .						{ yycolumn += 1; yylval = strdup(yytext); return yytext[0];}
 
 

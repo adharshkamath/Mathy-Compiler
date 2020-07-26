@@ -5,15 +5,13 @@
 
 extern int n;
 
-int yywrite() {
 
+int yywrite() {
     FILE *fptr;
     fptr = fopen("output.c", "w");
     char *basic =  "#include<stdio.h>\n#include<stdlib.h>\n#include<omp.h>\n\nint main()\n{\n}";
     fprintf(fptr, "%s", basic);
     fclose(fptr);
-
-
 }
 
 void printSymbolTable() {
@@ -23,28 +21,26 @@ void printSymbolTable() {
 }
 
 void insert(char* token, char* type, char* value) {
+    int index = hash(token);
     if(!isPresent(token)){
-        strcpy(table[n].token, token);
-        strcpy(table[n].type, type);
+        strcpy(table[index].token, token);
+        strcpy(table[index].type, type);
         if(strcmp(type, "float") == 0)
-            table[n].value.fval = strtof(value, NULL);
+            table[index].value.fval = strtof(value, NULL);
         if(strcmp(type, "long_double") == 0)
-            table[n].value.ldval = strtold(value, NULL);
+            table[index].value.ldval = strtold(value, NULL);
         if(strcmp(type, "double") == 0)
-            table[n].value.dval = strtod(value, NULL);
-        n++;
+            table[index].value.dval = strtod(value, NULL);
+        printf("%s - %s\n", token, type);
     }
     return;
 }
 
 int isPresent(char *token) {
-    for(int i=1; i<n; i++) {
-        if(!strcmp(table[i].token, token)) {
-            return i;
-        }
-    }
+    if(strcmp(token, table[hash(token)].token) == 0) return 1;
     return 0;
 } 
+
 
 int setBounds(char* token, int op_id, int lower, int upper) {
 
@@ -63,3 +59,21 @@ int hash(char* lexeme) {
     hash += hash << 15;
     return (hash % HASH_TABLE_SIZE + HASH_TABLE_SIZE) % HASH_TABLE_SIZE;
 }
+
+
+int newIdentifier(char* token, char* type, char* value) {
+    int index = hash(token);
+    if(!isPresent(token)){
+        strcpy(table[index].token, token);
+        strcpy(table[index].type, type);
+        if(strcmp(type, "float") == 0)
+            table[index].value.fval = strtof(value, NULL);
+        if(strcmp(type, "long_double") == 0)
+            table[index].value.ldval = strtold(value, NULL);
+        if(strcmp(type, "double") == 0)
+            table[index].value.dval = strtod(value, NULL);
+        printf("%s - %s\n", token, type);
+    }
+    return 0;
+}
+

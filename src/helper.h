@@ -26,15 +26,29 @@ struct bound {
 };
 
 struct forAll {
+    int type;
     struct bound forBound;
-    void* next;
     bool parent;
     char* expr;
+    union node* next;
 };
 
 struct sigma_prod {
+    int type;
     char* rhs, *lhs;
     struct bound sum_prod_bound;
+    union node* next;
+};
+
+struct expr {
+    int type;
+    char* expression;
+};
+
+union node {
+    struct forAll* forall;
+    struct sigma_prod* sum_prod;
+    struct expr* exprn;
 };
 
 struct arraySize {
@@ -53,5 +67,7 @@ int isPresent(char *token);
 int setBounds(char* token, int op_id, int lower, int upper);
 
 int hash(char *lexeme);
+
+int newIdentifier(char* token, char* type, char* value);
 
 #endif
