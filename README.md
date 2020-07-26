@@ -9,6 +9,8 @@ make
 ```
 Then
 ```
-./test filename
+./test [-t type] file
 ```
-A sample file has been given in the compiler directory (testing.mcp)
+Where type is one of *float* *long* or *long_double*
+
+A sample file ([2mm.mcp](./src/2mm.mcp))  has been given in the src/ directory
