@@ -69,8 +69,10 @@ int isPresent(char *token);
 
 int setBounds(char* token, int op_id, int lower, int upper);
 
-int hash(char *lexeme);
+int hash(char *lexeme, int length);
 
 int newIdentifier(char* token, char* type, char* value);
+
+int initSymbolTable();
 
 #endif
