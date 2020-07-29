@@ -17,7 +17,8 @@
     int c = 1;
     char *curid;
     void *curr_stmt;
-      
+    char **files;
+    int filenum=0, numfiles=0,t_opt;     
 %} 
 
 
@@ -119,12 +120,16 @@ int main(int argc, char **argv) {
         exit(3);
     }
 
-    yyin = fopen(argv[optind], "r");
+    numfiles = argc-optind;
+    files = argv;
+    t_opt = optind;
+    yyin = fopen(argv[optind+filenum], "r");
     if(yyin == NULL) {
-        fprintf(stderr, "File %s does not exist!\n", argv[optind]);
+        fprintf(stderr, "File %s does not exist!\n", argv[optind+filenum]);
         fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
         exit(4);
     }
+    filenum++;
 
     extern int yylineno;
     yyparse();
@@ -136,6 +141,20 @@ int main(int argc, char **argv) {
         printf("\nParsing failed due to %d error(s)\n", errors);
     }
     return 0;
+}
+
+int yywrap() {
+    if(filenum == numfiles) return -1;
+    else {
+        yyin = fopen(files[t_opt+filenum], "r");
+        if(yyin == NULL) {
+            fprintf(stderr, "File %s does not exist!\n", files[optind+filenum]);
+            fprintf(stderr, "Usage: %s [-t type] file\n", files[0]);
+            exit(4);
+        }
+        return 0;
+    }
+    filenum++;
 }
 
 int yyerror(const char *msg) {
