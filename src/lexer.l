@@ -15,7 +15,7 @@ CONTROL_STMT		forall|product|sigma|where
 IDENTIFIER 			[a-zA-Z_]([a-zA-Z0-9_])*
 INT_CONSTANT		[0-9]+
 FLOAT_CONSTANT 		[1-9][0-9]*(\.[0-9]+)?|0(\.[0-9]+)?
-OPERATOR 			(=|\+|\-|\/|\*|%)
+OPERATOR 			(\+|\-|\/|\*|%)
 COMPARISON 			<|<=
 PRECISION			(float|double|long_double)
 LEFT_SQUARE			"["

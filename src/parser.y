@@ -123,9 +123,9 @@ int main(int argc, char **argv) {
     numfiles = argc-optind;
     files = argv;
     t_opt = optind;
-    yyin = fopen(argv[optind+filenum], "r");
+    yyin = fopen(argv[optind], "r");
     if(yyin == NULL) {
-        fprintf(stderr, "File %s does not exist!\n", argv[optind+filenum]);
+        fprintf(stderr, "File %s does not exist!\n", argv[optind]);
         fprintf(stderr, "Usage: %s [-t type] file\n", argv[0]);
         exit(4);
     }
@@ -146,22 +146,25 @@ int main(int argc, char **argv) {
 int yywrap() {
     if(filenum == numfiles) return -1;
     else {
+        extern int yycolumn, yylineno;
+        yycolumn = 1;
+        yylineno = 1;
         yyin = fopen(files[t_opt+filenum], "r");
         if(yyin == NULL) {
             fprintf(stderr, "File %s does not exist!\n", files[optind+filenum]);
             fprintf(stderr, "Usage: %s [-t type] file\n", files[0]);
             exit(4);
         }
+        filenum++;
         return 0;
     }
-    filenum++;
 }
 
 int yyerror(const char *msg) {
     extern char* yytext;
     extern int yylineno;
     extern int yycolumn;
-    printf("\nProblem occured at line number %d, column number %d, near '%s'\nError: %s\n", yylineno, yycolumn, yytext, msg);
+    printf("\nProblem occured at line number %d, column number %d, near '%s' in %s\nError: %s\n", yylineno, yycolumn, yytext, files[t_opt+filenum], msg);
     errors++;
     success = false;
     return 1;
