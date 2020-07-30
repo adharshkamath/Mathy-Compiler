@@ -11,6 +11,6 @@ Then
 ```
 ./test [-t type] file
 ```
-Where type is one of *float* *long* or *long_double*
+Where type is one of *float*, *long* or *long_double*
 
 A sample file ([2mm.mcp](./src/2mm.mcp))  has been given in the src/ directory
