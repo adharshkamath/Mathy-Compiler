@@ -44,12 +44,17 @@ struct sigma_prod {
     struct node* next;
 };
 
+struct exprn {
+    char* exp;
+    struct node* next;
+};
+
 
 struct node {
     union {
         struct forAll forall;
         struct sigma_prod sum_prod;
-        char* exprn;
+        struct exprn expression;
     };
     int type;
 };

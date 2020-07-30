@@ -12,6 +12,7 @@ int yywrite() {
     char *basic =  "#include<stdio.h>\n#include<stdlib.h>\n#include<omp.h>\n\nint main()\n{\n}";
     fprintf(fptr, "%s", basic);
     fclose(fptr);
+    return 0;
 }
 
 void printSymbolTable() {
@@ -27,7 +28,7 @@ int isPresent(char* token) {
 
 
 int setBounds(char* token, int op_id, int lower, int upper) {
-
+    return 0;
 }
 
 int hash(char* lexeme, int length) {

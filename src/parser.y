@@ -8,6 +8,7 @@
     #include "helper.h"
     extern FILE *yyin;
     extern int yylex(void);
+    extern int yylineno, yycolumn;
     int yyerror(const char *msg);
     bool success = true; 
     int errors = 0;
@@ -34,21 +35,21 @@
 %type <string>  dimensions offset offset_type control number
 %type <id> identifier
 %type <loop_bound> bound
-%type <gen_expr> expression forall_stmt prod_sum_stmt term
+%type <gen_expr> expression forall_stmt prod_sum_stmt term statement statements
 
 %%
 
 program :   statements { printSymbolTable(); };
 
-statements  :   statements statement
-            |   %empty
+statements  :   statements statement    { $$ = $2; if($2.type == FORALL_STMT) { printf("Forall Bound - %s \n", $2.forall.forBound->token); } }
+            |   %empty      {  }
             ;
 
-statement   :   '\n'
-            |   expression '\n' {  }
+statement   :   '\n'    {  }
+            |   expression '\n' { $$ = $1; }
             ;
 
-identifier  :   IDENTIFIER { curid = $<string>1; newIdentifier(curid, type, "0"); $<id>$.token = $<string>1; $<id>$.type = type; } dimensions   {  }
+identifier  :   IDENTIFIER { curid = $<string>1; newIdentifier(curid, type, "0"); $<id>$.token = $<string>1; $<id>$.type = type; } dimensions   { }
             ;
 
 dimensions  :   dimensions LEFT_SQUARE offset RIGHT_SQUARE { strcat(curid, $<string>2); strcat(curid, $3); strcat(curid, $<string>4); }
@@ -68,19 +69,38 @@ number      :   INT_CONSTANT    { strcpy($$, $<string>1); }
             ;
 
 expression  :   term    { $$ = $1; $$.type = EXPRN_STMT; }
-            |   term OPERATOR expression    { strcat($$.exprn, $1.exprn); strcat($$.exprn, $<string>2); strcat($$.exprn, $3.exprn); }
-            |   identifier EQUALS expression       { $$.type = EXPRN_STMT; strcat($$.exprn, $1.token); strcat($$.exprn, $<string>2); strcat($$.exprn, $3.exprn); }
-            |   forall_stmt     { $$ = $1; }
+            |   term OPERATOR expression    { strcat($$.expression.exp, $1.expression.exp); 
+                                                strcat($$.expression.exp, $<string>2); 
+                                                strcat($$.expression.exp, $3.expression.exp); 
+                                            }
+            |   identifier EQUALS expression       {    if($3.type == SIGMA_STMT || $3.type == PRODUCT_STMT) { 
+                                                            $$.type = $3.type;
+                                                            $$.sum_prod.sum_prod_bound = $3.sum_prod.sum_prod_bound;
+                                                            $$.sum_prod.lhs = $1.token; $$.sum_prod.rhs = $3.sum_prod.rhs;
+                                                        }
+                                                        else {
+                                                            $$.type = EXPRN_STMT; strcat($$.expression.exp, $1.token); 
+                                                            strcat($$.expression.exp, $<string>2); 
+                                                            strcat($$.expression.exp, $3.expression.exp);
+                                                        }
+                                                    }
+            |   forall_stmt     { $$.type = $1.type; $$.forall.forBound = $1.forall.forBound; $$.forall.nest = $1.forall.nest; }
             |   prod_sum_stmt   { $$ = $1; }
             ;
 
-term    :   identifier          { $$.type = EXPRN_STMT; strcpy($$.exprn, $1.token); }
-        |   number      { $$.type = EXPRN_STMT; strcpy($$.exprn, $1); }
+term    :   identifier          { $$.type = EXPRN_STMT; strcpy($$.expression.exp, $1.token); }
+        |   number      { $$.type = EXPRN_STMT; strcpy($$.expression.exp, $1); }
         ;
 
-forall_stmt :   FORALL LEFT_PAREN IDENTIFIER RIGHT_PAREN WHERE bound { $<gen_expr>$.type = FORALL_STMT; $<gen_expr>$.forall.forBound = &($6); } LEFT_CURLY statements RIGHT_CURLY {  };
+forall_stmt :   FORALL LEFT_PAREN IDENTIFIER RIGHT_PAREN WHERE bound LEFT_CURLY statements RIGHT_CURLY {    $$.type = FORALL_STMT; 
+                                                                                                            $$.forall.forBound = &($6); 
+                                                                                                            $$.forall.nest = &($<gen_expr>9);
+                                                                                                    };
 
-prod_sum_stmt  :   control LEFT_PAREN expression RIGHT_PAREN WHERE bound { $$.type = strcmp($1, "sigma") == 0 ? SIGMA_STMT : PRODUCT_STMT; };
+prod_sum_stmt  :   control LEFT_PAREN expression RIGHT_PAREN WHERE bound { $$.type = strcmp($1, "sigma") == 0 ? SIGMA_STMT : PRODUCT_STMT; 
+                                                                            $$.sum_prod.rhs = $3.expression.exp; 
+                                                                            $$.sum_prod.sum_prod_bound = &($6); 
+                                                                          };
 
 control :   PRODUCT { $$ = "prod"; }
         |   SIGMA { $$ = "sigma"; }
@@ -130,8 +150,6 @@ int main(int argc, char **argv) {
         exit(4);
     }
     filenum++;
-
-    extern int yylineno;
     yyparse();
     if(success) {
         printf("OK\n");
@@ -162,8 +180,6 @@ int yywrap() {
 
 int yyerror(const char *msg) {
     extern char* yytext;
-    extern int yylineno;
-    extern int yycolumn;
     printf("\nProblem occured at line number %d, column number %d, near '%s' in %s\nError: %s\n", yylineno, yycolumn, yytext, files[t_opt+filenum], msg);
     errors++;
     success = false;
