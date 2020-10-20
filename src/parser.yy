@@ -1,5 +1,5 @@
 %skeleton "lalr1.cc"
-%require "3.2"
+%require "3.7.2"
 %defines
 %define api.parser.class { Parser }
 %define api.token.constructor
