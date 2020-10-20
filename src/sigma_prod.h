@@ -2,12 +2,12 @@
 #include <fstream>
 #include <variant>
 #include "gen_node.h"
+#include "forall.h"
 
 #ifndef SIGMA_PROD_H
 #define SIGMA_PROD_H
 
 namespace mathy {
-    class ForAll;
 
     class SigmaProd : public GeneralNode {
     public:
