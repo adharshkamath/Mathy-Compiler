@@ -1,8 +1,8 @@
 all: scanner parser
 	g++ -std=c++17 -Wall -O3 -g main.cpp scanner.cpp parser.cpp compiler.cpp sigma_prod.cpp forall.cpp gen_node.cpp -o test -ll 
 
-scanner: scanner.ll
-		flex -o scanner.cpp scanner.ll
+scanner: scanner.l
+		flex -o scanner.cpp scanner.l
 
 parser: parser.yy
 		bison -o parser.cpp parser.yy
