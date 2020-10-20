@@ -1,10 +1,11 @@
 # Mathy-Compiler
 A compiler to generate OpenMP code for mathematical notations like forall, sigma, etc
 
-Usage:
+Build:
 
-In the compiler directory
 ```
+cd src
+
 make
 ```
 Then
@@ -13,4 +14,19 @@ Then
 ```
 Where type is one of *float*, *long* or *long_double*
 
-A sample file ([2mm.mcp](./src/2mm.mcp))  has been given in the src/ directory
+To build the scanner or parser individually:
+
+```
+make scanner    # for scanner
+
+make parser     # for parser
+```
+To remove files:
+
+```
+make clean_all          # to delete all build files
+
+make clean_scanner      # to delete scanner related files
+
+make clean_parser       # to delete parser related files
+```
