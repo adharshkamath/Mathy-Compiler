@@ -93,3 +93,7 @@ void Compiler::increaseLocation(unsigned int loc) {
 unsigned int Compiler::location() const {
     return m_location;
 }
+
+int mathy_FlexLexer::yywrap() {
+    return 1;
+}

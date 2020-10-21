@@ -21,6 +21,9 @@ public:
     Scanner(Compiler &driver) : m_driver(driver) {}
 	virtual ~Scanner() {}
 	virtual mathy::Parser::symbol_type get_next_token();
+    int yywrap() {
+        return 1;
+    }
 
 private:
     Compiler &m_driver;

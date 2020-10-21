@@ -11,7 +11,7 @@
 	#define YY_USER_ACTION m_driver.increaseLocation(yyleng);
 %}
 
-%option nodefault yylineno noyywrap
+%option nodefault yylineno
 %option c++
 %option yyclass="Scanner"
 %option prefix="mathy_"
