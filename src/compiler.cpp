@@ -9,6 +9,7 @@
 #include "gen_node.h"
 #include "scanner.h"
 #include "parser.hpp"
+#include "files.h"
 
 namespace mathy
 {
@@ -81,13 +82,12 @@ void Compiler::clear() {
     m_location = 0;
 }
 
-void Compiler::switchInputStream(std::istream *is) {
+void Compiler::changeInput(std::istream *is) {
     m_scanner.switch_streams(is, NULL);
 }
 
 void Compiler::increaseLocation(unsigned int loc) {
     m_location += loc;
-    std::cout << "increaseLocation(): " << loc << ", total = " << m_location << std::endl;
 }
 
 unsigned int Compiler::location() const {
@@ -95,5 +95,7 @@ unsigned int Compiler::location() const {
 }
 
 int mathy_FlexLexer::yywrap() {
+    std::cout << "----- Original yywrap() called -----" << std::endl;
+    std::cout << filenum << std::endl;
     return 1;
 }

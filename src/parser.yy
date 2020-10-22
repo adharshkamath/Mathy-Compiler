@@ -24,6 +24,8 @@
         class Scanner;
         class Compiler;
     }
+
+    std::string type;
 }
 
 

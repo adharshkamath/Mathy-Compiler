@@ -21,7 +21,7 @@ namespace mathy {
         int node_type;
         Bound gen_bound;
         std::string expression;
-        std::variant<GeneralNode*, ForAll*, SigmaProd*> next;
+        std::variant<GeneralNode *, ForAll *, SigmaProd *> next;
 
         GeneralNode() : parent(false), node_type(EXPRN_NODE), gen_bound(), expression("") {}
 

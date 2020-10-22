@@ -37,7 +37,7 @@ namespace mathy
 
         void clear();
 
-        void switchInputStream(std::istream *is);
+        void changeInput(std::istream *is);
 
         void increaseLocation(unsigned int loc);
 

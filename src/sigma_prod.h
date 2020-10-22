@@ -15,13 +15,13 @@ namespace mathy {
 
         SigmaProd() : GeneralNode(SIGMA_NODE), LHS(""), RHS("") {}
 
-        SigmaProd(Bound &bound, int type, std::variant<GeneralNode, ForAll, SigmaProd> rhs) :
+        SigmaProd(Bound &bound, int type, std::variant <GeneralNode, ForAll, SigmaProd> rhs) :
                 GeneralNode(type, bound) {
             auto rhs_str = std::get_if<GeneralNode>(&rhs);
             this->RHS = rhs_str->expression;
         }
 
-        SigmaProd(Bound &bound, int type, const std::string& rhs) :
+        SigmaProd(Bound &bound, int type, const std::string &rhs) :
                 GeneralNode(type, bound) {
             this->RHS = rhs;
         }
