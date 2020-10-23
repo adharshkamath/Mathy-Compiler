@@ -1,8 +1,9 @@
+#ifndef FILES_H
+#define FILES_H
+
 #include <vector>
 #include <string>
 
-#ifndef FILES_H
-#define FILES_H
 namespace mathy {
     class Files {
     public:

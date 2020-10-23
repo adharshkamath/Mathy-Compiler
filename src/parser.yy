@@ -17,6 +17,7 @@
     #include "forall.h"
     #include "gen_node.h"
     #include "sigma_prod.h"
+    #include "helper.h"
 
     using namespace std;
 
@@ -41,6 +42,7 @@
     static Parser::symbol_type yylex(Scanner &scanner, Compiler &driver) {
         return scanner.get_next_token();
     }
+    std::string current_id;
     
 }
 
@@ -51,7 +53,6 @@
 %locations
 %define parse.trace
 %define parse.error verbose
-
 %define api.token.prefix {TOKEN_}
 
 %token END 0
@@ -59,13 +60,6 @@
 %token <std::string> IDENTIFIER;
 %token <int> INTCONST;
 %token <double> FLOATCONST;
-%token LEFTPAR;
-%token RIGHTPAR;
-%token LEFTCURLY;
-%token RIGHTCURLY;
-%token LEFTSQR;
-%token RIGHTSQR;
-%token SEMICOLON;
 %token <std::string> FORALL;
 %token <std::string> SIGMA;
 %token <std::string> WHERE;
@@ -73,6 +67,13 @@
 %token <std::string> COMPARISON;
 %token <std::string> OPERATOR;
 %token <std::string> EQUALS;
+%token LEFTPAR;
+%token RIGHTPAR;
+%token LEFTCURLY;
+%token RIGHTCURLY;
+%token LEFTSQR;
+%token RIGHTSQR;
+%token SEMICOLON;
 %token COMMA;
 
 %type<std::string> control identifier offset_type offset dimensions
@@ -90,7 +91,7 @@
 
 program :   statements { $$ = $1; };
 
-statements  :   statements statement { $1 = $2; }
+statements  :   statements statement { $1 = $2; std::cout << "Statement " << std::endl; }
             |   %empty {  }
             ;
 
@@ -113,7 +114,12 @@ statement   :   NEWLINE  {  }
                                     }
             ;
 
-identifier  :   IDENTIFIER  dimensions   { $$ = $1 + $2; }
+identifier  :   IDENTIFIER { 
+                                current_id = $1; 
+                                std::cout << "New identifier " << current_id << std::endl;
+                                newVariable(current_id);
+                            } 
+                dimensions   { $$; }
             ;
 
 dimensions  :   dimensions LEFTSQR offset RIGHTSQR { $$ = $1 + "[" + $3 + "]"; }
@@ -180,6 +186,7 @@ term    :   identifier   { $$ = $1; }
 
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY statements RIGHTCURLY  { 
                                                                                                     $$ = ForAll($6, $8, $3);
+                                                                                                    std::cout << "Forall statement" << std::endl;
                                                                                                 }
             ;
 
@@ -190,6 +197,7 @@ prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound {
                                                                         else {
                                                                             $$ = SigmaProd($6, PRODUCT_NODE, $3);
                                                                         }
+                                                                        std::cout << "SP statement" << std::endl;
                                                                     }
                 ;
 

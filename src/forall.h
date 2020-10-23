@@ -1,9 +1,9 @@
+#ifndef FORALL_H
+#define FORALL_H
+
 #include <fstream>
 #include <variant>
 #include "gen_node.h"
-
-#ifndef FORALL_H
-#define FORALL_H
 
 namespace mathy {
     class SigmaProd;

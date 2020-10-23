@@ -1,11 +1,11 @@
+#ifndef GEN_NODE_H
+#define GEN_NODE_H
+
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <variant>
 #include "bounds.h"
-
-#ifndef GEN_NODE_H
-#define GEN_NODE_H
 
 #define EXPRN_NODE 0
 #define SIGMA_NODE 1

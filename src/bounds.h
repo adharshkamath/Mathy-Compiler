@@ -1,8 +1,8 @@
-#include <string>
-#include <variant>
-
 #ifndef BOUNDS_H
 #define BOUNDS_H
+
+#include <string>
+#include <variant>
 
 namespace mathy {
     class ForAll;

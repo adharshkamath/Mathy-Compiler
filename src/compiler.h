@@ -1,3 +1,6 @@
+#ifndef COMPILER_H
+#define COMPILER_H
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -8,25 +11,10 @@
 #include "sigma_prod.h"
 #include "gen_node.h"
 
-#ifndef COMPILER_H
-#define COMPILER_H
-
 namespace mathy {
     class Scanner;
 
     class Parser;
-
-    int newVariable(std::string identifier);
-
-    int newBound(std::string identifier, int low, int high);
-
-    int addArrDimension(std::string identifier, int dimension);
-
-    int addArrDimension(std::string identifier, std::string bound);
-
-    bool isVariableDeclared(std::string identifier);
-
-    bool isBoundDeclared(std::string identifier);
 
     class Compiler {
     public:
