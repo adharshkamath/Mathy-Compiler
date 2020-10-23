@@ -23,14 +23,14 @@ int main(int argc, char *argv[]) {
                 exit(1);
             }
         } else {
-            std::cerr << "Usage: " << argv[0] << " [-t type] file\n" << std::endl;
+            std::cerr << "Usage: " << argv[0] << " [-t type] file(s)\n" << std::endl;
             exit(2);
         }
     }
 
     if (optind == argc) {
         std::cerr << "Enter the name of the file to be compiled!\n" << std::endl;
-        std::cerr << "Usage: " << argv[0] << " [-t type] file\n" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " [-t type] file(s)\n" << std::endl;
         exit(3);
     }
 
