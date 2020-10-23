@@ -14,6 +14,6 @@ clean_parser: parser.cpp parser.hpp
 			   rm -rf parser.cpp parser.hpp location.hh position.hh stack.hh	
 
 clean_all:
-	rm -rf scanner.cpp
-	rm -rf parser.cpp parser.hpp location.hh position.hh stack.hh
-	rm -rf test
+	rm -f scanner.cpp
+	rm -f parser.cpp parser.hpp location.hh position.hh stack.hh
+	rm -f test
