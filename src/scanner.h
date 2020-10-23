@@ -30,7 +30,6 @@ namespace mathy {
         virtual mathy::Parser::symbol_type get_next_token();
 
         int yywrap() {
-            extern Compiler compiler;
             std::string filename;
             if (files.next(&filename) == -1) {
                 return 1;
@@ -38,7 +37,7 @@ namespace mathy {
                 std::filebuf fb;
                 if (fb.open(filename, std::ios::in)) {
                     std::istream istr(&fb);
-                    compiler.changeInput(&istr);
+                    this->switch_streams(&istr, NULL);
                 }
                 std::cout << "----- Scanner yywrap() called -----" << std::endl;
                 return 0;

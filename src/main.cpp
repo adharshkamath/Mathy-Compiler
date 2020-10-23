@@ -9,7 +9,6 @@
 
 int main(int argc, char *argv[]) {
     extern std::string type;
-    extern std::filebuf fb;
     int opt;
     while ((opt = getopt(argc, argv, "t:")) != -1) {
         if (opt == 't') {
@@ -48,7 +47,6 @@ int main(int argc, char *argv[]) {
     }
     int res = compiler.parse();
     std::cout << "Parse complete. Result = " << res << std::endl;
-    fb.close();
     fbuff.close();
     return res;
 }
