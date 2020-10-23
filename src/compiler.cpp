@@ -11,29 +11,24 @@
 #include "parser.hpp"
 #include "files.h"
 
-namespace mathy
-{
-    std::unordered_map<std::string, std::pair<int, int>> bounds_table;
-    std::unordered_map<std::string, std::vector<int>> variable_table;
+namespace mathy {
+    std::unordered_map <std::string, std::pair<int, int>> bounds_table;
+    std::unordered_map <std::string, std::vector<int>> variable_table;
 }
 
 using namespace mathy;
 
-int newVariable(const std::string& ident)
-{
-    if (variable_table.find(ident) != variable_table.end())
-    {
+int newVariable(const std::string &ident) {
+    if (variable_table.find(ident) != variable_table.end()) {
         return -1;
     }
     variable_table[ident] = std::vector<int>();
     return 0;
 }
 
-int newBound(const std::string& ident, int low, int high)
-{
+int newBound(const std::string &ident, int low, int high) {
     int ret = 0;
-    if (bounds_table.find(ident) != bounds_table.end())
-    {
+    if (bounds_table.find(ident) != bounds_table.end()) {
         std::cout << "Warning: Bound variable re-used!" << std::endl;
         ret = -1;
     }
@@ -42,36 +37,31 @@ int newBound(const std::string& ident, int low, int high)
     return ret;
 }
 
-int addArrDimension(const std::string& ident, int dims)
-{
+int addArrDimension(const std::string &ident, int dims) {
     variable_table[ident].push_back(dims);
     return 0;
 }
 
-int addArrDimension(const std::string& ident, const std::string& bound)
-{
-    if (bounds_table.find(bound) == bounds_table.end())
-    {
+int addArrDimension(const std::string &ident, const std::string &bound) {
+    if (bounds_table.find(bound) == bounds_table.end()) {
         return -1;
     }
     variable_table[ident].push_back(bounds_table[bound].second + 1);
     return 0;
 }
 
-bool isVariableDeclared(const std::string& identifier)
-{
+bool isVariableDeclared(const std::string &identifier) {
     return variable_table.find(identifier) != variable_table.end();
 }
 
-bool isBoundDeclared(const std::string& identifier)
-{
+bool isBoundDeclared(const std::string &identifier) {
     return bounds_table.find(identifier) != bounds_table.end();
 }
 
 Compiler::Compiler() :
-    m_scanner(*this),
-    m_parser(m_scanner, *this),
-    m_location(0) { }
+        m_scanner(*this),
+        m_parser(m_scanner, *this),
+        m_location(0) {}
 
 int Compiler::parse() {
     m_location = 0;

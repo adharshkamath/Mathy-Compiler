@@ -11,9 +11,9 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
-namespace mathy
-{
+namespace mathy {
     class Scanner;
+
     class Parser;
 
     int newVariable(std::string identifier);
@@ -28,8 +28,7 @@ namespace mathy
 
     bool isBoundDeclared(std::string identifier);
 
-    class Compiler
-    {
+    class Compiler {
     public:
         Compiler();
 

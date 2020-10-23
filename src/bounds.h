@@ -4,10 +4,11 @@
 #ifndef BOUNDS_H
 #define BOUNDS_H
 
-namespace mathy {    
+namespace mathy {
     class ForAll;
+
     class SigmaProd;
-    
+
     class Bound {
     public:
         std::variant<int, std::string> lower, upper;

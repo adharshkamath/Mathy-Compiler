@@ -26,5 +26,5 @@ void GeneralNode::gen_code(std::ofstream &m_file) {
             temp->gen_code(m_file);
         }
     }
-    std::cout << "ERROR: Tried to generate code from a non espression general node!" << std::endl;
+    std::cout << "ERROR: Tried to generate code from a non expression general node!" << std::endl;
 }
