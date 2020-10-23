@@ -17,8 +17,6 @@
 
 namespace mathy {
 
-    static int filenum = 0;
-
     class Compiler;
 
     class Parser;
