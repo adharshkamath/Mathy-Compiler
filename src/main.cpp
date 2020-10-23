@@ -50,6 +50,5 @@ int main(int argc, char *argv[]) {
     std::cout << "Parse complete. Result = " << res << std::endl;
     fb.close();
     fbuff.close();
-    mathy::filenum++;
     return res;
 }
