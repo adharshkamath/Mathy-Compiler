@@ -24,7 +24,9 @@ namespace mathy {
     class Scanner : public yyFlexLexer {
     public:
         Scanner(Compiler &driver) : m_driver(driver) {}
+
         Files files;
+
         virtual ~Scanner() {}
 
         virtual mathy::Parser::symbol_type get_next_token();
@@ -42,9 +44,8 @@ namespace mathy {
                     this->switch_streams(&istr, NULL);
                     std::cout << "File changed" << std::endl;
                     return 0;
-                }
-                else {
-                    std::cerr << "File " << files.names[files.current_file -1] << " does not exist!" << std::endl;
+                } else {
+                    std::cerr << "File " << files.names[files.current_file - 1] << " does not exist!" << std::endl;
                     return -2;
                 }
             }

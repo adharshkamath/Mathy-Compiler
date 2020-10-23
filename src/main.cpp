@@ -45,9 +45,9 @@ int main(int argc, char *argv[]) {
     if (fbuff.open(filename, std::ios::in)) {
         std::istream is(&fbuff);
         compiler.changeInput(&is);
-    }
-    else {
-        std::cerr << "File " << compiler.m_scanner.files.names[compiler.m_scanner.files.current_file -1] << " does not exist!" << std::endl;
+    } else {
+        std::cerr << "File " << compiler.m_scanner.files.names[compiler.m_scanner.files.current_file - 1]
+                  << " does not exist!" << std::endl;
         return -2;
     }
     int res = compiler.parse();

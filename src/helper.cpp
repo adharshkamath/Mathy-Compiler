@@ -51,10 +51,10 @@ namespace mathy {
 
     void printStuff() {
         std::cout << "------ Final stuff ------" << std::endl;
-        for(auto x : variable_table) {
+        for (auto x : variable_table) {
             std::cout << x.first << std::endl;
         }
-        for(auto x : bounds_table) {
+        for (auto x : bounds_table) {
             std::cout << x.first << std::endl;
         }
         std::cout << "------ Final stuff ------" << std::endl;
