@@ -48,6 +48,17 @@ namespace mathy {
     bool isBoundDeclared(const std::string &identifier) {
         return bounds_table.find(identifier) != bounds_table.end();
     }
+
+    void printStuff() {
+        std::cout << "------ Final stuff ------" << std::endl;
+        for(auto x : variable_table) {
+            std::cout << x.first << std::endl;
+        }
+        for(auto x : bounds_table) {
+            std::cout << x.first << std::endl;
+        }
+        std::cout << "------ Final stuff ------" << std::endl;
+    }
 } // namespace mathy
 
 using namespace mathy;

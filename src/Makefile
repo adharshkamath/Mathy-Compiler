@@ -16,3 +16,6 @@ clean_parser: parser.cpp parser.hpp
 clean_all:
 	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh test compiler
 	rm -f *.o *.out *.s *.i *.gch
+
+dev: main.cpp scanner.cpp parser.cpp compiler.cpp sigma_prod.cpp forall.cpp gen_node.cpp helper.cpp
+	g++ -std=c++17 -Wall -O3 -g main.cpp scanner.cpp parser.cpp compiler.cpp sigma_prod.cpp forall.cpp gen_node.cpp helper.cpp -o test -ll

@@ -36,17 +36,22 @@ int main(int argc, char *argv[]) {
 
     while (optind < argc) {
         compiler.m_scanner.files.names.push_back(argv[optind++]);
+        compiler.m_scanner.files.total_files_num++;
     }
 
     std::filebuf fbuff;
-    std::string filename;
-    compiler.m_scanner.files.next(&filename);
+    std::string filename = compiler.m_scanner.files.names[0];
+    compiler.m_scanner.files.current_file++;
     if (fbuff.open(filename, std::ios::in)) {
         std::istream is(&fbuff);
         compiler.changeInput(&is);
     }
+    else {
+        std::cerr << "File " << compiler.m_scanner.files.names[compiler.m_scanner.files.current_file -1] << " does not exist!" << std::endl;
+        return -2;
+    }
     int res = compiler.parse();
-    std::cout << "Parse complete. Result = " << res << std::endl;
+    std::cout << "Parse complete. " << std::endl;
     fbuff.close();
     return res;
 }

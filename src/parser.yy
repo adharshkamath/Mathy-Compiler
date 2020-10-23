@@ -18,6 +18,7 @@
     #include "gen_node.h"
     #include "sigma_prod.h"
     #include "helper.h"
+    #include "files.h"
 
     using namespace std;
 
@@ -85,13 +86,11 @@
 %type< std::variant<double, int> > number
 %type< std::variant<std::string, double, int> > term
 
-%start program
-
 %%
 
-program :   statements { $$ = $1; };
+program :   statements { printStuff(); };
 
-statements  :   statements statement { $1 = $2; std::cout << "Statement " << std::endl; }
+statements  :   statements statement { $1 = $2; }
             |   %empty {  }
             ;
 

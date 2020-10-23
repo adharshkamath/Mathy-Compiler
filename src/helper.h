@@ -20,6 +20,8 @@ namespace mathy {
 
     bool isBoundDeclared(const std::string &identifier);
 
+    void printStuff();
+
 } // namespace mathy
 
 #endif
