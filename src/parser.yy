@@ -25,7 +25,6 @@
         class Compiler;
     }
 
-    std::string type;
 }
 
 

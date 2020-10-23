@@ -8,15 +8,16 @@
 #include "files.h"
 
 int main(int argc, char *argv[]) {
-    extern std::string type;
+    mathy::Compiler compiler;
+    std::string data_type = "float";
     int opt;
     while ((opt = getopt(argc, argv, "t:")) != -1) {
         if (opt == 't') {
             if (strcmp(optarg, "float") == 0);
             else if (strcmp(optarg, "double") == 0) {
-                type = optarg;
+                data_type = optarg;
             } else if (strcmp(optarg, "long_double") == 0) {
-                type = optarg;
+                data_type = optarg;
             } else {
                 std::cerr << "Invalid type " << optarg << " selected\n" << std::endl;
                 exit(1);
@@ -34,13 +35,12 @@ int main(int argc, char *argv[]) {
     }
 
     while (optind < argc) {
-        mathy::files.names.push_back(argv[argc++]);
+        compiler.m_scanner.files.names.push_back(argv[optind++]);
     }
 
-    mathy::Compiler compiler;
     std::filebuf fbuff;
     std::string filename;
-    mathy::files.next(&filename);
+    compiler.m_scanner.files.next(&filename);
     if (fbuff.open(filename, std::ios::in)) {
         std::istream is(&fbuff);
         compiler.changeInput(&is);

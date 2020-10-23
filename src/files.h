@@ -24,8 +24,6 @@ namespace mathy {
             }
         }
     };
-
-    Files files;
 } // namespace mathy
 
 #endif

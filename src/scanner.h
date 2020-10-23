@@ -24,7 +24,7 @@ namespace mathy {
     class Scanner : public yyFlexLexer {
     public:
         Scanner(Compiler &driver) : m_driver(driver) {}
-
+        Files files;
         virtual ~Scanner() {}
 
         virtual mathy::Parser::symbol_type get_next_token();
