@@ -44,7 +44,9 @@
         return scanner.get_next_token();
     }
     std::string current_id;
-    
+    GeneralNode* gen_ptr = NULL;
+    SigmaProd* sp_ptr = NULL;
+    ForAll* for_ptr = NULL;    
 }
 
 %lex-param { mathy::Scanner &scanner }
@@ -88,7 +90,7 @@
 
 %%
 
-program :   statements { printStuff(); };
+program :   statements { printStuff(); initOutput(); };
 
 statements  :   statements statement { $1 = $2; }
             |   %empty {  }
@@ -113,12 +115,12 @@ statement   :   NEWLINE  {  }
                                     }
             ;
 
-identifier  :   IDENTIFIER { 
+identifier  :   IDENTIFIER {
                                 current_id = $1; 
                                 std::cout << "New identifier " << current_id << std::endl;
                                 newVariable(current_id);
                             } 
-                dimensions   { $$; }
+                dimensions   { $$ = $1 + $3; }
             ;
 
 dimensions  :   dimensions LEFTSQR offset RIGHTSQR { $$ = $1 + "[" + $3 + "]"; }
@@ -161,6 +163,7 @@ expression  :   term {
             |   identifier EQUALS expression { if($3.index() == 0) {
                                                     auto gen_str = std::get<0>($3);
                                                     $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                    std::cout << "ID =-= " << $1 << std::endl;
                                                 }
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);
@@ -173,7 +176,7 @@ expression  :   term {
             |   prod_sum_stmt { $$ = $1; }
             ;
 
-term    :   identifier   { $$ = $1; }
+term    :   identifier   { $$ = $1; std::cout << "ID - " << $1 << std::endl; }
         |   number  {
                         if(($1).index() == 0)                        
                             $$ = to_string(std::get<0>($1));
@@ -206,6 +209,7 @@ control :   PRODUCT { $$ = $1; }
 
 bound   :   term COMPARISON IDENTIFIER COMPARISON term  {
                                                             $$ = Bound($1, $2, $3, $4, $5);
+                                                            newBound($3, std::get<0>($1), std::get<0>($5));
                                                         }
         ;
     

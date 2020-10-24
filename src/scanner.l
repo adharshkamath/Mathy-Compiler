@@ -98,7 +98,7 @@ product          {
                 
                 }
 
-[1-9][0-9]* {
+[0-9]+ {
                 
                 uint64_t number = strtoull(yytext, 0, 10);
                 return mathy::Parser::make_INTCONST(number, mathy::location());

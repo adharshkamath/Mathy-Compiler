@@ -10,7 +10,7 @@ namespace mathy {
 
     int newVariable(const std::string &identifier);
 
-    int newBound(const std::string &identifier, int low, int high);
+    int newBound(const std::string &identifier, const std::string& low, const std::string& high);
 
     int addArrDimension(const std::string &identifier, int dimension);
 
@@ -21,6 +21,8 @@ namespace mathy {
     bool isBoundDeclared(const std::string &identifier);
 
     void printStuff();
+
+    void initOutput();
 
 } // namespace mathy
 

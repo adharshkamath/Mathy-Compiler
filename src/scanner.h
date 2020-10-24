@@ -41,15 +41,6 @@ namespace mathy {
                     std::istream istr(&fb);
                     this->switch_streams(&istr, NULL);
                     std::cout << "File changed" << std::endl;
-                    std::string test;
-                    istr >> test;
-                    std::cout << "Test : " << test << std::endl;
-                    istr >> test;
-                    std::cout << "Test : " << test << std::endl;
-                    istr >> test;
-                    std::cout << "Test : " << test << std::endl;
-                    istr >> test;
-                    std::cout << "Test : " << test << std::endl;
                     return 0;
                 } else {
                     std::cerr << "File " << files.names[files.current_file - 1] << " does not exist!" << std::endl;
