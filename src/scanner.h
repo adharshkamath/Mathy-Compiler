@@ -32,10 +32,8 @@ namespace mathy {
         virtual mathy::Parser::symbol_type get_next_token();
 
         int yywrap() {
-            std::cout << "yywrap called" << std::endl;
             std::filebuf fb;
             if (files.current_file > files.total_files_num) {
-                std::cout << "All files done!" << std::endl;
                 return -1;
             } else {
                 std::cout << files.names[files.current_file] << std::endl;
@@ -43,6 +41,9 @@ namespace mathy {
                     std::istream istr(&fb);
                     this->switch_streams(&istr, NULL);
                     std::cout << "File changed" << std::endl;
+                    std::string test;
+                    istr >> test;
+                    std::cout << "Test : " << test << std::endl;
                     return 0;
                 } else {
                     std::cerr << "File " << files.names[files.current_file - 1] << " does not exist!" << std::endl;

@@ -1,5 +1,5 @@
-forall(i) where 0<=i<=50 {
-    forall(j) where 0<=j<=50 {
+forall(g) where 0<=i<=50 {
+    forall(h) where 0<=j<=50 {
         r[i][j] = sigma(p[i][k] * q[k][j]) where 0<=k<=100
     }
 }

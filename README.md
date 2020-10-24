@@ -24,9 +24,5 @@ make parser     # for parser
 To remove files:
 
 ```
-make clean_all          # to delete all build files
-
-make clean_scanner      # to delete scanner related files
-
-make clean_parser       # to delete parser related files
+make clean         # to delete all build files
 ```
