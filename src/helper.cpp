@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <variant>
+#include <regex>
 #include "helper.h"
 
 namespace mathy {
@@ -15,14 +16,14 @@ namespace mathy {
         if (variable_table.find(identifier) != variable_table.end()) {
             return -1;
         }
-        if(bounds_table.find(identifier) != bounds_table.end()) {
+        if (bounds_table.find(identifier) != bounds_table.end()) {
             return -2;
         }
         variable_table[identifier] = std::vector<int>();
         return 0;
     }
 
-    int newBound(const std::string &identifier, const std::string& low, const std::string& high) {
+    int newBound(const std::string &identifier, const std::string &low, const std::string &high) {
         int ret = 0;
         if (bounds_table.find(identifier) != bounds_table.end()) {
             std::cout << "Warning: Bound variable re-used!" << std::endl;
@@ -61,20 +62,29 @@ namespace mathy {
             std::cout << x.first << std::endl;
         }
         for (auto x : bounds_table) {
-            std::cout << x.first << " - " << x.second.first << ":"  << x.second.second << std::endl;
+            std::cout << x.first << " - " << x.second.first << ":" << x.second.second << std::endl;
         }
         std::cout << "------ Final stuff ------" << std::endl;
     }
+
     void initOutput() {
         std::fstream output;
         output.open("output.c");
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
-            
+
         // Rest of the important stuff - Function call 
 
         output << std::endl << "return 0;" << std::endl << "}" << std::endl;
     }
+
+    void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
+        auto words_begin = std::sregex_iterator(str.begin(), str.end(), reg);
+        auto words_end = std::sregex_iterator();
+        for (std::sregex_iterator i = words_begin; i != words_end; ++i)
+            res.push_back((*i).str());
+    }
+
 } // namespace mathy
 
 using namespace mathy;
