@@ -6,7 +6,9 @@ CFLAGS = -std=c++17 -c
 
 CCFLAGS = -std=c++17 -Wall -O3 -g
 
-DEPS = compiler.o sigma_prod.o forall.o gen_node.o helper.o main.o
+OBJ = compiler.o sigma_prod.o forall.o gen_node.o helper.o
+
+MAIN = main
 
 SCANNER = scanner
 
@@ -20,9 +22,11 @@ OUTPUT = test
 
 .PHONY: all clean
 
-all: $(PARSER).o $(SCANNER).o $(DEPS)
+all: $(PARSER).o $(SCANNER).o $(OBJ) $(MAIN).o
 	$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
 
+$(MAIN).o: $(MAIN).cpp
+			$(CXX) $(CFLAGS) $^ -o $@
 
 $(SCANNER).o: $(SCANNER).l
 		$(LEX_TOOL) -o $(SCANNER).$(LANG) $(SCANNER).l
@@ -32,8 +36,8 @@ $(PARSER).o: $(PARSER).yy
 		$(PARSE_TOOL) -o $(PARSER).$(LANG) $(PARSER).yy
 		$(CXX) $(CFLAGS) $(PARSER).$(LANG) -o $@
 
-$(DEPS): %.o: %.cpp
-		$(CXX) $(CFLAGS) $^ -o $@
+$(OBJ): %.o: %.cpp %.h
+		$(CXX) $(CFLAGS) $< -o $@
 
 clean:
 	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh test compiler
