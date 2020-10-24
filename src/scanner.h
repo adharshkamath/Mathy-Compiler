@@ -48,6 +48,8 @@ namespace mathy {
                     std::cout << "Test : " << test << std::endl;
                     istr >> test;
                     std::cout << "Test : " << test << std::endl;
+                    istr >> test;
+                    std::cout << "Test : " << test << std::endl;
                     return 0;
                 } else {
                     std::cerr << "File " << files.names[files.current_file - 1] << " does not exist!" << std::endl;
