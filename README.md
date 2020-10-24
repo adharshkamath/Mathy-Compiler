@@ -14,12 +14,6 @@ Then
 ```
 Where type is one of *float*, *long* or *long_double*
 
-To build the scanner or parser individually:
-
-```
-make scanner    # for scanner
-
-make parser     # for parser
 ```
 To remove files:
 
