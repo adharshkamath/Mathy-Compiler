@@ -1,31 +1,39 @@
-all: parser scanner compiler sigma_prod forall gen_node helper main
-	g++ -std=c++17 -Wall -O3 -g main.o scanner.o parser.o compiler.o sigma_prod.o forall.o gen_node.o helper.o -o test -ll
+LANG = cpp
 
-main: main.cpp
-	  g++ -std=c++17 -c main.cpp -o main.o
+CXX = g++
 
-scanner: scanner.l
-		flex -o scanner.cpp scanner.l
-		g++ -std=c++17 -c scanner.cpp -o scanner.o
+CFLAGS = -std=c++17 -c
 
-parser: parser.yy
-		bison -o parser.cpp parser.yy
-		g++ -std=c++17 -c parser.cpp -o parser.o
+CCFLAGS = -std=c++17 -Wall -O3 -g
 
-compiler: compiler.cpp
-		  g++ -std=c++17 -c compiler.cpp -o compiler.o
+DEPS = compiler.o sigma_prod.o forall.o gen_node.o helper.o main.o
 
-sigma_prod: sigma_prod.cpp
-			g++ -std=c++17 -c sigma_prod.cpp -o sigma_prod.o
+SCANNER = scanner
 
-forall: forall.cpp
-		g++ -std=c++17 -c forall.cpp -o forall.o
+PARSER = parser
 
-gen_node: gen_node.cpp
-		  g++ -std=c++17 -c gen_node.cpp -o gen_node.o
+LEX_TOOL = flex
 
-helper: helper.cpp
-		g++ -std=c++17 -c helper.cpp -o helper.o
+PARSE_TOOL = bison
+
+OUTPUT = test
+
+.PHONY: all clean
+
+all: $(PARSER).o $(SCANNER).o $(DEPS)
+	$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
+
+
+$(SCANNER).o: $(SCANNER).l
+		$(LEX_TOOL) -o $(SCANNER).$(LANG) $(SCANNER).l
+		$(CXX) $(CFLAGS) $(SCANNER).$(LANG) -o $@
+
+$(PARSER).o: $(PARSER).yy
+		$(PARSE_TOOL) -o $(PARSER).$(LANG) $(PARSER).yy
+		$(CXX) $(CFLAGS) $(PARSER).$(LANG) -o $@
+
+$(DEPS): %.o: %.cpp
+		$(CXX) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh test compiler
