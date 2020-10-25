@@ -47,13 +47,14 @@ namespace mathy {
                 std::regex operands("[^+-/*]+");
                 splitTerms(bound, operands, ops);
                 int size = ops.size();
-                int location = 0;
+                int location = -1;
                 for(int i=0; i<size; i++) {
                     location += ops[i].length();
                     if(isNumber(ops[i])) {
                         res += ops[i];
                         if(location+1 < bound.length()) {
                             res += bound[location+1];
+                            location++;
                         }
                     }
                     else {
@@ -62,12 +63,14 @@ namespace mathy {
                             res += ops[i];
                             if(location+1 < bound.length()) {
                                 res += bound[location+1];
+                                location++;
                             }
                         }
                         else {
                             res += temp;
                             if(location+1 < bound.length()) {
                                 res += bound[location+1];
+                                location++;
                             }
                         }
                     }
@@ -99,7 +102,7 @@ namespace mathy {
         std::regex operands("[^+-/*]+");
         splitTerms(bound, operands, ops);
         int size = ops.size();
-        int location = 0;
+        int location = -1;
         for(int i=0; i<size; i++) {
             location += ops[i].length();
             if(isNumber(ops[i])) {
@@ -148,7 +151,7 @@ namespace mathy {
                 std::regex operands("[^+-/*]+");
                 splitTerms(bound, operands, ops);
                 int size = ops.size();
-                int location = 0;
+                int location = -1;
                 for(int i=0; i<size; i++) {
                     location += ops[i].length();
                     if(isNumber(ops[i])) {
@@ -156,6 +159,7 @@ namespace mathy {
                         if(location+1 < bound.length())
                         {
                             res += bound[location+1];
+                            location++;
                         }
                     }
                     else {
@@ -165,6 +169,7 @@ namespace mathy {
                             if(location+1 < bound.length())
                             {
                                 res += bound[location+1];
+                                location++;
                             }
                         }
                         else {
@@ -172,6 +177,7 @@ namespace mathy {
                             if(location+1 < bound.length())
                             {
                                 res += bound[location+1];
+                                location++;
                             }
                         }
                     }
