@@ -9,15 +9,14 @@
 
 int main(int argc, char *argv[]) {
     mathy::Compiler compiler;
-    std::string data_type = "float";
     int opt;
     while ((opt = getopt(argc, argv, "t:")) != -1) {
         if (opt == 't') {
             if (strcmp(optarg, "float") == 0);
             else if (strcmp(optarg, "double") == 0) {
-                data_type = optarg;
+                mathy::data_type = optarg;
             } else if (strcmp(optarg, "long_double") == 0) {
-                data_type = optarg;
+                mathy::data_type = optarg;
             } else {
                 std::cerr << "Invalid type " << optarg << " selected\n" << std::endl;
                 exit(1);

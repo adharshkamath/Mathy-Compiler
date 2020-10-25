@@ -9,6 +9,8 @@
 
 namespace mathy {
 
+    extern std::string data_type;
+
     int newVariable(const std::string &identifier);
 
     int newBound(const std::string &identifier, const std::string &low, const std::string &high);
@@ -34,6 +36,8 @@ namespace mathy {
     bool isVariableFinalized(const std::string& identifier);
 
     int finalizeVariable(const std::string& identifier);
+
+    void declareVars(std::fstream& output);
 
 } // namespace mathy
 

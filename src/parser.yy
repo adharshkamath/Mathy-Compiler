@@ -91,13 +91,21 @@
 
 %%
 
-program :   statements { printStuff(); initOutput(); };
+program :   statements  { 
+                            printStuff(); initOutput();  
+                        }
+        ;
 
-statements  :   statements statement { $1 = $2; }
+statements  :   statements statement    { 
+                                            $1 = $2; 
+                                        }
             |   %empty {  }
             ;
 
-statement   :   NEWLINE  {  }
+statement   :   NEWLINE { 
+                            
+                        }
+
             |   expression NEWLINE { 
                                         int temp = ($1).index(); 
                                         if(temp == 0) {

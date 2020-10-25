@@ -12,6 +12,7 @@
 namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string> > variable_table;
+    std::string data_type = "float";
 
     int newVariable(const std::string &identifier) {
         if (variable_table.find(identifier) != variable_table.end()) {
@@ -217,9 +218,11 @@ namespace mathy {
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
 
+        declareVars(output);
+
         // Rest of the important stuff - Function call 
 
-        output << std::endl << "return 0;" << std::endl << "}" << std::endl;
+        output << std::endl << "\treturn 0;" << std::endl << "}" << std::endl;
     }
 
     void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
@@ -236,6 +239,21 @@ namespace mathy {
 
     bool isString(const std::string& s) {
         return !isNumber(s);
+    }
+
+    void declareVars(std::fstream& output) {
+        output << "\t" << data_type << " ";
+        auto it = variable_table.begin();
+        for(it; it != variable_table.end(); it++) {
+            output << it->first;
+            for(auto& y : it->second) {
+                output << "[" << y << "]";
+            }
+            output << ", ";
+        }
+        long pos = output.tellp();
+        output.seekp(pos - 2);
+        output << ";" << std::endl;
     }
 
 } // namespace mathy
