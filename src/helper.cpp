@@ -230,11 +230,8 @@ namespace mathy {
     }
 
     bool isNumber(const std::string& s) {
-        if(s.empty() || std::isspace(s[0]) || std::isalpha(s[0])) 
-            return false ;
-        char * p ;
-        strtod(s.c_str(), &p) ;
-        return (*p == 0) ;
+        std::regex rgx("([0-9]+[+/*-])*[0-9]+");
+        return std::regex_match(s, rgx);
     }
 
     bool isString(const std::string& s) {

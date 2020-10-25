@@ -124,7 +124,8 @@ identifier  :   IDENTIFIER {
                                         unfinished_vars.push_back(current_id);
                                     }
                             } 
-                dimensions  { $$ = $1 + $3; if(std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) {
+                dimensions  { $$ = $1 + $3; if(isVariableFinalized(current_id) == 0 && 
+                                                std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) {
                                                 newVariable($1);
                                                 addArrDimension(current_id, $3);
                                             }
@@ -181,11 +182,21 @@ expression  :   term {
                                                 for(auto& var : unfinished_vars) {
                                                     finalizeVariable(var);
                                                 }
+                                                for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                                    if(isVariableFinalized(unfinished_vars[i])) {
+                                                        unfinished_vars.pop_back();
+                                                    }
+                                                }
                                             }
             |   forall_stmt { $$ = $1; }
             |   prod_sum_stmt   {   $$ = $1;
                                     for(auto& var : unfinished_vars) {
                                         finalizeVariable(var);
+                                    }
+                                    for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                        if(isVariableFinalized(unfinished_vars[i])) {
+                                            unfinished_vars.pop_back();
+                                        }
                                     }
                                 }
             ;
