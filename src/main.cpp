@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
             else if (strcmp(optarg, "double") == 0) {
                 mathy::data_type = optarg;
             } else if (strcmp(optarg, "long_double") == 0) {
-                mathy::data_type = optarg;
+                mathy::data_type = "long double";
             } else {
                 std::cerr << "Invalid type " << optarg << " selected\n" << std::endl;
                 exit(1);

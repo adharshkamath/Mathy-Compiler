@@ -57,6 +57,7 @@ namespace mathy {
                 }
             }
         }
+
         Bound() : lower(0), upper(10000), identifier("t") {
         }
     };

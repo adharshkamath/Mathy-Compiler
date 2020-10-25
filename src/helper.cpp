@@ -11,7 +11,7 @@
 
 namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
-    std::unordered_map <std::string, std::vector<std::string> > variable_table;
+    std::unordered_map <std::string, std::vector<std::string>> variable_table;
     std::string data_type = "float";
 
     int newVariable(const std::string &identifier) {
@@ -36,41 +36,38 @@ namespace mathy {
         return ret;
     }
 
-    std::string getBoundValue(const std::string& identifier) {
+    std::string getBoundValue(const std::string &identifier) {
         if (bounds_table.find(identifier) != bounds_table.end()) {
-            if(isNumber(bounds_table[identifier].second))
-            return bounds_table[identifier].second;
-            else
-            {
+            if (isNumber(bounds_table[identifier].second))
+                return bounds_table[identifier].second;
+            else {
                 std::string bound = bounds_table[identifier].second;
                 std::string res = "";
-                std::vector<std::string> ops;
+                std::vector <std::string> ops;
                 std::regex operands("[^+-/*]+");
                 splitTerms(bound, operands, ops);
                 int size = ops.size();
                 int location = -1;
-                for(int i=0; i<size; i++) {
+                for (int i = 0; i < size; i++) {
                     location += ops[i].length();
-                    if(isNumber(ops[i])) {
+                    if (isNumber(ops[i])) {
                         res += ops[i];
-                        if(location+1 < bound.length()) {
-                            res += bound[location+1];
+                        if (location + 1 < bound.length()) {
+                            res += bound[location + 1];
                             location++;
                         }
-                    }
-                    else {
+                    } else {
                         std::string temp = getBoundValue(ops[i]);
-                        if(temp.length() == 0) {
+                        if (temp.length() == 0) {
                             res += ops[i];
-                            if(location+1 < bound.length()) {
-                                res += bound[location+1];
+                            if (location + 1 < bound.length()) {
+                                res += bound[location + 1];
                                 location++;
                             }
-                        }
-                        else {
+                        } else {
                             res += temp;
-                            if(location+1 < bound.length()) {
-                                res += bound[location+1];
+                            if (location + 1 < bound.length()) {
+                                res += bound[location + 1];
                                 location++;
                             }
                         }
@@ -78,20 +75,20 @@ namespace mathy {
                 }
                 return res;
             }
-            
+
         }
         return "";
     }
 
     int addArrDimension(const std::string &identifier, std::string &bound) {
-        if(!isVariableDeclared(identifier)) return -1;
-        std::vector<std::string> ops;
+        if (!isVariableDeclared(identifier)) return -1;
+        std::vector <std::string> ops;
         std::replace(bound.begin(), bound.end(), ']', '_');
         std::replace(bound.begin(), bound.end(), '[', '_');
         std::regex operands("[^_]+");
         splitTerms(bound, operands, ops);
         int size = ops.size();
-        for(int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             addArrDimension_util(identifier, ops[i]);
         }
         return 0;
@@ -99,31 +96,29 @@ namespace mathy {
 
     int addArrDimension_util(const std::string &identifier, const std::string &bound) {
         std::string res = "";
-        std::vector<std::string> ops;
+        std::vector <std::string> ops;
         std::regex operands("[^+-/*]+");
         splitTerms(bound, operands, ops);
         int size = ops.size();
         int location = -1;
-        for(int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             location += ops[i].length();
-            if(isNumber(ops[i])) {
+            if (isNumber(ops[i])) {
                 res += ops[i];
-                if(location+1 < bound.length()) {
-                    char op = bound[location+1];
+                if (location + 1 < bound.length()) {
+                    char op = bound[location + 1];
                     res += op;
                 }
-            }
-            else {
+            } else {
                 std::string temp = getBoundValue(ops[i]);
-                if(temp.length() == 0) {
+                if (temp.length() == 0) {
                     res += ops[i];
-                    if(location+1 < bound.length())
-                    res += bound[location+1];
-                }
-                else {
+                    if (location + 1 < bound.length())
+                        res += bound[location + 1];
+                } else {
                     res += temp;
-                    if(location+1 < bound.length())
-                    res += bound[location+1];
+                    if (location + 1 < bound.length())
+                        res += bound[location + 1];
                 }
             }
         }
@@ -131,53 +126,47 @@ namespace mathy {
         return 0;
     }
 
-    bool isVariableFinalized(const std::string& identifier) {
-        if(!isVariableDeclared(identifier)) {
+    bool isVariableFinalized(const std::string &identifier) {
+        if (!isVariableDeclared(identifier)) {
             return false;
-        }
-        else {
+        } else {
             return !(std::any_of(variable_table[identifier].begin(), variable_table[identifier].end(), isString));
         }
     }
 
-    int finalizeVariable(const std::string& identifier) {
+    int finalizeVariable(const std::string &identifier) {
         bool check = std::none_of(variable_table[identifier].begin(), variable_table[identifier].end(), isString);
-        if(check) return 1;
+        if (check) return 1;
         else {
-            for(int j=0; j < variable_table[identifier].size(); j++) {
+            for (int j = 0; j < variable_table[identifier].size(); j++) {
                 std::string res = "";
-                std::vector<std::string> ops;
+                std::vector <std::string> ops;
                 auto bound = variable_table[identifier][j];
-                if(isNumber(bound)) continue;
+                if (isNumber(bound)) continue;
                 std::regex operands("[^+-/*]+");
                 splitTerms(bound, operands, ops);
                 int size = ops.size();
                 int location = -1;
-                for(int i=0; i<size; i++) {
+                for (int i = 0; i < size; i++) {
                     location += ops[i].length();
-                    if(isNumber(ops[i])) {
+                    if (isNumber(ops[i])) {
                         res += ops[i];
-                        if(location+1 < bound.length())
-                        {
-                            res += bound[location+1];
+                        if (location + 1 < bound.length()) {
+                            res += bound[location + 1];
                             location++;
                         }
-                    }
-                    else {
+                    } else {
                         std::string temp = getBoundValue(ops[i]);
-                        if(temp.length() == 0) {
+                        if (temp.length() == 0) {
                             res += ops[i];
-                            if(location+1 < bound.length())
-                            {
-                                res += bound[location+1];
+                            if (location + 1 < bound.length()) {
+                                res += bound[location + 1];
                                 location++;
                             }
-                        }
-                        else {
+                        } else {
                             res += temp;
-                            if(location+1 < bound.length())
-                            {
-                                res += bound[location+1];
+                            if (location + 1 < bound.length()) {
+                                res += bound[location + 1];
                                 location++;
                             }
                         }
@@ -201,7 +190,7 @@ namespace mathy {
         std::cout << "------ Final stuff ------" << std::endl;
         for (auto x : variable_table) {
             std::cout << x.first << " - ";
-            for(auto y : x.second) {
+            for (auto y : x.second) {
                 std::cout << y << " ";
             }
             std::cout << std::endl;
@@ -217,12 +206,12 @@ namespace mathy {
         output.open("output.c");
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
-
         declareVars(output);
+        output << "\t#pragma omp parallel\n\t{\n" << std::endl;
 
-        // Rest of the important stuff - Function call 
+        // Imp. stuff here
 
-        output << std::endl << "\treturn 0;" << std::endl << "}" << std::endl;
+        output << "\t}" << std::endl << "\treturn 0;" << std::endl << "}" << std::endl;
     }
 
     void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
@@ -232,21 +221,21 @@ namespace mathy {
             res.push_back((*i).str());
     }
 
-    bool isNumber(const std::string& s) {
+    bool isNumber(const std::string &s) {
         std::regex rgx("([0-9]+[+/*-])*[0-9]+");
         return std::regex_match(s, rgx);
     }
 
-    bool isString(const std::string& s) {
+    bool isString(const std::string &s) {
         return !isNumber(s);
     }
 
-    void declareVars(std::fstream& output) {
+    void declareVars(std::fstream &output) {
         output << "\t" << data_type << " ";
         auto it = variable_table.begin();
-        for(it; it != variable_table.end(); it++) {
+        for (it; it != variable_table.end(); it++) {
             output << it->first;
-            for(auto& y : it->second) {
+            for (auto &y : it->second) {
                 output << "[" << y << "]";
             }
             output << ", ";

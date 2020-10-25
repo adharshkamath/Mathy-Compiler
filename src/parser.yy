@@ -92,12 +92,12 @@
 %%
 
 program :   statements  { 
-                            printStuff(); initOutput();  
+                            printStuff(); initOutput();
                         }
         ;
 
 statements  :   statements statement    { 
-                                            $1 = $2; 
+                                            $1 = $2;
                                         }
             |   %empty {  }
             ;
