@@ -13,9 +13,9 @@ namespace mathy {
 
     int newBound(const std::string &identifier, const std::string &low, const std::string &high);
 
-    int addArrDimension(const std::string &identifier, int dimension);
-
-    int addArrDimension(const std::string &identifier, const std::string &bound);
+    int addArrDimension(const std::string &identifier, std::string &bound);
+    
+    int addArrDimension_util(const std::string &identifier, const std::string &bound);
 
     bool isVariableDeclared(const std::string &identifier);
 
@@ -26,6 +26,14 @@ namespace mathy {
     void printStuff();
 
     void initOutput();
+
+    bool isNumber(const std::string& s);
+
+    bool isString(const std::string& s);
+
+    bool isVariableFinalized(const std::string& identifier);
+
+    int finalizeVariable(const std::string& identifier);
 
 } // namespace mathy
 

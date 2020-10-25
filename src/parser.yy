@@ -46,7 +46,8 @@
     std::string current_id;
     GeneralNode* gen_ptr = NULL;
     SigmaProd* sp_ptr = NULL;
-    ForAll* for_ptr = NULL;    
+    ForAll* for_ptr = NULL;
+    std::vector<std::string> unfinished_vars, bound_ids;
 }
 
 %lex-param { mathy::Scanner &scanner }
@@ -116,11 +117,18 @@ statement   :   NEWLINE  {  }
             ;
 
 identifier  :   IDENTIFIER {
-                                current_id = $1; 
-                                std::cout << "New identifier " << current_id << std::endl;
-                                newVariable(current_id);
+                                current_id = $1;
+                                if(isVariableFinalized(current_id) == 0 && 
+                                        std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) 
+                                    {
+                                        unfinished_vars.push_back(current_id);
+                                    }
                             } 
-                dimensions   { $$ = $1 + $3; }
+                dimensions  { $$ = $1 + $3; if(std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) {
+                                                newVariable($1);
+                                                addArrDimension(current_id, $3);
+                                            }
+                            }
             ;
 
 dimensions  :   dimensions LEFTSQR offset RIGHTSQR { $$ = $1 + "[" + $3 + "]"; }
@@ -163,7 +171,6 @@ expression  :   term {
             |   identifier EQUALS expression { if($3.index() == 0) {
                                                     auto gen_str = std::get<0>($3);
                                                     $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                    std::cout << "ID =-= " << $1 << std::endl;
                                                 }
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);
@@ -171,12 +178,19 @@ expression  :   term {
                                                     auto temp = std::get_if<SigmaProd>(&$$);
                                                     temp->set_lhs($1);
                                                 }
+                                                for(auto& var : unfinished_vars) {
+                                                    finalizeVariable(var);
+                                                }
                                             }
             |   forall_stmt { $$ = $1; }
-            |   prod_sum_stmt { $$ = $1; }
+            |   prod_sum_stmt   {   $$ = $1;
+                                    for(auto& var : unfinished_vars) {
+                                        finalizeVariable(var);
+                                    }
+                                }
             ;
 
-term    :   identifier   { $$ = $1; std::cout << "ID - " << $1 << std::endl; }
+term    :   identifier   { $$ = $1; }
         |   number  {
                         if(($1).index() == 0)                        
                             $$ = to_string(std::get<0>($1));
@@ -188,7 +202,6 @@ term    :   identifier   { $$ = $1; std::cout << "ID - " << $1 << std::endl; }
 
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY statements RIGHTCURLY  { 
                                                                                                     $$ = ForAll($6, $8, $3);
-                                                                                                    std::cout << "Forall statement" << std::endl;
                                                                                                 }
             ;
 
@@ -199,7 +212,6 @@ prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound {
                                                                         else {
                                                                             $$ = SigmaProd($6, PRODUCT_NODE, $3);
                                                                         }
-                                                                        std::cout << "SP statement" << std::endl;
                                                                     }
                 ;
 
@@ -207,10 +219,14 @@ control :   PRODUCT { $$ = $1; }
         |   SIGMA { $$ = $1; }
         ;
 
-bound   :   term COMPARISON IDENTIFIER COMPARISON term  {
-                                                            $$ = Bound($1, $2, $3, $4, $5);
-                                                            newBound($3, std::get<0>($1), std::get<0>($5));
-                                                        }
+bound   :   expression COMPARISON IDENTIFIER COMPARISON expression  {   
+                                                                        auto l = std::get<0>($1); auto h = std::get<0>($5);
+                                                                        std::variant<std::string, double, int> low = l.expression;
+                                                                        std::variant<std::string, double, int> high = h.expression;
+                                                                        $$ = Bound(low, $2, $3, $4, high);
+                                                                        newBound($3, l.expression, h.expression);
+                                                                        bound_ids.push_back($3);
+                                                                    }
         ;
     
 %%
