@@ -6,10 +6,16 @@
 #include <unordered_map>
 #include <vector>
 #include <regex>
+#include "forall.h"
+#include "sigma_prod.h"
 
 namespace mathy {
 
     extern std::string data_type;
+
+    extern GeneralNode* gen_ptr;
+    extern SigmaProd* sp_ptr;
+    extern ForAll* for_ptr;
 
     int newVariable(const std::string &identifier);
 
@@ -38,6 +44,14 @@ namespace mathy {
     int finalizeVariable(const std::string &identifier);
 
     void declareVars(std::fstream &output);
+
+    void traverse(GeneralNode* genp);
+
+    void traverse(ForAll* genp);
+
+    void traverse(SigmaProd* genp);
+
+    void freeBound(const std::string& identifier);
 
 } // namespace mathy
 

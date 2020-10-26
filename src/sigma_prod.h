@@ -15,10 +15,16 @@ namespace mathy {
 
         SigmaProd() : GeneralNode(SIGMA_NODE), LHS(""), RHS("") {}
 
-        SigmaProd(Bound &bound, int type, std::variant <GeneralNode, ForAll, SigmaProd> rhs) :
+        SigmaProd(Bound &bound, int type, std::variant <GeneralNode, ForAll, SigmaProd, long int> rhs) :
                 GeneralNode(type, bound) {
             auto rhs_str = std::get_if<GeneralNode>(&rhs);
             this->RHS = rhs_str->expression;
+        }
+
+        SigmaProd(Bound &bound, int type, const std::string &rhs, const std::string &lhs) :
+                GeneralNode(type, bound) {
+            this->RHS = rhs;
+            this->LHS = lhs;
         }
 
         SigmaProd(Bound &bound, int type, const std::string &rhs) :
@@ -32,7 +38,7 @@ namespace mathy {
 
         void set_type(int type);
 
-        void gen_code(std::ofstream &file);
+        void gen_code(std::fstream &file);
     };
 } // namespace mathy
 

@@ -1,6 +1,7 @@
 #ifndef FORALL_H
 #define FORALL_H
 
+#include <iostream>
 #include <fstream>
 #include <variant>
 #include "gen_node.h"
@@ -13,9 +14,10 @@ namespace mathy {
         std::variant<GeneralNode *, ForAll *, SigmaProd *> child;
         std::string loop_var;
 
-        ForAll() : GeneralNode(FORALL_NODE) {}
+        ForAll() : GeneralNode(FORALL_NODE) {
+        }
 
-        ForAll(const Bound &bound, const std::variant<GeneralNode *, ForAll *, SigmaProd *> nest,
+        ForAll(const Bound &bound, const std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> nest,
                const std::string &id) {
             this->node_type = FORALL_NODE;
             this->loop_var = id;
@@ -46,7 +48,7 @@ namespace mathy {
 
         void set_child(SigmaProd &nest);
 
-        void gen_code(std::ofstream &file);
+        void gen_code(std::fstream &file);
     };
 
 } // namespace mathy

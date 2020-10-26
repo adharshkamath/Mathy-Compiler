@@ -14,7 +14,6 @@ Then
 ```
 Where type is one of *float*, *long* or *long_double*
 
-```
 To remove files:
 
 ```

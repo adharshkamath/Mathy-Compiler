@@ -21,20 +21,20 @@ namespace mathy {
         int node_type;
         Bound gen_bound;
         std::string expression;
-        std::variant<GeneralNode *, ForAll *, SigmaProd *> next;
+        std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> next;
 
         GeneralNode() : parent(false), node_type(EXPRN_NODE), gen_bound(), expression("") {}
 
         void make_parent();
 
-        void gen_code(std::ofstream &m_file);
+        void gen_code(std::fstream &m_file);
 
-        explicit GeneralNode(int type) : parent(false), node_type(type), gen_bound(), expression("") {}
+        explicit GeneralNode(int type) : parent(false), node_type(type), gen_bound(), expression("aaaaaaaaaa") {}
 
         GeneralNode(int type, const std::string &exprn) : parent(false), node_type(type), gen_bound(),
                                                           expression(exprn) {}
 
-        GeneralNode(int type, Bound &bound) : parent(false), node_type(type), gen_bound(bound), expression("") {}
+        GeneralNode(int type, Bound &bound) : parent(false), node_type(type), gen_bound(bound), expression("abc") {}
     };
 } // namespace mathy
 

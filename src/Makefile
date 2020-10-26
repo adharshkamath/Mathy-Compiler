@@ -22,7 +22,7 @@ PARSE_TOOL = bison
 
 OUTPUT = test
 
-.PHONY: all clean
+.PHONY: all clean rebuild
 
 all: $(PARSER).o $(SCANNER).o $(OBJ) $(MAIN).o
 	$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
@@ -42,5 +42,7 @@ $(OBJ): %.o: %.h %.cpp
 		$(CXX) $(CFLAGS) $*.cpp -o $@
 
 clean:
-	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh test compiler
+	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh output.c test compiler
 	rm -f *.o *.out *.s *.i *.gch
+
+rebuild: clean all

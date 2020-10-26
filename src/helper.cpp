@@ -13,6 +13,9 @@ namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string>> variable_table;
     std::string data_type = "float";
+    GeneralNode* gen_ptr = NULL;
+    SigmaProd* sp_ptr = NULL;
+    ForAll* for_ptr = NULL;
 
     int newVariable(const std::string &identifier) {
         if (variable_table.find(identifier) != variable_table.end()) {
@@ -37,6 +40,7 @@ namespace mathy {
     }
 
     std::string getBoundValue(const std::string &identifier) {
+        if(isNumber(identifier)) return identifier;
         if (bounds_table.find(identifier) != bounds_table.end()) {
             if (isNumber(bounds_table[identifier].second))
                 return bounds_table[identifier].second;
@@ -103,7 +107,7 @@ namespace mathy {
         int location = -1;
         for (int i = 0; i < size; i++) {
             location += ops[i].length();
-            if (isNumber(ops[i])) {
+            if (isNumber(ops[i]) && getBoundValue(ops[i]) == ops[i]) {
                 res += ops[i];
                 if (location + 1 < bound.length()) {
                     char op = bound[location + 1];
@@ -130,26 +134,38 @@ namespace mathy {
         if (!isVariableDeclared(identifier)) {
             return false;
         } else {
-            return !(std::any_of(variable_table[identifier].begin(), variable_table[identifier].end(), isString));
+                bool flag = true;
+                for(auto& x : variable_table[identifier]) {
+                    auto temp = getBoundValue(x);
+                    if(!(temp.compare(x) == 0 && isNumber(x))) 
+                        flag = false;
+                }
+            return flag;
         }
     }
 
     int finalizeVariable(const std::string &identifier) {
-        bool check = std::none_of(variable_table[identifier].begin(), variable_table[identifier].end(), isString);
-        if (check) return 1;
+        bool flag = true;
+        for(auto& x : variable_table[identifier]) {
+            auto temp = getBoundValue(x);
+            if(!(temp.compare(x) == 0 && isNumber(x))) 
+                flag = false;
+        }
+        if(flag)
+            return 1;
         else {
             for (int j = 0; j < variable_table[identifier].size(); j++) {
                 std::string res = "";
                 std::vector <std::string> ops;
                 auto bound = variable_table[identifier][j];
-                if (isNumber(bound)) continue;
+                if (isNumber(bound) && bound.compare(getBoundValue(bound)) == 0) continue;
                 std::regex operands("[^+-/*]+");
                 splitTerms(bound, operands, ops);
                 int size = ops.size();
                 int location = -1;
                 for (int i = 0; i < size; i++) {
                     location += ops[i].length();
-                    if (isNumber(ops[i])) {
+                    if (isNumber(ops[i])&& getBoundValue(ops[i]).compare(ops[i])) {
                         res += ops[i];
                         if (location + 1 < bound.length()) {
                             res += bound[location + 1];
@@ -210,6 +226,21 @@ namespace mathy {
         output << "\t#pragma omp parallel\n\t{\n" << std::endl;
 
         // Imp. stuff here
+        if(gen_ptr != NULL) {
+            std::cout << "GEN PRG" << std::endl;
+            traverse(gen_ptr);
+        }
+        else if(for_ptr != NULL) {
+            std::cout << "FOR PRG" << std::endl;
+            traverse(for_ptr);
+        }
+        else if(sp_ptr != NULL) {
+            std::cout << "SIP PRG" << std::endl;
+            // traverse(sp_ptr);
+        }
+        else {
+            std::cout << "ERROR Program is NULL" << std::endl;
+        }
 
         output << "\t}" << std::endl << "\treturn 0;" << std::endl << "}" << std::endl;
     }
@@ -243,6 +274,90 @@ namespace mathy {
         long pos = output.tellp();
         output.seekp(pos - 2);
         output << ";" << std::endl;
+    }
+
+    void traverse(GeneralNode* genp) {
+        if(genp == NULL) {
+            std::cout << "NULLL GEN P " << std::endl;
+            return;
+        } 
+        std::cout << "GEN NODE" << std::endl;
+        int tt = (genp->next).index();
+        if(tt == 0) {
+            auto t = std::get<0>(genp->next);
+            std::cout << "-----" << t << std::endl;
+            if(t != 0)
+            traverse(t);
+        }
+        else if(tt == 1) {
+            auto t = std::get<1>(genp->next);
+            if(t != 0)
+            traverse(t);
+        }
+        else if(tt == 2) {
+            auto t = std::get<2>(genp->next);
+            if(t != 0)
+            traverse(t);
+        }
+    }
+
+    void traverse(ForAll* genp) {
+        std::cout << "FOR NODE" << std::endl;
+
+        int ttt = (genp->child).index();
+        if(ttt == 0) {
+            auto tr = std::get<0>(genp->child);
+            traverse(tr);
+        }
+        else if(ttt == 1) {
+            auto tr = std::get<1>(genp->child);
+            traverse(tr);
+        }
+        else if(ttt == 2) {
+            auto tr = std::get<2>(genp->child);
+            traverse(tr);
+        }
+
+        int tt = (genp->next).index();
+        if(tt == 0) {
+            auto t = std::get<0>(genp->next);
+            traverse(t);
+        }
+        else if(tt == 1) {
+            auto t = std::get<1>(genp->next);
+            traverse(t);
+        }
+        else if(tt == 2) {
+            auto t = std::get<2>(genp->next);
+            traverse(t);
+        }
+    }
+
+    void traverse(SigmaProd* genp) {
+        std::cout << "SP NODE" << std::endl;
+        int tt = (genp->next).index();
+        if(tt == 0) {
+            auto t = std::get<0>(genp->next);
+            traverse(t);
+        }
+        else if(tt == 1) {
+            auto t = std::get<1>(genp->next);
+            traverse(t);
+        }
+        else if(tt == 2) {
+            auto t = std::get<2>(genp->next);
+            traverse(t);
+        }
+    }
+
+    void freeBound(const std::string& identifier) {
+        if(!(isBoundDeclared(identifier))) {
+            return;
+        }
+        else 
+        bounds_table[identifier].first = "";
+        bounds_table[identifier].second = "";
+        return;
     }
 
 } // namespace mathy

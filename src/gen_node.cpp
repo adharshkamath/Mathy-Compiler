@@ -12,19 +12,25 @@ void GeneralNode::make_parent() {
     this->parent = true;
 }
 
-void GeneralNode::gen_code(std::ofstream &m_file) {
+void GeneralNode::gen_code(std::fstream &m_file) {
     if (this->node_type == EXPRN_NODE) {
+    std::cout << "Gen node |-" << this->expression << "-|" << std::endl;
         m_file << this->expression << std::endl;
-        if (this->next.index() == 0) {
+        if ((this->next).index() == 0) {
             auto temp = std::get<0>(this->next);
+            std::cout << "if Gen node |-" << this->expression << "-|" << std::endl;
             temp->gen_code(m_file);
-        } else if (this->next.index() == 1) {
+        } else if ((this->next).index() == 1) {
             auto temp = std::get<1>(this->next);
             temp->gen_code(m_file);
-        } else if (this->next.index() == 2) {
+        } else if ((this->next).index() == 2) {
             auto temp = std::get<2>(this->next);
             temp->gen_code(m_file);
         }
     }
-    std::cout << "ERROR: Tried to generate code from a non expression general node!" << std::endl;
+    else {
+        std::cout << "ERROR: Tried to generate code from a non expression general node! Type " << this->node_type << std::endl;
+    }
+    return;
+    
 }

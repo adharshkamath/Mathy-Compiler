@@ -44,9 +44,6 @@
         return scanner.get_next_token();
     }
     std::string current_id;
-    GeneralNode* gen_ptr = NULL;
-    SigmaProd* sp_ptr = NULL;
-    ForAll* for_ptr = NULL;
     std::vector<std::string> unfinished_vars, bound_ids;
 }
 
@@ -81,8 +78,8 @@
 %token COMMA;
 
 %type<std::string> control identifier offset_type offset dimensions
-%type< std::variant<GeneralNode, ForAll, SigmaProd> > expression
-%type< std::variant<GeneralNode*, ForAll*, SigmaProd*> > program statement statements
+%type< std::variant<GeneralNode, ForAll, SigmaProd, long int> > expression
+%type< std::variant<GeneralNode*, ForAll*, SigmaProd*, long int> > program statement statements
 %type<ForAll> forall_stmt
 %type<SigmaProd> prod_sum_stmt
 %type<Bound> bound
@@ -92,18 +89,66 @@
 %%
 
 program :   statements  { 
-                            printStuff(); initOutput();
+                            printStuff(); 
+                            int idxn = ($1).index();
+                            if(idxn == 0) {
+                                mathy::gen_ptr = std::get<0>($1);
+                                $$ = mathy::gen_ptr;
+                            }
+                            else if(idxn == 1) {
+                                mathy::for_ptr = std::get<1>($1);
+                                $$ = mathy::for_ptr;
+                            }
+                            else if(idxn == 2) {
+                                mathy::sp_ptr = std::get<2>($1);
+                                $$ = mathy::sp_ptr;
+                            }
+                            initOutput();
                         }
         ;
 
-statements  :   statements statement    { 
-                                            $1 = $2;
+statements  :   statements statement    {
+                                            int idx = ($1).index();
+                                            if(idx == 0) {
+                                                auto temp = std::get<0>($1);
+                                                if(temp == 0) {
+                                                    $1 = $2;
+                                                }
+                                                else {
+                                                    temp->next = $2;
+                                                }
+                                                $$ = $1;
+                                            }
+                                            else if(idx == 1) {
+                                                auto temp = std::get<1>($1);
+                                                if(temp == 0) {
+                                                    $1 = $2;
+                                                }
+                                                else {
+                                                    temp->next = $2;
+                                                }
+                                                $$ = $1;
+                                            }
+                                            else if(idx == 2) {
+                                               auto temp = std::get<2>($1);
+                                                if(temp == 0) {
+                                                    $1 = $2;
+                                                }
+                                                else {
+                                                    temp->next = $2;
+                                                    std::cout <<"huhh" << std::endl;
+                                                }
+                                                $$ = $1;
+                                                std::cout << ($2).index() << std::endl;
+                                            }
                                         }
             |   %empty {  }
             ;
 
 statement   :   NEWLINE { 
-                            
+                            auto temp = GeneralNode(EXPRN_NODE, "EMPTY");
+                            temp.next = NULL;
+                            $$ = &(temp);
                         }
 
             |   expression NEWLINE { 
@@ -183,29 +228,46 @@ expression  :   term {
                                                 }
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);
-                                                    $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS);
-                                                    auto temp = std::get_if<SigmaProd>(&$$);
-                                                    temp->set_lhs($1);
+                                                    $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
                                                 }
                                                 for(auto& var : unfinished_vars) {
                                                     finalizeVariable(var);
                                                 }
                                                 for(int i=unfinished_vars.size()-1; i>=0; i--) {
                                                     if(isVariableFinalized(unfinished_vars[i])) {
-                                                        unfinished_vars.pop_back();
+                                                        unfinished_vars.erase(unfinished_vars.begin() + i);
+                                                    }
+                                                }
+                                                for(auto& var : unfinished_vars) {
+                                                    finalizeVariable(var);
+                                                }
+                                                for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                                    if(isVariableFinalized(unfinished_vars[i])) {
+                                                        unfinished_vars.erase(unfinished_vars.begin() + i);
                                                     }
                                                 }
                                             }
-            |   forall_stmt { $$ = $1; }
+            |   forall_stmt {   $$ = $1;
+                                for(auto& var : unfinished_vars) {
+                                    finalizeVariable(var);
+                                }
+                                for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                    if(isVariableFinalized(unfinished_vars[i])) {
+                                        unfinished_vars.erase(unfinished_vars.begin() + i);
+                                    }
+                                }
+                                freeBound($1.gen_bound.identifier);
+                            }
             |   prod_sum_stmt   {   $$ = $1;
                                     for(auto& var : unfinished_vars) {
                                         finalizeVariable(var);
                                     }
                                     for(int i=unfinished_vars.size()-1; i>=0; i--) {
                                         if(isVariableFinalized(unfinished_vars[i])) {
-                                            unfinished_vars.pop_back();
+                                            unfinished_vars.erase(unfinished_vars.begin() + i);
                                         }
                                     }
+                                    freeBound($1.gen_bound.identifier);
                                 }
             ;
 
@@ -219,13 +281,13 @@ term    :   identifier   { $$ = $1; }
                     }
         ;
 
-forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY statements RIGHTCURLY  { 
+forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY statements RIGHTCURLY  {
                                                                                                     $$ = ForAll($6, $8, $3);
                                                                                                 }
             ;
 
 prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound {    
-                                                                        if($1.compare("sigma")) {
+                                                                        if($1.compare("sigma") == 0) {
                                                                             $$ = SigmaProd($6, SIGMA_NODE, $3);
                                                                         }
                                                                         else {
@@ -240,9 +302,7 @@ control :   PRODUCT { $$ = $1; }
 
 bound   :   expression COMPARISON IDENTIFIER COMPARISON expression  {   
                                                                         auto l = std::get<0>($1); auto h = std::get<0>($5);
-                                                                        std::variant<std::string, double, int> low = l.expression;
-                                                                        std::variant<std::string, double, int> high = h.expression;
-                                                                        $$ = Bound(low, $2, $3, $4, high);
+                                                                        $$ = Bound(l.expression, $2, $3, $4, h.expression);
                                                                         newBound($3, l.expression, h.expression);
                                                                         bound_ids.push_back($3);
                                                                     }
