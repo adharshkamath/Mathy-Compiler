@@ -14,11 +14,9 @@ void GeneralNode::make_parent() {
 
 void GeneralNode::gen_code(std::fstream &m_file) {
     if (this->node_type == EXPRN_NODE) {
-    std::cout << "Gen node |-" << this->expression << "-|" << std::endl;
         m_file << this->expression << std::endl;
         if ((this->next).index() == 0) {
             auto temp = std::get<0>(this->next);
-            std::cout << "if Gen node |-" << this->expression << "-|" << std::endl;
             temp->gen_code(m_file);
         } else if ((this->next).index() == 1) {
             auto temp = std::get<1>(this->next);
@@ -26,6 +24,8 @@ void GeneralNode::gen_code(std::fstream &m_file) {
         } else if ((this->next).index() == 2) {
             auto temp = std::get<2>(this->next);
             temp->gen_code(m_file);
+        } else if ((this->next).index() == 3) {
+            return;
         }
     }
     else {

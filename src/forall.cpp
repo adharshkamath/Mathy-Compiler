@@ -18,7 +18,6 @@ void ForAll::set_child(SigmaProd &nest) {
 }
 
 void ForAll::gen_code(std::fstream &m_file) {
-    std::cout << "For node |-" << this->expression << "-|" << std::endl;
     m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; " << this->gen_bound.identifier;
     m_file << "<= " << this->gen_bound.upper << "; " << this->gen_bound.identifier << "++) {" << std::endl;
     m_file << this->expression << std::endl;
@@ -44,5 +43,7 @@ void ForAll::gen_code(std::fstream &m_file) {
     } else if (this->next.index() == 2) {
         auto temp = std::get<2>(this->next);
         temp->gen_code(m_file);
+    } else if (this->next.index() == 3) {
+        return;
     }
 }

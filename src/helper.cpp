@@ -227,16 +227,13 @@ namespace mathy {
 
         // Imp. stuff here
         if(gen_ptr != NULL) {
-            std::cout << "GEN PRG" << std::endl;
             traverse(gen_ptr);
         }
         else if(for_ptr != NULL) {
-            std::cout << "FOR PRG" << std::endl;
             traverse(for_ptr);
         }
         else if(sp_ptr != NULL) {
-            std::cout << "SIP PRG" << std::endl;
-            // traverse(sp_ptr);
+            traverse(sp_ptr);
         }
         else {
             std::cout << "ERROR Program is NULL" << std::endl;
@@ -277,10 +274,6 @@ namespace mathy {
     }
 
     void traverse(GeneralNode* genp) {
-        if(genp == NULL) {
-            std::cout << "NULLL GEN P " << std::endl;
-            return;
-        } 
         std::cout << "GEN NODE" << std::endl;
         int tt = (genp->next).index();
         if(tt == 0) {
@@ -299,11 +292,14 @@ namespace mathy {
             if(t != 0)
             traverse(t);
         }
+        else if(tt == 3) {
+            std::cout << "Null next of gen" << std::endl;
+            return;
+        }
     }
 
     void traverse(ForAll* genp) {
         std::cout << "FOR NODE" << std::endl;
-
         int ttt = (genp->child).index();
         if(ttt == 0) {
             auto tr = std::get<0>(genp->child);
@@ -317,7 +313,10 @@ namespace mathy {
             auto tr = std::get<2>(genp->child);
             traverse(tr);
         }
-
+        else if(ttt == 3) {
+            std::cout << "Null child of gen" << std::endl;
+            return;
+        }
         int tt = (genp->next).index();
         if(tt == 0) {
             auto t = std::get<0>(genp->next);
@@ -330,6 +329,10 @@ namespace mathy {
         else if(tt == 2) {
             auto t = std::get<2>(genp->next);
             traverse(t);
+        }
+        else if(tt == 3) {
+            std::cout << "Null next of for" << std::endl;
+            return;
         }
     }
 
@@ -347,6 +350,10 @@ namespace mathy {
         else if(tt == 2) {
             auto t = std::get<2>(genp->next);
             traverse(t);
+        }
+        else if(tt == 3) {
+            std::cout << "Null next of sp" << std::endl;
+            return;
         }
     }
 
