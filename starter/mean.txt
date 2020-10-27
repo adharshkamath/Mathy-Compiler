@@ -1,0 +1,3 @@
+sum = sigma(a[i]) where 0<=i<=100
+
+sum = sum/100

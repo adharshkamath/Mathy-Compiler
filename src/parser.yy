@@ -304,6 +304,7 @@ expression  :   term {
             |   identifier EQUALS expression { if($3.index() == 0) {
                                                     auto gen_str = std::get<0>($3);
                                                     $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                    mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
                                                 }
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);

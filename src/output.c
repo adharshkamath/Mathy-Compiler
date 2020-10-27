@@ -4,19 +4,16 @@
 
 int main()
 {
-    float b[100 + 1][50 + 1] = { 1 }, a[50 + 1][100 + 1] = { 1 }, c[50 + 1][50 + 1] = { 1 };
+    float a[100 + 1] = { 0 }, sum = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp parallel for
-        for (int i = 0; i <= 50; i++) {
-            for (int j = 0; j <= 50; j++) {
-                for (int k = 0; k <= 100; k++) {
-                    c[i][j] += a[i][k] * b[k][j];
-                }
-
-            }
+        for (int i = 0; i <= 100; i++) {
+            sum += a[i];
         }
+
+        sum = sum / 100;
     }
     return 0;
 }
