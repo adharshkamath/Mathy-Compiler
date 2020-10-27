@@ -77,7 +77,7 @@
 %token SEMICOLON;
 %token COMMA;
 
-%type<std::string> control identifier offset_type offset dimensions
+%type<std::string> control identifier offset_type offset dimensions final
 %type< std::variant<GeneralNode, ForAll, SigmaProd, long int> > expression
 %type< std::variant<GeneralNode*, ForAll*, SigmaProd*, long int> > program statement statements
 %type<ForAll> forall_stmt
@@ -145,13 +145,17 @@ statements  :   statements statement    {
             |   %empty {  }
             ;
 
+final       :   NEWLINE { $$ = $1; }
+            |   END {  }
+            ;
+
 statement   :   NEWLINE { 
                             auto temp = GeneralNode(EXPRN_NODE, "EMPTY");
                             temp.next = NULL;
                             $$ = &(temp);
                         }
 
-            |   expression NEWLINE { 
+            |   expression final { 
                                         int temp = ($1).index(); 
                                         if(temp == 0) {
                                             auto gen_temp = std::get<0>($1);

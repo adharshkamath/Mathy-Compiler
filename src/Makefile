@@ -50,7 +50,7 @@ $(OBJ): %.o: %.h %.cpp
 
 clean:
 	@rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh output.c test compiler
-	@rm -f *.o *.out *.s *.i *.gch
+	@rm -f *.o *.out *.s *.i *.gch *.output
 
 rebuild: clean all
 

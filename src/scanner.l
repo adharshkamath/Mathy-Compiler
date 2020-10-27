@@ -28,9 +28,7 @@ LEFTCURLY   \{
 RIGHTCURLY  \}
 LEFTSQR     \[
 RIGHTSQR    \]
-SEMICOLON   ;
 EQUALS      =
-COMMA       ,
 WHITESPACE  [ \t\v\f]
 INTCONST    [0-9]+
 FLOATCONST  [1-9][0-9]*(\.[0-9]+)?|0(\.[0-9]+)?
@@ -88,16 +86,8 @@ WILDCARD    .
                     return mathy::Parser::make_RIGHTSQR(mathy::location());
                 }
 
-{SEMICOLON}     {
-                    return mathy::Parser::make_SEMICOLON(mathy::location());
-                }
-
 {EQUALS}        {
                     return mathy::Parser::make_EQUALS(yytext, mathy::location());
-                }
-            
-{COMMA}         {
-                    return mathy::Parser::make_COMMA(mathy::location());
                 }
             
 {WHITESPACE}    {    }
