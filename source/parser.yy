@@ -196,7 +196,6 @@ statements  :   statements statement    {
                                                         auto t2v = std::get<2>(current_stmt);
                                                         t_type->next = t2v;
                                                     }
-                                                    std::cout <<"huhh" << std::endl;
                                                 }
                                                 $$ = $1;
                                             }
@@ -207,7 +206,6 @@ statements  :   statements statement    {
                                                     temp_stmt = current_stmt;
                                                 }
                                                 else {
-                                                    std::cout <<"huhh" << std::endl;
                                                 }
                                                 $$ = $1;
                                             }

@@ -13,6 +13,7 @@ namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string>> variable_table;
     std::string data_type = "float";
+    std::string output_name = "output";
     GeneralNode *gen_ptr = NULL;
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
@@ -222,7 +223,8 @@ namespace mathy {
 
     void initOutput() {
         std::fstream output;
-        output.open("output.c", std::ios::out);
+        mathy::output_name += std::string(".c");
+        output.open(output_name, std::ios::out);
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
         declareVars(output);

@@ -12,6 +12,7 @@
 namespace mathy {
 
     extern std::string data_type;
+    extern std::string output_name;
 
     extern GeneralNode *gen_ptr;
     extern SigmaProd *sp_ptr;

@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     mathy::Compiler compiler;
     int opt;
     extern bool success;
-    while ((opt = getopt(argc, argv, "t:")) != -1) {
+    while ((opt = getopt(argc, argv, "t:o:")) != -1) {
         if (opt == 't') {
             if (strcmp(optarg, "float") == 0);
             else if (strcmp(optarg, "double") == 0) {
@@ -22,7 +22,10 @@ int main(int argc, char *argv[]) {
                 std::cerr << "Invalid type " << optarg << " selected\n" << std::endl;
                 exit(1);
             }
-        } else {
+        } else if (opt == 'o') {
+            mathy::output_name = optarg;
+        }
+         else {
             std::cerr << "Usage: " << argv[0] << " [-t type] file(s)\n" << std::endl;
             exit(2);
         }
@@ -53,8 +56,10 @@ int main(int argc, char *argv[]) {
     int res = compiler.parse();
     fbuff.close();
     if(success) {
+        std::string cmd = std::string("indent -linux -l120 -i4 -nut ") + mathy::output_name;
+        const char *command = cmd.c_str();
         try {
-            system("indent -linux -l120 -i4 -nut output.c");
+            system(command);
         }
         catch (int error) {
             cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "
