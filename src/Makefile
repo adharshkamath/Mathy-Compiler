@@ -18,31 +18,41 @@ PARSER = parser
 
 LEX_TOOL = flex
 
-PARSE_TOOL = bison
+PARSE_TOOL = bison 
+
+BISON_DEBUG = -Wcounterexamples --report=itemset
 
 OUTPUT = test
 
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild install
 
 all: $(PARSER).o $(SCANNER).o $(OBJ) $(MAIN).o
-	$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
+	@echo "\n----- Putting it all together -----"
+	@$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
+	@echo "\nExecutable \"$(OUTPUT)\" ready!"
 
 $(MAIN).o: $(MAIN).cpp $(patsubst %, %.h, $(ADD_HEADERS))
-			$(CXX) $(CFLAGS) $< -o $@
+			@$(CXX) $(CFLAGS) $< -o $@
 
 $(SCANNER).o: $(SCANNER).l $(SCANNER).h $(patsubst %, %.h, $(ADD_HEADERS))
-		$(LEX_TOOL) -o $(SCANNER).$(LANG) $(SCANNER).l
-		$(CXX) $(CFLAGS) $(SCANNER).$(LANG) -o $@
+		@echo "\n----- Building lexer -----"
+		@$(LEX_TOOL) -o $(SCANNER).$(LANG) $(SCANNER).l
+		@$(CXX) $(CFLAGS) $(SCANNER).$(LANG) -o $@
+		@echo "\n----- Building utilitites -----"
 
 $(PARSER).o: $(PARSER).yy $(patsubst %, %.h, $(ADD_HEADERS))
-		$(PARSE_TOOL) -o $(PARSER).$(LANG) $(PARSER).yy
-		$(CXX) $(CFLAGS) $(PARSER).$(LANG) -o $@
+		@echo "----- Building parser -----"
+		@$(PARSE_TOOL) $(BISON_DEBUG) -o $(PARSER).$(LANG) $(PARSER).yy
+		@$(CXX) $(CFLAGS) $(PARSER).$(LANG) -o $@
 
 $(OBJ): %.o: %.h %.cpp
-		$(CXX) $(CFLAGS) $*.cpp -o $@
+		@$(CXX) $(CFLAGS) $*.cpp -o $@
 
 clean:
-	rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh output.c test compiler
-	rm -f *.o *.out *.s *.i *.gch
+	@rm -f scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh output.c test compiler
+	@rm -f *.o *.out *.s *.i *.gch
 
 rebuild: clean all
+
+install: all 
+		@rm -f *.o *.out *.s *.i *.gch *.output scanner.cpp parser.cpp parser.hpp location.hh position.hh stack.hh

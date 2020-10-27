@@ -281,9 +281,22 @@ term    :   identifier   { $$ = $1; }
                     }
         ;
 
-forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY statements RIGHTCURLY  {
-                                                                                                    $$ = ForAll($6, $8, $3);
-                                                                                                }
+forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
+                                                                                                            $$ = ForAll($6, $9, $3);
+                                                                                                            int temp = ($9).index(); 
+                                                                                                            if(temp == 0) {
+                                                                                                                auto gen_temp = std::get<0>($9);
+                                                                                                                std::cout << "gen child = " << gen_temp << std::endl;
+                                                                                                            } 
+                                                                                                            else if(temp == 1) {
+                                                                                                                auto gen_temp = std::get<1>($9);
+                                                                                                                std::cout << "for child = " << gen_temp << std::endl;
+                                                                                                            } 
+                                                                                                            else if(temp == 2) {
+                                                                                                                auto gen_temp = std::get<2>($9);
+                                                                                                                std::cout << "sp child = " << gen_temp << std::endl;
+                                                                                                            } 
+                                                                                                        }
             ;
 
 prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound {    
