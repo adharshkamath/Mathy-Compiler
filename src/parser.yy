@@ -364,6 +364,19 @@ term    :   identifier   { $$ = $1; }
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
                                                                                                             $$ = ForAll($6, $9, $3);
                                                                                                             mathy::current_node = ForAll($6, mathy::current_stmt, $3);
+                                                                                                            int tl = (mathy::current_stmt).index();
+                                                                                                            if(tl == 0) {
+                                                                                                                auto tk = std::get<0>(mathy::current_stmt);
+                                                                                                                tk->parent = false;
+                                                                                                            }
+                                                                                                            else if(tl == 1) {
+                                                                                                                auto tk = std::get<1>(mathy::current_stmt);
+                                                                                                                tk->parent = false;
+                                                                                                            }
+                                                                                                            else if(tl == 2) {
+                                                                                                                auto tk = std::get<2>(mathy::current_stmt);
+                                                                                                                tk->parent = false;
+                                                                                                            }
                                                                                                         }
             ;
 
