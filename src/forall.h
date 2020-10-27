@@ -18,7 +18,7 @@ namespace mathy {
         }
 
         ForAll(const Bound &bound, const std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> nest,
-               const std::string &id)  : GeneralNode(FORALL_NODE), child(NULL) {
+               const std::string &id) : GeneralNode(FORALL_NODE), child(NULL) {
             this->node_type = FORALL_NODE;
             this->loop_var = id;
             this->gen_bound = bound;
@@ -37,7 +37,7 @@ namespace mathy {
             }
         }
 
-        explicit ForAll(const Bound &bound)  : GeneralNode(FORALL_NODE), child(NULL) {
+        explicit ForAll(const Bound &bound) : GeneralNode(FORALL_NODE), child(NULL) {
             this->node_type = FORALL_NODE;
             this->gen_bound = bound;
         }

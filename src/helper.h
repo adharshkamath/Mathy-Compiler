@@ -13,9 +13,9 @@ namespace mathy {
 
     extern std::string data_type;
 
-    extern GeneralNode* gen_ptr;
-    extern SigmaProd* sp_ptr;
-    extern ForAll* for_ptr;
+    extern GeneralNode *gen_ptr;
+    extern SigmaProd *sp_ptr;
+    extern ForAll *for_ptr;
 
     int newVariable(const std::string &identifier);
 
@@ -45,13 +45,13 @@ namespace mathy {
 
     void declareVars(std::fstream &output);
 
-    void traverse(GeneralNode* genp);
+    void traverse(GeneralNode *genp);
 
-    void traverse(ForAll* genp);
+    void traverse(ForAll *genp);
 
-    void traverse(SigmaProd* genp);
+    void traverse(SigmaProd *genp);
 
-    void freeBound(const std::string& identifier);
+    void freeBound(const std::string &identifier);
 
 } // namespace mathy
 

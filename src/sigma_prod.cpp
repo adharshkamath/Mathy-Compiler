@@ -19,7 +19,8 @@ void SigmaProd::set_type(int type) {
 }
 
 void SigmaProd::gen_code(std::fstream &m_file) {
-    m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; " << this->gen_bound.identifier;
+    m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; "
+           << this->gen_bound.identifier;
     m_file << "<= " << this->gen_bound.upper << "; " << this->gen_bound.identifier << "++) {" << std::endl;
     std::string op = this->node_type == SIGMA_NODE ? " += " : " *= ";
     m_file << this->LHS << op << this->RHS << std::endl;

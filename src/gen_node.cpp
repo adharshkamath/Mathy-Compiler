@@ -27,10 +27,10 @@ void GeneralNode::gen_code(std::fstream &m_file) {
         } else if ((this->next).index() == 3) {
             return;
         }
-    }
-    else {
-        std::cout << "ERROR: Tried to generate code from a non expression general node! Type " << this->node_type << std::endl;
+    } else {
+        std::cout << "ERROR: Tried to generate code from a non expression general node! Type " << this->node_type
+                  << std::endl;
     }
     return;
-    
+
 }

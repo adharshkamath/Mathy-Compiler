@@ -40,6 +40,5 @@ unsigned int Compiler::location() const {
 }
 
 int mathy_FlexLexer::yywrap() {
-    std::cout << "----- Original yywrap() called -----" << std::endl;
     return 1;
 }

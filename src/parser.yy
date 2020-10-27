@@ -57,10 +57,10 @@
 %define api.token.prefix {TOKEN_}
 
 %token END 0
-%token <char> NEWLINE;
-%token <std::string> IDENTIFIER;
 %token <int> INTCONST;
 %token <double> FLOATCONST;
+%token <char> NEWLINE;
+%token <std::string> IDENTIFIER;
 %token <std::string> FORALL;
 %token <std::string> SIGMA;
 %token <std::string> WHERE;
@@ -103,7 +103,7 @@ program :   statements  {
                                 mathy::sp_ptr = std::get<2>($1);
                                 $$ = mathy::sp_ptr;
                             }
-                            initOutput();
+                            // initOutput();
                         }
         ;
 

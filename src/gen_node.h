@@ -29,12 +29,14 @@ namespace mathy {
 
         void gen_code(std::fstream &m_file);
 
-        explicit GeneralNode(int type) : parent(false), node_type(type), gen_bound(), expression("aaaaaaaaaa"), next(NULL) {}
+        explicit GeneralNode(int type) : parent(false), node_type(type), gen_bound(), expression("aaaaaaaaaa"),
+                                         next(NULL) {}
 
         GeneralNode(int type, const std::string &exprn) : parent(false), node_type(type), gen_bound(),
                                                           expression(exprn), next(NULL) {}
 
-        GeneralNode(int type, Bound &bound) : parent(false), node_type(type), gen_bound(bound), expression("abc"), next(NULL) {}
+        GeneralNode(int type, Bound &bound) : parent(false), node_type(type), gen_bound(bound), expression("abc"),
+                                              next(NULL) {}
     };
 } // namespace mathy
 

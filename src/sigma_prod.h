@@ -15,7 +15,7 @@ namespace mathy {
 
         SigmaProd() : GeneralNode(SIGMA_NODE), LHS(""), RHS("") {}
 
-        SigmaProd(Bound &bound, int type, std::variant <GeneralNode, ForAll, SigmaProd, long int> rhs) :
+        SigmaProd(Bound &bound, int type, std::variant<GeneralNode, ForAll, SigmaProd, long int> rhs) :
                 GeneralNode(type, bound) {
             auto rhs_str = std::get_if<GeneralNode>(&rhs);
             this->RHS = rhs_str->expression;

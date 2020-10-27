@@ -14,8 +14,8 @@ namespace mathy {
         std::string lower, upper;
         std::string identifier;
 
-        Bound(std::string& low, std::string &lower_comp, const std::string &id,
-              std::string &higher_comp, std::string& high) {
+        Bound(std::string &low, std::string &lower_comp, const std::string &id,
+              std::string &higher_comp, std::string &high) {
             this->identifier = id;
             if (lower_comp.compare("<=")) {
                 low.append("+1");
@@ -27,8 +27,7 @@ namespace mathy {
             this->upper = high;
         }
 
-        Bound()  {  }
+        Bound() {}
     };
 } // namespace mathy
-
 #endif

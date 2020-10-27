@@ -34,7 +34,5 @@ namespace mathy {
         Parser m_parser;
         unsigned int m_location;
     };
-
 } // namespace mathy
-
 #endif

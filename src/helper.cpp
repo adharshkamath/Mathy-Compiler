@@ -13,9 +13,9 @@ namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string>> variable_table;
     std::string data_type = "float";
-    GeneralNode* gen_ptr = NULL;
-    SigmaProd* sp_ptr = NULL;
-    ForAll* for_ptr = NULL;
+    GeneralNode *gen_ptr = NULL;
+    SigmaProd *sp_ptr = NULL;
+    ForAll *for_ptr = NULL;
 
     int newVariable(const std::string &identifier) {
         if (variable_table.find(identifier) != variable_table.end()) {
@@ -40,7 +40,7 @@ namespace mathy {
     }
 
     std::string getBoundValue(const std::string &identifier) {
-        if(isNumber(identifier)) return identifier;
+        if (isNumber(identifier)) return identifier;
         if (bounds_table.find(identifier) != bounds_table.end()) {
             if (isNumber(bounds_table[identifier].second))
                 return bounds_table[identifier].second;
@@ -134,24 +134,24 @@ namespace mathy {
         if (!isVariableDeclared(identifier)) {
             return false;
         } else {
-                bool flag = true;
-                for(auto& x : variable_table[identifier]) {
-                    auto temp = getBoundValue(x);
-                    if(!(temp.compare(x) == 0 && isNumber(x))) 
-                        flag = false;
-                }
+            bool flag = true;
+            for (auto &x : variable_table[identifier]) {
+                auto temp = getBoundValue(x);
+                if (!(temp.compare(x) == 0 && isNumber(x)))
+                    flag = false;
+            }
             return flag;
         }
     }
 
     int finalizeVariable(const std::string &identifier) {
         bool flag = true;
-        for(auto& x : variable_table[identifier]) {
+        for (auto &x : variable_table[identifier]) {
             auto temp = getBoundValue(x);
-            if(!(temp.compare(x) == 0 && isNumber(x))) 
+            if (!(temp.compare(x) == 0 && isNumber(x)))
                 flag = false;
         }
-        if(flag)
+        if (flag)
             return 1;
         else {
             for (int j = 0; j < variable_table[identifier].size(); j++) {
@@ -165,7 +165,7 @@ namespace mathy {
                 int location = -1;
                 for (int i = 0; i < size; i++) {
                     location += ops[i].length();
-                    if (isNumber(ops[i])&& getBoundValue(ops[i]).compare(ops[i])) {
+                    if (isNumber(ops[i]) && getBoundValue(ops[i]).compare(ops[i])) {
                         res += ops[i];
                         if (location + 1 < bound.length()) {
                             res += bound[location + 1];
@@ -226,16 +226,13 @@ namespace mathy {
         output << "\t#pragma omp parallel\n\t{\n" << std::endl;
 
         // Imp. stuff here
-        if(gen_ptr != NULL) {
+        if (gen_ptr != NULL) {
             traverse(gen_ptr);
-        }
-        else if(for_ptr != NULL) {
+        } else if (for_ptr != NULL) {
             traverse(for_ptr);
-        }
-        else if(sp_ptr != NULL) {
+        } else if (sp_ptr != NULL) {
             traverse(sp_ptr);
-        }
-        else {
+        } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
 
@@ -273,96 +270,83 @@ namespace mathy {
         output << ";" << std::endl;
     }
 
-    void traverse(GeneralNode* genp) {
+    void traverse(GeneralNode *genp) {
         std::cout << "GEN NODE" << std::endl;
         int tt = (genp->next).index();
-        if(tt == 0) {
+        if (tt == 0) {
             auto t = std::get<0>(genp->next);
             std::cout << "-----" << t << std::endl;
-            if(t != 0)
-            traverse(t);
-        }
-        else if(tt == 1) {
+            if (t != 0)
+                traverse(t);
+        } else if (tt == 1) {
             auto t = std::get<1>(genp->next);
-            if(t != 0)
-            traverse(t);
-        }
-        else if(tt == 2) {
+            if (t != 0)
+                traverse(t);
+        } else if (tt == 2) {
             auto t = std::get<2>(genp->next);
-            if(t != 0)
-            traverse(t);
-        }
-        else if(tt == 3) {
+            if (t != 0)
+                traverse(t);
+        } else if (tt == 3) {
             std::cout << "Null next of gen" << std::endl;
             return;
         }
     }
 
-    void traverse(ForAll* genp) {
+    void traverse(ForAll *genp) {
         std::cout << "FOR NODE" << std::endl;
         int ttt = (genp->child).index();
-        if(ttt == 0) {
+        if (ttt == 0) {
             auto tr = std::get<0>(genp->child);
             traverse(tr);
-        }
-        else if(ttt == 1) {
+        } else if (ttt == 1) {
             auto tr = std::get<1>(genp->child);
             traverse(tr);
-        }
-        else if(ttt == 2) {
+        } else if (ttt == 2) {
             auto tr = std::get<2>(genp->child);
             traverse(tr);
-        }
-        else if(ttt == 3) {
+        } else if (ttt == 3) {
             std::cout << "Null child of gen" << std::endl;
             return;
         }
         int tt = (genp->next).index();
-        if(tt == 0) {
+        if (tt == 0) {
             auto t = std::get<0>(genp->next);
             traverse(t);
-        }
-        else if(tt == 1) {
+        } else if (tt == 1) {
             auto t = std::get<1>(genp->next);
             traverse(t);
-        }
-        else if(tt == 2) {
+        } else if (tt == 2) {
             auto t = std::get<2>(genp->next);
             traverse(t);
-        }
-        else if(tt == 3) {
+        } else if (tt == 3) {
             std::cout << "Null next of for" << std::endl;
             return;
         }
     }
 
-    void traverse(SigmaProd* genp) {
+    void traverse(SigmaProd *genp) {
         std::cout << "SP NODE" << std::endl;
         int tt = (genp->next).index();
-        if(tt == 0) {
+        if (tt == 0) {
             auto t = std::get<0>(genp->next);
             traverse(t);
-        }
-        else if(tt == 1) {
+        } else if (tt == 1) {
             auto t = std::get<1>(genp->next);
             traverse(t);
-        }
-        else if(tt == 2) {
+        } else if (tt == 2) {
             auto t = std::get<2>(genp->next);
             traverse(t);
-        }
-        else if(tt == 3) {
+        } else if (tt == 3) {
             std::cout << "Null next of sp" << std::endl;
             return;
         }
     }
 
-    void freeBound(const std::string& identifier) {
-        if(!(isBoundDeclared(identifier))) {
+    void freeBound(const std::string &identifier) {
+        if (!(isBoundDeclared(identifier))) {
             return;
-        }
-        else 
-        bounds_table[identifier].first = "";
+        } else
+            bounds_table[identifier].first = "";
         bounds_table[identifier].second = "";
         return;
     }
