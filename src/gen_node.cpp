@@ -14,7 +14,7 @@ void GeneralNode::make_parent() {
 
 void GeneralNode::gen_code(std::fstream &m_file) {
     if (this->node_type == EXPRN_NODE) {
-        if(this->expression.length() > 0)
+        if (this->expression.length() > 0)
             m_file << this->expression << ";" << std::endl;
         if ((this->next).index() == 0) {
             auto temp = std::get<0>(this->next);

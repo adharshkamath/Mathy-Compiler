@@ -55,8 +55,9 @@ int main(int argc, char *argv[]) {
     try {
         system("indent -linux -l120 -i4 -nut output.c");
     }
-    catch(int error)    {
-        cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : " << endl << "sudo apt-get install indent" << endl;
+    catch (int error) {
+        cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "
+             << endl << "sudo apt-get install indent" << endl;
     }
     return res;
 }
