@@ -265,7 +265,7 @@ namespace mathy {
             for (auto &y : it->second) {
                 output << "[" << y << "]";
             }
-            output << ", ";
+            output << "= {1}, ";
         }
         long pos = output.tellp();
         output.seekp(pos - 2);
