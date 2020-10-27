@@ -30,6 +30,7 @@ all: $(PARSER).o $(SCANNER).o $(OBJ) $(MAIN).o
 	@echo "\n----- Putting it all together -----"
 	@$(CXX) $(CCFLAGS) $^ -o $(OUTPUT) -ll
 	@echo "\nExecutable \"$(OUTPUT)\" ready!"
+	@touch output.c
 
 $(MAIN).o: $(MAIN).cpp $(patsubst %, %.h, $(ADD_HEADERS))
 			@$(CXX) $(CFLAGS) $< -o $@

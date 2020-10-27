@@ -94,16 +94,19 @@ program :   statements  {
                             if(idxn == 0) {
                                 mathy::gen_ptr = std::get<0>($1);
                                 $$ = mathy::gen_ptr;
+                                mathy::gen_ptr = std::get<0>(temp_stmt);
                             }
                             else if(idxn == 1) {
                                 mathy::for_ptr = std::get<1>($1);
                                 $$ = mathy::for_ptr;
+                                mathy::for_ptr = std::get<1>(temp_stmt);
                             }
                             else if(idxn == 2) {
                                 mathy::sp_ptr = std::get<2>($1);
                                 $$ = mathy::sp_ptr;
+                                mathy::sp_ptr = std::get<2>(temp_stmt);
                             }
-                            // initOutput();
+                            initOutput();
                         }
         ;
 
@@ -111,48 +114,114 @@ statements  :   statements statement    {
                                             int idx = ($1).index();
                                             if(idx == 0) {
                                                 auto temp = std::get<0>($1);
+                                                auto t_type = std::get<0>(temp_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
                                                 else {
-                                                    temp->next = $2;
+                                                    int t1 = $2.index();
+                                                    if(t1 == 0) {
+                                                        auto t1v = std::get<0>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<0>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 1) {
+                                                        auto t1v = std::get<1>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<1>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 2) {
+                                                        auto t1v = std::get<2>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<2>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
                                                 }
                                                 $$ = $1;
                                             }
                                             else if(idx == 1) {
                                                 auto temp = std::get<1>($1);
+                                                auto t_type = std::get<1>(temp_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
                                                 else {
-                                                    temp->next = $2;
+                                                    int t1 = $2.index();
+                                                    if(t1 == 0) {
+                                                        auto t1v = std::get<0>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<0>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 1) {
+                                                        auto t1v = std::get<1>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<1>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 2) {
+                                                        auto t1v = std::get<2>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<2>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
                                                 }
                                                 $$ = $1;
                                             }
                                             else if(idx == 2) {
                                                auto temp = std::get<2>($1);
+                                                auto t_type = std::get<2>(temp_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
                                                 else {
-                                                    temp->next = $2;
+                                                    int t1 = $2.index();
+                                                    if(t1 == 0) {
+                                                        auto t1v = std::get<0>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<0>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 1) {
+                                                        auto t1v = std::get<1>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<1>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
+                                                    else if(t1 == 2) {
+                                                        auto t1v = std::get<2>($2);
+                                                        temp->next = t1v;
+                                                        auto t2v = std::get<2>(current_stmt);
+                                                        t_type->next = t2v;
+                                                    }
                                                     std::cout <<"huhh" << std::endl;
                                                 }
                                                 $$ = $1;
-                                                std::cout << ($2).index() << std::endl;
                                             }
+                                            else if(idx == 3) {
+                                               auto temp = std::get<3>($1);
+                                                if(temp == 0) {
+                                                    $1 = $2;
+                                                    temp_stmt = current_stmt;
+                                                }
+                                                else {
+                                                    std::cout <<"huhh" << std::endl;
+                                                }
+                                                $$ = $1;
+                                            }
+                                            
                                         }
-            |   %empty {  }
+            |   %empty { $$ = NULL; }
             ;
 
 final       :   NEWLINE { $$ = $1; }
             |   END {  }
             ;
 
-statement   :   NEWLINE { 
-                            auto temp = GeneralNode(EXPRN_NODE, "EMPTY");
-                            temp.next = NULL;
-                            $$ = &(temp);
+statement   :   NEWLINE {
+                            $$ = NULL;
                         }
 
             |   expression final { 
@@ -160,14 +229,20 @@ statement   :   NEWLINE {
                                         if(temp == 0) {
                                             auto gen_temp = std::get<0>($1);
                                             $$ = &gen_temp;
+                                            auto gen_temp_t = std::get<0>(mathy::current_node);
+                                            mathy::current_stmt = new GeneralNode(gen_temp_t);
                                         } 
                                         else if(temp == 1) {
                                             auto gen_temp = std::get<1>($1);
                                             $$ = &gen_temp;
+                                            auto gen_temp_t = std::get<1>(mathy::current_node);
+                                            mathy::current_stmt = new ForAll(gen_temp_t);
                                         } 
                                         else if(temp == 2) {
                                             auto gen_temp = std::get<2>($1);
                                             $$ = &gen_temp;
+                                            auto gen_temp_t = std::get<2>(mathy::current_node);
+                                            mathy::current_stmt = new SigmaProd(gen_temp_t);
                                         }
                                         
                                     }
@@ -233,6 +308,7 @@ expression  :   term {
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);
                                                     $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
+                                                    mathy::current_node = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
                                                 }
                                                 for(auto& var : unfinished_vars) {
                                                     finalizeVariable(var);
@@ -287,6 +363,7 @@ term    :   identifier   { $$ = $1; }
 
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
                                                                                                             $$ = ForAll($6, $9, $3);
+                                                                                                            mathy::current_node = ForAll($6, mathy::current_stmt, $3);
                                                                                                             int temp = ($9).index(); 
                                                                                                             if(temp == 0) {
                                                                                                                 auto gen_temp = std::get<0>($9);

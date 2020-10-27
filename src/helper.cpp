@@ -16,6 +16,8 @@ namespace mathy {
     GeneralNode *gen_ptr = NULL;
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
+    std::variant<GeneralNode*, ForAll*, SigmaProd*, long int> current_stmt, root=NULL, temp_stmt=NULL;
+    std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {
         if (variable_table.find(identifier) != variable_table.end()) {
@@ -126,6 +128,7 @@ namespace mathy {
                 }
             }
         }
+        res += "+1";
         variable_table[identifier].push_back(res);
         return 0;
     }
@@ -219,24 +222,27 @@ namespace mathy {
 
     void initOutput() {
         std::fstream output;
-        output.open("output.c");
+        output.open("output.c", std::ios::out);
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
         declareVars(output);
-        output << "\t#pragma omp parallel\n\t{\n" << std::endl;
+        output << "#pragma omp parallel\n\t{\n" << std::endl;
 
         // Imp. stuff here
         if (gen_ptr != NULL) {
             traverse(gen_ptr);
+            gen_ptr->gen_code(output);
         } else if (for_ptr != NULL) {
             traverse(for_ptr);
+            for_ptr->gen_code(output);
         } else if (sp_ptr != NULL) {
             traverse(sp_ptr);
+            sp_ptr->gen_code(output);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
 
-        output << "\t}" << std::endl << "\treturn 0;" << std::endl << "}" << std::endl;
+        output << "}" << std::endl << "return 0;" << std::endl << "}" << std::endl;
     }
 
     void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
@@ -272,6 +278,8 @@ namespace mathy {
 
     void traverse(GeneralNode *genp) {
         std::cout << "GEN NODE" << std::endl;
+        std::cout << genp->expression << std::endl;
+        std::cout << genp->node_type << std::endl;
         int tt = (genp->next).index();
         if (tt == 0) {
             auto t = std::get<0>(genp->next);

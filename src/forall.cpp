@@ -21,10 +21,10 @@ void ForAll::gen_code(std::fstream &m_file) {
     m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; "
            << this->gen_bound.identifier;
     m_file << "<= " << this->gen_bound.upper << "; " << this->gen_bound.identifier << "++) {" << std::endl;
-    m_file << this->expression << std::endl;
+    if(this->expression.length() > 0)
+        m_file << this->expression << ";" << std::endl;
     int tmp = this->child.index();
     if (tmp == 0) {
-        std::cout << "For node ------- |" << this->expression << "|" << std::endl;
         auto temp = std::get<0>(this->child);
         temp->gen_code(m_file);
     } else if (tmp == 1) {
