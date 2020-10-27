@@ -45,6 +45,7 @@
     }
     std::string current_id;
     std::vector<std::string> unfinished_vars, bound_ids;
+    bool success = true;
 }
 
 %lex-param { mathy::Scanner &scanner }
@@ -88,8 +89,7 @@
 
 %%
 
-program :   statements  { 
-                            printStuff(); 
+program :   statements  {
                             int idxn = ($1).index();
                             if(idxn == 0) {
                                 mathy::gen_ptr = std::get<0>($1);
@@ -364,19 +364,6 @@ term    :   identifier   { $$ = $1; }
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
                                                                                                             $$ = ForAll($6, $9, $3);
                                                                                                             mathy::current_node = ForAll($6, mathy::current_stmt, $3);
-                                                                                                            int temp = ($9).index(); 
-                                                                                                            if(temp == 0) {
-                                                                                                                auto gen_temp = std::get<0>($9);
-                                                                                                                std::cout << "gen child = " << gen_temp << std::endl;
-                                                                                                            } 
-                                                                                                            else if(temp == 1) {
-                                                                                                                auto gen_temp = std::get<1>($9);
-                                                                                                                std::cout << "for child = " << gen_temp << std::endl;
-                                                                                                            } 
-                                                                                                            else if(temp == 2) {
-                                                                                                                auto gen_temp = std::get<2>($9);
-                                                                                                                std::cout << "sp child = " << gen_temp << std::endl;
-                                                                                                            } 
                                                                                                         }
             ;
 
@@ -407,4 +394,5 @@ bound   :   expression COMPARISON IDENTIFIER COMPARISON expression  {
 
 void mathy::Parser::error(const location &loc , const std::string &message) {	
     std::cout << "Error: " << message << std::endl << "Error location: " << driver.location() << std::endl;
+    success = false;
 }

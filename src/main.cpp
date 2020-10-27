@@ -10,6 +10,7 @@
 int main(int argc, char *argv[]) {
     mathy::Compiler compiler;
     int opt;
+    extern bool success;
     while ((opt = getopt(argc, argv, "t:")) != -1) {
         if (opt == 't') {
             if (strcmp(optarg, "float") == 0);
@@ -50,14 +51,15 @@ int main(int argc, char *argv[]) {
         return -2;
     }
     int res = compiler.parse();
-    std::cout << "Parse complete. " << std::endl;
     fbuff.close();
-    try {
-        system("indent -linux -l120 -i4 -nut output.c");
-    }
-    catch (int error) {
-        cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "
-             << endl << "sudo apt-get install indent" << endl;
+    if(success) {
+        try {
+            system("indent -linux -l120 -i4 -nut output.c");
+        }
+        catch (int error) {
+            cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "
+                << endl << "sudo apt-get install indent" << endl;
+        }
     }
     return res;
 }

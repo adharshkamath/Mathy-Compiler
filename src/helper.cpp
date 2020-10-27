@@ -228,15 +228,11 @@ namespace mathy {
         declareVars(output);
         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
-        // Imp. stuff here
         if (gen_ptr != NULL) {
-            traverse(gen_ptr);
             gen_ptr->gen_code(output);
         } else if (for_ptr != NULL) {
-            traverse(for_ptr);
             for_ptr->gen_code(output);
         } else if (sp_ptr != NULL) {
-            traverse(sp_ptr);
             sp_ptr->gen_code(output);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
