@@ -95,17 +95,17 @@ program :   statements  {
                             if(idxn == 0) {
                                 mathy::gen_ptr = std::get<0>($1);
                                 $$ = mathy::gen_ptr;
-                                mathy::gen_ptr = std::get<0>(temp_stmt);
+                                mathy::gen_ptr = std::get<0>(previous_stmt);
                             }
                             else if(idxn == 1) {
                                 mathy::for_ptr = std::get<1>($1);
                                 $$ = mathy::for_ptr;
-                                mathy::for_ptr = std::get<1>(temp_stmt);
+                                mathy::for_ptr = std::get<1>(previous_stmt);
                             }
                             else if(idxn == 2) {
                                 mathy::sp_ptr = std::get<2>($1);
                                 $$ = mathy::sp_ptr;
-                                mathy::sp_ptr = std::get<2>(temp_stmt);
+                                mathy::sp_ptr = std::get<2>(previous_stmt);
                             }
                             initOutput();
                         }
@@ -115,7 +115,7 @@ statements  :   statements statement    {
                                             int idx = ($1).index();
                                             if(idx == 0) {
                                                 auto temp = std::get<0>($1);
-                                                auto t_type = std::get<0>(temp_stmt);
+                                                auto t_type = std::get<0>(previous_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
@@ -144,7 +144,7 @@ statements  :   statements statement    {
                                             }
                                             else if(idx == 1) {
                                                 auto temp = std::get<1>($1);
-                                                auto t_type = std::get<1>(temp_stmt);
+                                                auto t_type = std::get<1>(previous_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
@@ -173,7 +173,7 @@ statements  :   statements statement    {
                                             }
                                             else if(idx == 2) {
                                                auto temp = std::get<2>($1);
-                                                auto t_type = std::get<2>(temp_stmt);
+                                                auto t_type = std::get<2>(previous_stmt);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                 }
@@ -204,7 +204,7 @@ statements  :   statements statement    {
                                                auto temp = std::get<3>($1);
                                                 if(temp == 0) {
                                                     $1 = $2;
-                                                    temp_stmt = current_stmt;
+                                                    previous_stmt = current_stmt;
                                                 }
                                                 else {
                                                 }
@@ -223,7 +223,7 @@ statement   :   NEWLINE {
                             $$ = NULL;
                         }
 
-            |   expression final { 
+            |   expression final    { 
                                         int temp = ($1).index(); 
                                         if(temp == 0) {
                                             auto gen_temp = std::get<0>($1);
@@ -247,16 +247,15 @@ statement   :   NEWLINE {
                                     }
             ;
 
-identifier  :   IDENTIFIER {
+identifier  :   IDENTIFIER  {
                                 current_id = $1;
                                 if(isVariableFinalized(current_id) == 0 && 
-                                        std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) 
-                                    {
+                                    std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end())   {
                                         unfinished_vars.push_back(current_id);
                                     }
                             } 
                 dimensions  { $$ = $1 + $3; if(isVariableFinalized(current_id) == 0 && 
-                                                std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) {
+                                                std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end())   {
                                                 int check = newVariable($1);
                                                 if(check == 0) addArrDimension(current_id, $3);
                                             }
@@ -282,83 +281,76 @@ number      :   INTCONST    { $$ = $1; }
 intermediate_expr   :   OPERATOR expression { auto eval = std::get<0>($2); $$ = $1 + eval.expression;  }
                     |   %empty      {  }
 
-expression  :   term { 
-                        if(($1).index() == 0) {
-                            $$ = GeneralNode(EXPRN_NODE, std::get<0>($1));
+expression  :   term    { 
+                            if(($1).index() == 0) {
+                                $$ = GeneralNode(EXPRN_NODE, std::get<0>($1));
+                            }
+                            else {
+                                auto nval = std::get<1>($1);
+                                $$ = GeneralNode(EXPRN_NODE, to_string(nval));
+                            }
                         }
-                        else {
-                            auto nval = std::get<1>($1);
-                            $$ = GeneralNode(EXPRN_NODE, to_string(nval));
-                        }
-                    }
-            |   term OPERATOR expression { if($3.index() == 0) {
-                                                std::string value;
-                                                if(($1).index() == 0)                        
-                                                    value = std::get<0>($1);
-                                                else {
-                                                    auto nval = std::get<1>($1);
-                                                    value = to_string(nval);
-                                                }
-                                                auto gen_str = std::get<0>($3);
-                                                $$ = GeneralNode(EXPRN_NODE, value + $2 + gen_str.expression);
-                                            }
-                                        }
-            |   identifier EQUALS expression { if($3.index() == 0) {
+            |   term OPERATOR expression    {
+                                                if($3.index() == 0) {
+                                                    std::string value;
+                                                    if(($1).index() == 0)                        
+                                                        value = std::get<0>($1);
+                                                    else {
+                                                        auto nval = std::get<1>($1);
+                                                        value = to_string(nval);
+                                                    }
                                                     auto gen_str = std::get<0>($3);
-                                                    if(gen_str.node_type == 0) {
-                                                        $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                        mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                    }
-                                                    else if(gen_str.node_type == 4) {
-                                                        $$ = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
-                                                        mathy::current_node = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
-                                                    }
-                                                }
-                                                else if($3.index() == 2) {
-                                                    auto prod_sum = std::get<2>($3);
-                                                    $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
-                                                    mathy::current_node = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
-                                                }
-                                                for(auto& var : unfinished_vars) {
-                                                    finalizeVariable(var);
-                                                }
-                                                for(int i=unfinished_vars.size()-1; i>=0; i--) {
-                                                    if(isVariableFinalized(unfinished_vars[i])) {
-                                                        unfinished_vars.erase(unfinished_vars.begin() + i);
-                                                    }
-                                                }
-                                                for(auto& var : unfinished_vars) {
-                                                    finalizeVariable(var);
-                                                }
-                                                for(int i=unfinished_vars.size()-1; i>=0; i--) {
-                                                    if(isVariableFinalized(unfinished_vars[i])) {
-                                                        unfinished_vars.erase(unfinished_vars.begin() + i);
-                                                    }
+                                                    $$ = GeneralNode(EXPRN_NODE, value + $2 + gen_str.expression);
                                                 }
                                             }
+            |   identifier EQUALS expression    {   
+                                                    if($3.index() == 0) {
+                                                        auto gen_str = std::get<0>($3);
+                                                        if(gen_str.node_type == 0) {
+                                                            $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                            mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                        }
+                                                        else if(gen_str.node_type == 4) {
+                                                            $$ = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
+                                                            mathy::current_node = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
+                                                        }
+                                                    }
+                                                    else if($3.index() == 2) {
+                                                        auto prod_sum = std::get<2>($3);
+                                                        $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
+                                                        mathy::current_node = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
+                                                    }
+                                                    for(auto& var : unfinished_vars) {
+                                                        finalizeVariable(var);
+                                                    }
+                                                    for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                                        if(isVariableFinalized(unfinished_vars[i])) {
+                                                            unfinished_vars.erase(unfinished_vars.begin() + i);
+                                                        }
+                                                    }
+                                                }
             |   SQRT LEFTPAR expression RIGHTPAR    {
-                                                            auto tempidx = $3.index();
-                                                            if(tempidx == 0) {
-                                                                auto tempstr = std::get<0>($3);
-                                                                $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
-                                                            }
-                                                            else {
-                                                                std::cout << "erraneous syntax" << std::endl;
-                                                            }
-                                                            
+                                                        auto tempidx = $3.index();
+                                                        if(tempidx == 0) {
+                                                            auto tempstr = std::get<0>($3);
+                                                            $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
                                                         }
+                                                        else {
+                                                            std::cout << "erraneous syntax" << std::endl;
+                                                        }                                    
+                                                    }
             |   LEFTPAR expression RIGHTPAR  intermediate_expr  {
-                                                            auto tempidx = $2.index();
-                                                            if(tempidx == 0) {
-                                                                auto tempstr = std::get<0>($2);
-                                                                $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")" + $4);
-                                                            }
-                                                            else {
-                                                                std::cout << "erraneous syntax" << std::endl;
-                                                            }
-                                                            
-                                                        }
-            |   forall_stmt {   $$ = $1;
+                                                                    auto tempidx = $2.index();
+                                                                    if(tempidx == 0) {
+                                                                        auto tempstr = std::get<0>($2);
+                                                                        $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")" + $4);
+                                                                    }
+                                                                    else {
+                                                                        std::cout << "erraneous syntax" << std::endl;
+                                                                    }
+                                                                }
+            |   forall_stmt {   
+                                $$ = $1;
                                 for(auto& var : unfinished_vars) {
                                     finalizeVariable(var);
                                 }
@@ -369,7 +361,8 @@ expression  :   term {
                                 }
                                 freeBound($1.gen_bound.identifier);
                             }
-            |   prod_sum_stmt   {   $$ = $1;
+            |   prod_sum_stmt   {   
+                                    $$ = $1;
                                     for(auto& var : unfinished_vars) {
                                         finalizeVariable(var);
                                     }
@@ -397,16 +390,22 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             mathy::current_node = ForAll($6, mathy::current_stmt, $3);
                                                                                                             int tl = (mathy::current_stmt).index();
                                                                                                             if(tl == 0) {
+                                                                                                                std::cout << "Expression node" << std::endl;
                                                                                                                 auto tk = std::get<0>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
+                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                             else if(tl == 1) {
+                                                                                                                std::cout << "For node" << std::endl;
                                                                                                                 auto tk = std::get<1>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
+                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                             else if(tl == 2) {
+                                                                                                                std::cout << "SP node" << std::endl;
                                                                                                                 auto tk = std::get<2>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
+                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                         }
             ;

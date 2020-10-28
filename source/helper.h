@@ -18,7 +18,7 @@ namespace mathy {
     extern SigmaProd *sp_ptr;
     extern ForAll *for_ptr;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt;
-    extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> temp_stmt;
+    extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> previous_stmt;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> root;
     extern std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
