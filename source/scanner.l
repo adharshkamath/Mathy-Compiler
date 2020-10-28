@@ -21,6 +21,7 @@ FORALL      forall
 SIGMA       sigma
 WHERE       where
 PRODUCT     product
+SQRT        sqrt
 IDENTIFIER  [a-zA-Z_]([a-zA-Z0-9_])*
 LEFTPAR     \(
 RIGHTPAR    \)
@@ -56,6 +57,10 @@ WILDCARD    .
 
 {PRODUCT}       {
                     return mathy::Parser::make_PRODUCT(yytext, mathy::location()); 
+                }
+
+{SQRT}          {
+                    return mathy::Parser::make_SQRT(yytext, mathy::location()); 
                 }
 
 {IDENTIFIER}    {

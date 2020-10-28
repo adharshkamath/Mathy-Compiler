@@ -11,6 +11,7 @@
 #define SIGMA_NODE 1
 #define PRODUCT_NODE 2
 #define FORALL_NODE 3
+#define SQRT_NODE  4
 
 namespace mathy {
 

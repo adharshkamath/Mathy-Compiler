@@ -65,6 +65,7 @@
 %token <std::string> FORALL;
 %token <std::string> SIGMA;
 %token <std::string> WHERE;
+%token <std::string> SQRT;
 %token <std::string> PRODUCT;
 %token <std::string> COMPARISON;
 %token <std::string> OPERATOR;
@@ -301,8 +302,14 @@ expression  :   term {
                                         }
             |   identifier EQUALS expression { if($3.index() == 0) {
                                                     auto gen_str = std::get<0>($3);
-                                                    $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                    mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                    if(gen_str.node_type == 0) {
+                                                        $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                        mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
+                                                    }
+                                                    else if(gen_str.node_type == 4) {
+                                                        $$ = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
+                                                        mathy::current_node = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
+                                                    }
                                                 }
                                                 else if($3.index() == 2) {
                                                     auto prod_sum = std::get<2>($3);
@@ -326,6 +333,17 @@ expression  :   term {
                                                     }
                                                 }
                                             }
+            |   SQRT LEFTPAR expression RIGHTPAR    {
+                                                            auto tempidx = $3.index();
+                                                            if(tempidx == 0) {
+                                                                auto tempstr = std::get<0>($3);
+                                                                $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
+                                                            }
+                                                            else {
+                                                                std::cout << "erraneous syntax" << std::endl;
+                                                            }
+                                                            
+                                                        }
             |   forall_stmt {   $$ = $1;
                                 for(auto& var : unfinished_vars) {
                                     finalizeVariable(var);

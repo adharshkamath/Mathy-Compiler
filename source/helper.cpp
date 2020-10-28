@@ -225,7 +225,7 @@ namespace mathy {
         std::fstream output;
         mathy::output_name += std::string(".c");
         output.open(output_name, std::ios::out);
-        output << "#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n" \
+        output << "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
         declareVars(output);
         output << "#pragma omp parallel\n\t{\n" << std::endl;

@@ -13,7 +13,7 @@ void GeneralNode::make_parent() {
 }
 
 void GeneralNode::gen_code(std::fstream &m_file) {
-    if (this->node_type == EXPRN_NODE) {
+    if (this->node_type == EXPRN_NODE || this->node_type == SQRT_NODE) {
         if (this->expression.length() > 0)
             m_file << this->expression << ";" << std::endl;
         if ((this->next).index() == 0) {
