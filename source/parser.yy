@@ -344,6 +344,17 @@ expression  :   term {
                                                             }
                                                             
                                                         }
+            |   LEFTPAR expression RIGHTPAR         {
+                                                            auto tempidx = $2.index();
+                                                            if(tempidx == 0) {
+                                                                auto tempstr = std::get<0>($2);
+                                                                $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")");
+                                                            }
+                                                            else {
+                                                                std::cout << "erraneous syntax" << std::endl;
+                                                            }
+                                                            
+                                                        }
             |   forall_stmt {   $$ = $1;
                                 for(auto& var : unfinished_vars) {
                                     finalizeVariable(var);
