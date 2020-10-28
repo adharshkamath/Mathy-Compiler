@@ -1,0 +1,20 @@
+alpha = 10
+beta = 2
+
+forall(i) where 0<=i<=50 {
+    forall(j) where 0<=j<=50 {
+        a_b[i][j] = sigma(alpha * (a[i][k] * b[k][j])) where 0<=k<=50
+    }
+}
+
+forall(i) where 0<=i<=50 {
+    forall(j) where 0<=j<=50 {
+        c_b[i][j] = c[i][j]*beta
+    }
+}
+
+forall(i) where 0<=i<=50 {
+    forall(j) where 0<=j<=50 {
+        c_out[i][j] = a_b[i][j] + c_b[i][j]
+    }
+}
