@@ -79,7 +79,7 @@
 %token SEMICOLON;
 %token COMMA;
 
-%type<std::string> control identifier offset_type offset dimensions final
+%type<std::string> control identifier offset_type offset dimensions final intermediate_expr
 %type< std::variant<GeneralNode, ForAll, SigmaProd, long int> > expression
 %type< std::variant<GeneralNode*, ForAll*, SigmaProd*, long int> > program statement statements
 %type<ForAll> forall_stmt
@@ -257,8 +257,8 @@ identifier  :   IDENTIFIER {
                             } 
                 dimensions  { $$ = $1 + $3; if(isVariableFinalized(current_id) == 0 && 
                                                 std::find(bound_ids.begin(), bound_ids.end(), $1) == bound_ids.end()) {
-                                                newVariable($1);
-                                                addArrDimension(current_id, $3);
+                                                int check = newVariable($1);
+                                                if(check == 0) addArrDimension(current_id, $3);
                                             }
                             }
             ;
@@ -278,6 +278,9 @@ offset_type :   INTCONST    { $$ = to_string($1); }
 number      :   INTCONST    { $$ = $1; }
             |   FLOATCONST  { $$ = $1; }
             ;
+
+intermediate_expr   :   OPERATOR expression { auto eval = std::get<0>($2); $$ = $1 + eval.expression;  }
+                    |   %empty      {  }
 
 expression  :   term { 
                         if(($1).index() == 0) {
@@ -344,11 +347,11 @@ expression  :   term {
                                                             }
                                                             
                                                         }
-            |   LEFTPAR expression RIGHTPAR         {
+            |   LEFTPAR expression RIGHTPAR  intermediate_expr  {
                                                             auto tempidx = $2.index();
                                                             if(tempidx == 0) {
                                                                 auto tempstr = std::get<0>($2);
-                                                                $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")");
+                                                                $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")" + $4);
                                                             }
                                                             else {
                                                                 std::cout << "erraneous syntax" << std::endl;
