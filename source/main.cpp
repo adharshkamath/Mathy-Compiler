@@ -24,8 +24,7 @@ int main(int argc, char *argv[]) {
             }
         } else if (opt == 'o') {
             mathy::output_name = optarg;
-        }
-         else {
+        } else {
             std::cerr << "Usage: " << argv[0] << " [-t type] file(s)\n" << std::endl;
             exit(2);
         }
@@ -55,7 +54,7 @@ int main(int argc, char *argv[]) {
     }
     int res = compiler.parse();
     fbuff.close();
-    if(success) {
+    if (success) {
         std::string cmd = std::string("indent -linux -l120 -i4 -nut ") + mathy::output_name;
         const char *command = cmd.c_str();
         try {
@@ -63,7 +62,7 @@ int main(int argc, char *argv[]) {
         }
         catch (int error) {
             cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "
-                << endl << "sudo apt-get install indent" << endl;
+                 << endl << "sudo apt-get install indent" << endl;
         }
     }
     return res;

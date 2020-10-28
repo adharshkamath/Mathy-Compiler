@@ -18,7 +18,7 @@ void ForAll::set_child(SigmaProd &nest) {
 }
 
 void ForAll::gen_code(std::fstream &m_file) {
-    if(this->parent) {
+    if (this->parent) {
         m_file << "#pragma omp parallel for" << std::endl;
     }
     m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; "

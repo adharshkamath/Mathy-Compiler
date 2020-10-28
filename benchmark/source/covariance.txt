@@ -1,0 +1,10 @@
+
+forall(x) where 0<=x<=100 {
+    mean[x] = sigma(data[k][x]/100) where 0<=k<=100
+}
+
+forall(i) where 0<=i<=100 {
+    forall(j) where 0<=j<=100 {
+        cov[i][j] = sigma(((data[k][i] - mean[i])*(data[k][j] - mean[j]))/99) where 0<=k<=100
+    }
+}

@@ -34,7 +34,6 @@ namespace mathy {
     int newBound(const std::string &identifier, const std::string &low, const std::string &high) {
         int ret = 0;
         if (bounds_table.find(identifier) != bounds_table.end()) {
-            std::cout << "Warning: Bound variable re-used!" << std::endl;
             ret = -1;
         }
         bounds_table[identifier].first = low;
@@ -231,11 +230,11 @@ namespace mathy {
         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
         if (gen_ptr != NULL) {
-            gen_ptr->gen_code(output);
+            // gen_ptr->gen_code(output);
         } else if (for_ptr != NULL) {
-            for_ptr->gen_code(output);
+            // for_ptr->gen_code(output);
         } else if (sp_ptr != NULL) {
-            sp_ptr->gen_code(output);
+            // sp_ptr->gen_code(output);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }

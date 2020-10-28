@@ -1,0 +1,15 @@
+forall(i) where 0<=i<=100 {
+    forall(j) where 0<=j<=200 {
+        a_t[i][j] = a[j][i]
+    }
+}
+
+forall(i) where 0<=i<=100 {
+    a_x[i] = sigma(a[i][k] * x[k]) where 0<=k<=100
+}
+
+forall(i) where 0<=i<=50 {
+    forall(j) where 0<=j<=100 {
+        res[i][j] = sigma(a_t[j][k] * a_x[k]) where 0<=k<=100
+    }
+}
