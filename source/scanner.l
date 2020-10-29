@@ -17,11 +17,11 @@
 %option prefix="mathy_"
 
 NEWLINE     \n
-FORALL      forall
-SIGMA       sigma
-WHERE       where
-PRODUCT     product
-SQRT        sqrt
+FORALL      (forall|∀)
+SIGMA       (sigma|Σ)
+WHERE       (where|\|)
+PRODUCT     (product|Π)
+SQRT        (sqrt|√)
 IDENTIFIER  [a-zA-Z_]([a-zA-Z0-9_])*
 LEFTPAR     \(
 RIGHTPAR    \)
