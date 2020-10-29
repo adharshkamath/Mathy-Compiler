@@ -2,7 +2,7 @@ LANG = cpp
 
 CXX = g++
 
-CFLAGS = -std=c++17 -c
+CFLAGS = -std=c++17 -c -g
 
 CCFLAGS = -std=c++17 -Wall -O3 -g
 
