@@ -92,44 +92,44 @@
 
 program :   statements  {
                             int idxn = ($1).index();
-                            int t_idx = previous_stmt.index();
+                            int t_idx = root.index();
                             if(idxn == 0) {
                                 mathy::gen_ptr = std::get<0>($1);
                                 $$ = mathy::gen_ptr;
                                 if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(previous_stmt);
+                                    mathy::gen_ptr = std::get<0>(root);
                                 }
                                 else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(previous_stmt);
+                                    mathy::for_ptr = std::get<1>(root);
                                 }
                                 else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(previous_stmt);
+                                    mathy::sp_ptr = std::get<2>(root);
                                 }                                
                             }
                             else if(idxn == 1) {
                                 mathy::for_ptr = std::get<1>($1);
                                 $$ = mathy::for_ptr;
                                 if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(previous_stmt);
+                                    mathy::gen_ptr = std::get<0>(root);
                                 }
                                 else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(previous_stmt);
+                                    mathy::for_ptr = std::get<1>(root);
                                 }
                                 else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(previous_stmt);
+                                    mathy::sp_ptr = std::get<2>(root);
                                 }
                             }
                             else if(idxn == 2) {
                                 mathy::sp_ptr = std::get<2>($1);
                                 $$ = mathy::sp_ptr;
                                 if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(previous_stmt);
+                                    mathy::gen_ptr = std::get<0>(root);
                                 }
                                 else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(previous_stmt);
+                                    mathy::for_ptr = std::get<1>(root);
                                 }
                                 else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(previous_stmt);
+                                    mathy::sp_ptr = std::get<2>(root);
                                 }
                             }
                             initOutput();
@@ -151,6 +151,7 @@ statements  :   statements statement    {
                                                         temp->next = t1v;
                                                         auto t2v = std::get<0>(current_stmt);
                                                         if(t_idx == 0) {
+                                                            std::cout << idx << " === " << std::endl;
                                                             auto t_type = std::get<0>(previous_stmt);
                                                             t_type->next = t2v;
                                                         }
@@ -161,6 +162,9 @@ statements  :   statements statement    {
                                                         else if(t_idx == 2) {
                                                             auto t_type = std::get<2>(previous_stmt);
                                                             t_type->next = t2v;
+                                                        }
+                                                        else if(t_idx == 3) {
+                                                            previous_stmt = current_stmt;
                                                         }
                                                     }
                                                     else if(t1 == 1) {
@@ -174,10 +178,18 @@ statements  :   statements statement    {
                                                         else if(t_idx == 1) {
                                                             auto t_type = std::get<1>(previous_stmt);
                                                             t_type->next = t2v;
+                                                            auto hh = std::get<1>(t_type->next);
+                                                            std::cout << "gen previous 2  " << " -- " << current_stmt.index() << std::endl;
+                                                            auto nn = std::get<1>(current_stmt);
+                                                            std::cout << t_type->expression << "| === |" << t_type->gen_bound.identifier <<  std::endl;
                                                         }
                                                         else if(t_idx == 2) {
                                                             auto t_type = std::get<2>(previous_stmt);
                                                             t_type->next = t2v;
+                                                        }
+                                                        else if(t_idx == 3) {
+                                                            previous_stmt = current_stmt;
+                                                            std::cout << "gen previous " << " -- " << current_stmt.index() << std::endl;
                                                         }
                                                     }
                                                     else if(t1 == 2) {
@@ -195,6 +207,10 @@ statements  :   statements statement    {
                                                         else if(t_idx == 2) {
                                                             auto t_type = std::get<2>(previous_stmt);
                                                             t_type->next = t2v;
+                                                        }
+                                                        else if(t_idx == 3) {
+                                                            previous_stmt = current_stmt;
+                                                            std::cout << "gen previous " << " -- " << current_stmt.index() << std::endl;
                                                         }
                                                     }
                                                 }
@@ -259,16 +275,21 @@ statements  :   statements statement    {
                                                 $$ = $1;
                                             }
                                             else if(idx == 3) {
-                                               auto temp = std::get<3>($1);
+                                                // std::cout << "---- HERE stmts null ----- " << previous_stmt.index() << std::endl;
+                                                if(previous_stmt.index() != 3 && (mathy::root).index() == 3) {
+                                                    mathy::root = previous_stmt;
+                                                }
+                                                auto temp = std::get<3>($1);
                                                 if(temp == 0) {
                                                     $1 = $2;
                                                     previous_stmt = current_stmt;
                                                     if(previous_stmt.index() == 1) {
                                                         auto ttm = std::get<1>(previous_stmt);
-                                                        std::cout << "FORALL Finally " << ttm->gen_bound.identifier << "  " << ttm->expression << std::endl;
+                                                        // std::cout << "FORALL Finally " << ttm->gen_bound.identifier << "  |" << ttm->expression << std::endl;
                                                     }
                                                 }
                                                 else {
+                                                    // no code should reach here because if idx is 3, then statements is NULL so temp _will_ be 0
                                                 }
                                                 $$ = $1;
                                             }
@@ -292,7 +313,7 @@ statement   :   NEWLINE {
                                             $$ = &gen_temp;
                                             auto gen_temp_t = std::get<0>(mathy::current_node);
                                             mathy::current_stmt = new GeneralNode(gen_temp_t);
-                                            std::cout << "GEN with "  << gen_temp_t.gen_bound.identifier << "  " <<  gen_temp_t.expression << std::endl;
+                                            std::cout << "GEN with "  << gen_temp_t.gen_bound.identifier << "  " <<  gen_temp_t.expression << " cur stmt " << current_stmt.index() << std::endl;
                                         } 
                                         else if(temp == 1) {
                                             auto gen_temp = std::get<1>($1);
@@ -301,11 +322,15 @@ statement   :   NEWLINE {
                                             mathy::current_stmt = new ForAll(gen_temp_t);
                                             if(previous_stmt.index() == 0) {
                                                 auto ttm = std::get<0>(previous_stmt);
-                                                std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->expression << std::endl;
+                                                // std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->expression << " cur stmt " << current_stmt.index() << std::endl;
                                             }
                                             if(previous_stmt.index() == 1) {
                                                 auto ttm = std::get<1>(previous_stmt);
-                                                std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->gen_bound.identifier << std::endl;
+                                                // std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->gen_bound.identifier << " cur stmt " << current_stmt.index() << std::endl;
+                                            }
+                                            if(previous_stmt.index() == 3) {
+                                                auto ttm = std::get<3>(previous_stmt);
+                                                // std::cout << "FORALL with PROBLEMSSSSSS " << std::endl;
                                             }
                                         } 
                                         else if(temp == 2) {
@@ -315,11 +340,15 @@ statement   :   NEWLINE {
                                             mathy::current_stmt = new SigmaProd(gen_temp_t);
                                             if(previous_stmt.index() == 0) {
                                                 auto ttm = std::get<0>(previous_stmt);
-                                                std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  --- |" << ttm << std::endl;
+                                                // std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  --- |" << ttm << std::endl;
                                             }
                                             if(previous_stmt.index() == 1) {
                                                 auto ttm = std::get<1>(previous_stmt);
-                                                std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  " << ttm->gen_bound.identifier << std::endl;
+                                                // std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  " << ttm->gen_bound.identifier << std::endl;
+                                            }
+                                            if(previous_stmt.index() == 3) {
+                                                auto ttm = std::get<3>(previous_stmt);
+                                                std::cout << "SP with PROBLEMSSSSSS " << std::endl;
                                             }
                                         }
                                         
@@ -469,22 +498,22 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             mathy::current_node = ForAll($6, mathy::current_stmt, $3);
                                                                                                             int tl = (mathy::current_stmt).index();
                                                                                                             if(tl == 0) {
-                                                                                                                std::cout << "Expression node" << std::endl;
+                                                                                                                // std::cout << "Expression node" << std::endl;
                                                                                                                 auto tk = std::get<0>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
-                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
+                                                                                                                // std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                             else if(tl == 1) {
-                                                                                                                std::cout << "For node" << std::endl;
+                                                                                                                // std::cout << "For node" << std::endl;
                                                                                                                 auto tk = std::get<1>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
-                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
+                                                                                                                // std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                             else if(tl == 2) {
-                                                                                                                std::cout << "SP node" << std::endl;
+                                                                                                                // std::cout << "SP node" << std::endl;
                                                                                                                 auto tk = std::get<2>(mathy::current_stmt);
                                                                                                                 tk->parent = false;
-                                                                                                                std::cout << tk->gen_bound.identifier << std::endl;
+                                                                                                                // std::cout << tk->gen_bound.identifier << std::endl;
                                                                                                             }
                                                                                                         }
             ;

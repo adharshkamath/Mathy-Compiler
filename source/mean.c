@@ -4,7 +4,7 @@
 #include <omp.h>
 
 int main() {
-	float b[100+1][50+1]= {0}, a[50+1][100+1]= {0}, c[50+1][50+1]= {0};
+	float a[100+1]= {0}, sum= {0};
 #pragma omp parallel
 	{
 

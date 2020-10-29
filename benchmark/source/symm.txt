@@ -7,14 +7,14 @@ forall(i) where 0<=i<=50 {
     }
 }
 
-forall(i) where 0<=i<=50 {
-    forall(j) where 0<=j<=50 {
-        c_b[i][j] = c[i][j]*beta
+forall(p) where 0<=p<=50 {
+    forall(q) where 0<=q<=50 {
+        c_b[p][q] = c[p][q]*beta
     }
 }
 
-forall(i) where 0<=i<=50 {
-    forall(j) where 0<=j<=50 {
-        c_out[i][j] = a_b[i][j] + c_b[i][j]
+forall(m) where 0<=m<=50 {
+    forall(n) where 0<=n<=50 {
+        c_out[m][n] = a_b[m][n] + c_b[m][n]
     }
 }

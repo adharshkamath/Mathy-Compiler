@@ -231,13 +231,13 @@ namespace mathy {
 
         if (gen_ptr != NULL) {
             // gen_ptr->gen_code(output);
-            // traverse(gen_ptr);
+            traverse(gen_ptr);
         } else if (for_ptr != NULL) {
             // for_ptr->gen_code(output);
-            // traverse(for_ptr);
+            traverse(for_ptr);
         } else if (sp_ptr != NULL) {
             // sp_ptr->gen_code(output);
-            // traverse(sp_ptr);
+            traverse(sp_ptr);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
@@ -277,13 +277,10 @@ namespace mathy {
     }
 
     void traverse(GeneralNode *genp) {
-        std::cout << "GEN NODE" << std::endl;
-        std::cout << genp->expression << std::endl;
-        std::cout << genp->node_type << std::endl;
+        std::cout << "GEN NODE ----- " << genp->expression << std::endl;
         int tt = (genp->next).index();
         if (tt == 0) {
             auto t = std::get<0>(genp->next);
-            std::cout << "-----" << t << std::endl;
             if (t != 0)
                 traverse(t);
         } else if (tt == 1) {
