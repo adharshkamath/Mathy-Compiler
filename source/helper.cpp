@@ -233,9 +233,8 @@ namespace mathy {
             // gen_ptr->gen_code(output);
             traverse(gen_ptr);
         } else if (for_ptr != NULL) {
-            // for_ptr->gen_code(output);
-            std::cout << "----- Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
-            // traverse(for_ptr);
+            for_ptr->gen_code(output);
+            traverse(for_ptr);
         } else if (sp_ptr != NULL) {
             sp_ptr->gen_code(output);
             traverse(sp_ptr);
@@ -299,7 +298,7 @@ namespace mathy {
     }
 
     void traverse(ForAll *genp) {
-        std::cout << "FOR NODE" << std::endl;
+        std::cout << "----- Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
         int ttt = (genp->child).index();
         if (ttt == 0) {
             auto tr = std::get<0>(genp->child);
@@ -315,6 +314,7 @@ namespace mathy {
             return;
         }
         int tt = (genp->next).index();
+        std::cout << "----- After Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
         if (tt == 0) {
             auto t = std::get<0>(genp->next);
             traverse(t);
