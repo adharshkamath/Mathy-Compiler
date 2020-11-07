@@ -234,9 +234,10 @@ namespace mathy {
             traverse(gen_ptr);
         } else if (for_ptr != NULL) {
             // for_ptr->gen_code(output);
-            traverse(for_ptr);
+            std::cout << "----- Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
+            // traverse(for_ptr);
         } else if (sp_ptr != NULL) {
-            // sp_ptr->gen_code(output);
+            sp_ptr->gen_code(output);
             traverse(sp_ptr);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;

@@ -275,9 +275,12 @@ statements  :   statements statement    {
                                                 $$ = $1;
                                             }
                                             else if(idx == 3) {
-                                                // std::cout << "---- HERE stmts null ----- " << previous_stmt.index() << std::endl;
+                                                std::cout << "---- HERE stmts null ----- " << previous_stmt.index() << std::endl;
                                                 if(previous_stmt.index() != 3 && (mathy::root).index() == 3) {
                                                     mathy::root = previous_stmt;
+                                                }
+                                                else if(current_stmt.index() != 3 && (mathy::root).index() == 3) {
+                                                    mathy::root = current_stmt;
                                                 }
                                                 auto temp = std::get<3>($1);
                                                 if(temp == 0) {
@@ -307,49 +310,51 @@ statement   :   NEWLINE {
                         }
 
             |   expression final    { 
-                                        int temp = ($1).index(); 
-                                        if(temp == 0) {
+                                        int rhs_index = ($1).index(); 
+                                        if(rhs_index == 0) {
                                             auto gen_temp = std::get<0>($1);
                                             $$ = &gen_temp;
                                             auto gen_temp_t = std::get<0>(mathy::current_node);
                                             mathy::current_stmt = new GeneralNode(gen_temp_t);
-                                            std::cout << "GEN with "  << gen_temp_t.gen_bound.identifier << "  " <<  gen_temp_t.expression << " cur stmt " << current_stmt.index() << std::endl;
+                                            // std::cout << "GEN with "  << gen_temp_t.gen_bound.identifier << "  " <<  gen_temp_t.expression << " cur stmt " << current_stmt.index() << std::endl;
                                         } 
-                                        else if(temp == 1) {
+                                        else if(rhs_index == 1) {
                                             auto gen_temp = std::get<1>($1);
                                             $$ = &gen_temp;
                                             auto gen_temp_t = std::get<1>(mathy::current_node);
                                             mathy::current_stmt = new ForAll(gen_temp_t);
-                                            if(previous_stmt.index() == 0) {
-                                                auto ttm = std::get<0>(previous_stmt);
-                                                // std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->expression << " cur stmt " << current_stmt.index() << std::endl;
-                                            }
-                                            if(previous_stmt.index() == 1) {
-                                                auto ttm = std::get<1>(previous_stmt);
-                                                // std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->gen_bound.identifier << " cur stmt " << current_stmt.index() << std::endl;
-                                            }
-                                            if(previous_stmt.index() == 3) {
-                                                auto ttm = std::get<3>(previous_stmt);
-                                                // std::cout << "FORALL with PROBLEMSSSSSS " << std::endl;
-                                            }
+                                            // if(previous_stmt.index() == 0) {
+                                            //     auto ttm = std::get<0>(previous_stmt);
+                                            //     std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->expression << " cur stmt " << current_stmt.index() << std::endl;
+                                            // }
+                                            // if(previous_stmt.index() == 1) {
+                                            //     auto ttm = std::get<1>(previous_stmt);
+                                            //     std::cout << "FORALL with " << gen_temp_t.gen_bound.identifier << "|  |" << ttm->gen_bound.identifier << " cur stmt " << current_stmt.index() << std::endl;
+                                            // }
+                                            // if(previous_stmt.index() == 3) {
+                                            //     auto ttm = std::get<3>(previous_stmt);
+                                            //     std::cout << "FORALL with PROBLEMSSSSSS " << std::endl;
+                                            // }
                                         } 
-                                        else if(temp == 2) {
+                                        else if(rhs_index == 2) {
                                             auto gen_temp = std::get<2>($1);
                                             $$ = &gen_temp;
                                             auto gen_temp_t = std::get<2>(mathy::current_node);
                                             mathy::current_stmt = new SigmaProd(gen_temp_t);
-                                            if(previous_stmt.index() == 0) {
-                                                auto ttm = std::get<0>(previous_stmt);
-                                                // std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  --- |" << ttm << std::endl;
-                                            }
-                                            if(previous_stmt.index() == 1) {
-                                                auto ttm = std::get<1>(previous_stmt);
-                                                // std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  " << ttm->gen_bound.identifier << std::endl;
-                                            }
-                                            if(previous_stmt.index() == 3) {
-                                                auto ttm = std::get<3>(previous_stmt);
-                                                std::cout << "SP with PROBLEMSSSSSS " << std::endl;
-                                            }
+                                            // auto ttm1 = std::get<2>(current_stmt);
+                                            // std::cout << "TEMPPPP  |" << ttm1->gen_bound.identifier << "|  |" << ttm1->LHS << "|  |" << ttm1->RHS << std::endl;
+                                            // if(previous_stmt.index() == 0) {
+                                            //     auto ttm = std::get<0>(previous_stmt);
+                                            //     std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  --- |" << ttm << std::endl;
+                                            // }
+                                            // if(previous_stmt.index() == 1) {
+                                            //     auto ttm = std::get<1>(previous_stmt);
+                                            //     std::cout << "SP with " << gen_temp_t.gen_bound.identifier << "  " << ttm->gen_bound.identifier << std::endl;
+                                            // }
+                                            // if(previous_stmt.index() == 3) {
+                                            //     auto ttm = std::get<3>(previous_stmt);
+                                            //     std::cout << "SP with PROBLEMSSSSSS " << std::endl;
+                                            // }
                                         }
                                         
                                     }
