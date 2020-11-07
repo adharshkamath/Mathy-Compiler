@@ -91,47 +91,6 @@
 %%
 
 program :   statements  {
-                            int idxn = ($1).index();
-                            int t_idx = root.index();
-                            if(idxn == 0) {
-                                mathy::gen_ptr = std::get<0>($1);
-                                $$ = mathy::gen_ptr;
-                                if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(root);
-                                }
-                                else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(root);
-                                }
-                                else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(root);
-                                }                                
-                            }
-                            else if(idxn == 1) {
-                                mathy::for_ptr = std::get<1>($1);
-                                $$ = mathy::for_ptr;
-                                if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(root);
-                                }
-                                else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(root);
-                                }
-                                else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(root);
-                                }
-                            }
-                            else if(idxn == 2) {
-                                mathy::sp_ptr = std::get<2>($1);
-                                $$ = mathy::sp_ptr;
-                                if(t_idx == 0) {
-                                    mathy::gen_ptr = std::get<0>(root);
-                                }
-                                else if(t_idx == 1) {
-                                    mathy::for_ptr = std::get<1>(root);
-                                }
-                                else if(t_idx == 2) {
-                                    mathy::sp_ptr = std::get<2>(root);
-                                }
-                            }
                             initOutput();
                         }
         ;
@@ -213,50 +172,13 @@ expression  :   term    {
                                                 }
                                             }
             |   identifier EQUALS expression    {   
-                                                    if($3.index() == 0) {
-                                                        auto gen_str = std::get<0>($3);
-                                                        if(gen_str.node_type == 0) {
-                                                            $$ = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                            mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + gen_str.expression);
-                                                        }
-                                                        else if(gen_str.node_type == 4) {
-                                                            $$ = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
-                                                            mathy::current_node = GeneralNode(SQRT_NODE, $1 + $2 + gen_str.expression);
-                                                        }
-                                                    }
-                                                    else if($3.index() == 2) {
-                                                        auto prod_sum = std::get<2>($3);
-                                                        $$ = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
-                                                        mathy::current_node = SigmaProd(prod_sum.gen_bound, prod_sum.node_type, prod_sum.RHS, $1);
-                                                    }
-                                                    for(auto& var : unfinished_vars) {
-                                                        finalizeVariable(var);
-                                                    }
-                                                    for(int i=unfinished_vars.size()-1; i>=0; i--) {
-                                                        if(isVariableFinalized(unfinished_vars[i])) {
-                                                            unfinished_vars.erase(unfinished_vars.begin() + i);
-                                                        }
-                                                    }
+                                                    
                                                 }
             |   SQRT LEFTPAR expression RIGHTPAR    {
-                                                        auto tempidx = $3.index();
-                                                        if(tempidx == 0) {
-                                                            auto tempstr = std::get<0>($3);
-                                                            $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
-                                                        }
-                                                        else {
-                                                            std::cout << "erraneous syntax" << std::endl;
-                                                        }                                    
+                                                                                          
                                                     }
             |   LEFTPAR expression RIGHTPAR  intermediate_expr  {
-                                                                    auto tempidx = $2.index();
-                                                                    if(tempidx == 0) {
-                                                                        auto tempstr = std::get<0>($2);
-                                                                        $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")" + $4);
-                                                                    }
-                                                                    else {
-                                                                        std::cout << "erraneous syntax" << std::endl;
-                                                                    }
+                                                                    
                                                                 }
             |   forall_stmt {   
                                 $$ = $1;
