@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
         const char *command = cmd.c_str();
         try {
             system(command);
+            remove(std::string(mathy::output_name + "~").c_str());
         }
         catch (int error) {
             cout << "Code not pretty printed!" << endl << "indent not found" << endl << "Please install indent using : "

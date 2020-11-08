@@ -6,6 +6,7 @@
 #include <fstream>
 #include <variant>
 #include <regex>
+#include <stack>
 #include <algorithm>
 #include "helper.h"
 
@@ -19,6 +20,7 @@ namespace mathy {
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
     std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, current_root = NULL, previous_stmt = NULL;
+    std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
     std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {
@@ -232,13 +234,13 @@ namespace mathy {
 
         if (gen_ptr != NULL) {
             gen_ptr->gen_code(output);
-            traverse(gen_ptr);
+            // traverse(gen_ptr);
         } else if (for_ptr != NULL) {
             for_ptr->gen_code(output);
-            traverse(for_ptr);
+            // traverse(for_ptr);
         } else if (sp_ptr != NULL) {
             sp_ptr->gen_code(output);
-            traverse(sp_ptr);
+            // traverse(sp_ptr);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }

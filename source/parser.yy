@@ -126,11 +126,13 @@ statements  :   statements statement    {
                                             // Handling all types of nodes for root:
                                             // Gen Node, SP Node = nesting will always be 0 and statements will be NULL for the first statement
                                             // ForAll Node = nesting will be zero only for the outermost node and that will be assigned to root  
-
+                                            if(mathy::temp_prev.size() != 0 && $2.index() == 1) {
+                                                mathy::previous_stmt = mathy::temp_prev.top();
+                                                mathy::temp_prev.pop();
+                                            }
                                             if($1.index() == 3) {
                                                 if(mathy::nest_lvl == 0 && root.index() == 3) {
                                                     mathy::root = mathy::current_stmt;
-                                                    std::cout << "assigning to main root! " << std::endl;
                                                 }
                                                 mathy::current_root = mathy::current_stmt;
                                                 $$ = $2;
@@ -141,7 +143,7 @@ statements  :   statements statement    {
                                                 auto general_stmts = std::get<0>(mathy::previous_stmt);
                                                 general_stmts_yy->next = $2;
                                                 general_stmts->next = mathy::current_stmt;
-                                                $$ = $1;
+                                                $$ = $2;
                                                 mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             else if($1.index() == 1) {
@@ -149,7 +151,7 @@ statements  :   statements statement    {
                                                 auto for_stmts = std::get<1>(mathy::previous_stmt);
                                                 for_stmts_yy->next = $2;
                                                 for_stmts->next = mathy::current_stmt;
-                                                $$ = $1;
+                                                $$ = $2;
                                                 mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             else if($1.index() == 2) {
@@ -157,7 +159,7 @@ statements  :   statements statement    {
                                                 auto sp_stmts = std::get<2>(mathy::previous_stmt);
                                                 sp_stmts_yy->next = $2;
                                                 sp_stmts->next = mathy::current_stmt;
-                                                $$ = $1;
+                                                $$ = $2;
                                                 mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             mathy::current_stmt = NULL;
@@ -170,7 +172,8 @@ final       :   NEWLINE { $$ = $1; }
             ;
 
 statement   :   NEWLINE {
-                            $$ = NULL;
+                            $$ = new GeneralNode(EXPRN_NODE, "\n");
+                            mathy::current_stmt = new GeneralNode(EXPRN_NODE, "\n");
                         }
             |   expression final    { 
                                         int rhs_index = ($1).index(); 
@@ -340,7 +343,8 @@ term    :   identifier   { $$ = $1; }
                     }
         ;
 
-forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE {  mathy::nest_lvl++;  } statements RIGHTCURLY  {
+forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE {  mathy::nest_lvl++; mathy::temp_prev.push(mathy::previous_stmt); } 
+                                                                                    statements RIGHTCURLY  {
                                                                                                             $$ = ForAll($6, $10, $3);
                                                                                                             // Create new node with current_root as child. 
                                                                                                             // Assign its address to current_stmt
@@ -375,10 +379,7 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             }
                                                                                                             mathy::nest_lvl--;
                                                                                                             auto forall_node = std::get<1>(current_node);
-                                                                                                            if(mathy::nest_lvl == 0) {
-                                                                                                                std::cout << "Outermost forall!" << std::endl;
-                                                                                                            }
-                                                                                                            else {
+                                                                                                            if(mathy::nest_lvl != 0) {
                                                                                                                 forall_node.parent = false;
                                                                                                             }
                                                                                                             mathy::current_stmt = &(forall_node);
