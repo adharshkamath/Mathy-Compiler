@@ -146,7 +146,7 @@ number      :   INTCONST    { $$ = $1; }
             |   FLOATCONST  { $$ = $1; }
             ;
 
-intermediate_expr   :   OPERATOR expression { auto eval = std::get<0>($2); $$ = $1 + eval.expression;  }
+intermediate_expr   :   OPERATOR expression { auto left_expression = std::get<0>($2); $$ = $1 + left_expression.expression;  }
                     |   %empty      {  }
 
 expression  :   term    { 
@@ -170,15 +170,56 @@ expression  :   term    {
                                                     auto gen_str = std::get<0>($3);
                                                     $$ = GeneralNode(EXPRN_NODE, value + $2 + gen_str.expression);
                                                 }
+                                                else {
+                                                    std::cout << "Invalid combination of Expression and Term!" << std::endl;
+                                                }
                                             }
             |   identifier EQUALS expression    {   
-                                                    
+                                                    if($3.index() == 0) {
+                                                        auto string_expression = std::get<0>($3);
+                                                        if(string_expression.node_type == 0) {
+                                                            $$ = GeneralNode(EXPRN_NODE, $1 + $2 + string_expression.expression);
+                                                            mathy::current_node = GeneralNode(EXPRN_NODE, $1 + $2 + string_expression.expression);
+                                                        }
+                                                        else if(string_expression.node_type == 4) {
+                                                            $$ = GeneralNode(SQRT_NODE, $1 + $2 + string_expression.expression);
+                                                            mathy::current_node = GeneralNode(SQRT_NODE, $1 + $2 + string_expression.expression);
+                                                        }
+                                                    }
+                                                    else if($3.index() == 2) {
+                                                        auto sigma_pi_expression = std::get<2>($3);
+                                                        $$ = SigmaProd(sigma_pi_expression.gen_bound, sigma_pi_expression.node_type, sigma_pi_expression.RHS, $1);
+                                                        mathy::current_node = SigmaProd(sigma_pi_expression.gen_bound, sigma_pi_expression.node_type, sigma_pi_expression.RHS, $1);
+                                                    }
+                                                    else {
+                                                        std::cout << "Invalid type of expression!" << std::endl;
+                                                    }
+                                                    for(auto& var : unfinished_vars) {
+                                                        finalizeVariable(var);
+                                                    }
+                                                    for(int i=unfinished_vars.size()-1; i>=0; i--) {
+                                                        if(isVariableFinalized(unfinished_vars[i])) {
+                                                            unfinished_vars.erase(unfinished_vars.begin() + i);
+                                                        }
+                                                    }                                                    
                                                 }
             |   SQRT LEFTPAR expression RIGHTPAR    {
-                                                                                          
+                                                        if($3.index() == 0) {
+                                                            auto tempstr = std::get<0>($3);
+                                                            $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
+                                                        }
+                                                        else {
+                                                            std::cout << "Erraneous syntax" << std::endl;
+                                                        }                                                                                          
                                                     }
             |   LEFTPAR expression RIGHTPAR  intermediate_expr  {
-                                                                    
+                                                                    if($2.index() == 0) {
+                                                                        auto tempstr = std::get<0>($2);
+                                                                        $$ = GeneralNode(EXPRN_NODE, "(" + tempstr.expression + ")" + $4);
+                                                                    }
+                                                                    else {
+                                                                        std::cout << "Erraneous syntax" << std::endl;
+                                                                    }                                                                    
                                                                 }
             |   forall_stmt {   
                                 $$ = $1;
@@ -217,10 +258,18 @@ term    :   identifier   { $$ = $1; }
         ;
 
 forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
+                                                                                                            $$ = ForAll($6, $9, $3);
+                                                                                                            
                                                                                                         }
             ;
 
-prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound {   
+prod_sum_stmt  :   control LEFTPAR expression RIGHTPAR WHERE bound  {    
+                                                                        if($1.compare("sigma") == 0) {
+                                                                            $$ = SigmaProd($6, SIGMA_NODE, $3);
+                                                                        }
+                                                                        else {
+                                                                            $$ = SigmaProd($6, PRODUCT_NODE, $3);
+                                                                        }
                                                                     }
                 ;
 
