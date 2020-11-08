@@ -5,14 +5,12 @@
 
 int main()
 {
-    float c[150 + 1][250 + 1] = { 0 }, alpha_abc[100 + 1][250 + 1] = { 0 }, d[100 + 1][250 + 1] =
-        { 0 }, a[100 + 1][200 + 1] = { 0 }, e[100 + 1][250 + 1] = { 0 }, ab[100 + 1][150 + 1] = { 0 }, beta =
-        { 0 }, b[200 + 1][150 + 1] = { 0 }, alpha = { 0 };
+    float abcd[100 + 1][250 + 1] = { 0 }, c[150 + 1][300 + 1] = { 0 }, cd[150 + 1][250 + 1] =
+        { 0 }, b[200 + 1][150 + 1] = { 0 }, d[300 + 1][250 + 1] = { 0 }, a[100 + 1][200 + 1] =
+        { 0 }, ab[100 + 1][150 + 1] = { 0 };
 #pragma omp parallel
     {
 
-        alpha = 2;
-        beta = 3;
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 150; j++) {
@@ -23,10 +21,10 @@ int main()
             }
         }
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
+        for (int i = 0; i <= 150; i++) {
             for (int j = 0; j <= 250; j++) {
-                for (int k = 0; k <= 150; k++) {
-                    alpha_abc[i][j] += alpha * ab[i][k] * c[k][j];
+                for (int k = 0; k <= 300; k++) {
+                    cd[i][j] += c[i][k] * d[k][j];
                 }
 
             }
@@ -34,7 +32,10 @@ int main()
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 250; j++) {
-                e[i][j] = alpha_abc[i][j] + (beta * d[i][j]);
+                for (int k = 0; k <= 150; k++) {
+                    abcd[i][j] += ab[i][k] * cd[k][j];
+                }
+
             }
         }
     }
