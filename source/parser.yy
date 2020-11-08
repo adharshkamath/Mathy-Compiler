@@ -292,7 +292,7 @@ expression  :   term    {
             |   SQRT LEFTPAR expression RIGHTPAR    {
                                                         if($3.index() == 0) {
                                                             auto tempstr = std::get<0>($3);
-                                                            $$ = GeneralNode(SQRT_NODE, $1 + "(" + tempstr.expression + ")");
+                                                            $$ = GeneralNode(SQRT_NODE, "sqrt(" + tempstr.expression + ")");
                                                         }
                                                         else {
                                                             std::cout << "Erraneous syntax" << std::endl;
