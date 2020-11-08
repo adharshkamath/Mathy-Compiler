@@ -91,6 +91,25 @@
 %%
 
 program :   statements  {
+                            int root_index = root.index();
+                            switch(root_index) {
+                                case 0: {
+                                    mathy::gen_ptr = std::get<0>(root);
+                                    break;
+                                }
+                                case 1: {
+                                    mathy::for_ptr = std::get<1>(root);
+                                    break;
+                                }
+                                case 2: {
+                                    mathy::sp_ptr = std::get<2>(root);
+                                    break;
+                                }
+                                default: {
+                                    std::cout << "NULL statements!" << std::endl;
+                                    break;
+                                }
+                            }
                             initOutput();
                         }
         ;
@@ -111,30 +130,36 @@ statements  :   statements statement    {
                                             if($1.index() == 3) {
                                                 if(mathy::nest_lvl == 0 && root.index() == 3) {
                                                     mathy::root = mathy::current_stmt;
+                                                    std::cout << "assigning to main root! " << std::endl;
                                                 }
-                                                else if(mathy::current_root.index() == 3) {
-                                                    mathy::current_root == mathy::current_stmt;
-                                                }
+                                                mathy::current_root = mathy::current_stmt;
+                                                $$ = $2;
+                                                mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             else if($1.index() == 0) {
                                                 auto general_stmts_yy = std::get<0>($1);
                                                 auto general_stmts = std::get<0>(mathy::previous_stmt);
                                                 general_stmts_yy->next = $2;
                                                 general_stmts->next = mathy::current_stmt;
+                                                $$ = $1;
+                                                mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             else if($1.index() == 1) {
                                                 auto for_stmts_yy = std::get<1>($1);
                                                 auto for_stmts = std::get<1>(mathy::previous_stmt);
                                                 for_stmts_yy->next = $2;
                                                 for_stmts->next = mathy::current_stmt;
+                                                $$ = $1;
+                                                mathy::previous_stmt = mathy::current_stmt;
                                             }
                                             else if($1.index() == 2) {
                                                 auto sp_stmts_yy = std::get<2>($1);
                                                 auto sp_stmts = std::get<2>(mathy::previous_stmt);
                                                 sp_stmts_yy->next = $2;
                                                 sp_stmts->next = mathy::current_stmt;
+                                                $$ = $1;
+                                                mathy::previous_stmt = mathy::current_stmt;
                                             }
-                                            mathy::previous_stmt = mathy::current_stmt;
                                             mathy::current_stmt = NULL;
                                         }
             |   %empty { $$ = NULL; }
@@ -146,9 +171,7 @@ final       :   NEWLINE { $$ = $1; }
 
 statement   :   NEWLINE {
                             $$ = NULL;
-                            current_stmt = NULL;
                         }
-
             |   expression final    { 
                                         int rhs_index = ($1).index(); 
                                         if(rhs_index == 0) {
@@ -322,10 +345,43 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             // Create new node with current_root as child. 
                                                                                                             // Assign its address to current_stmt
                                                                                                             // Traverse to all the nest nodes and set parent to false
+                                                                                                            mathy::current_node = ForAll($6, mathy::current_root, $3);
+                                                                                                            auto current_ptr = mathy::current_root;
+                                                                                                            while(current_ptr.index() != 3) {
+                                                                                                                switch(current_ptr.index()) {
+                                                                                                                    case 0: {
+                                                                                                                                auto general_ptr = std::get<0>(current_ptr);
+                                                                                                                                general_ptr->parent = false;
+                                                                                                                                current_ptr = general_ptr->next;
+                                                                                                                                break;
+                                                                                                                    }
+                                                                                                                    case 1: {
+                                                                                                                            auto forall_ptr = std::get<1>(current_ptr);
+                                                                                                                            forall_ptr->parent = false;
+                                                                                                                            current_ptr = forall_ptr->next;
+                                                                                                                            break;
+                                                                                                                    }
+                                                                                                                    case 2: {
+                                                                                                                            auto spn_ptr = std::get<2>(current_ptr);
+                                                                                                                            spn_ptr->parent = false;
+                                                                                                                            current_ptr = spn_ptr->next;
+                                                                                                                            break;
+                                                                                                                    }
+                                                                                                                    default: {
+                                                                                                                            std::cout << "Invalid index!" << std::endl;
+                                                                                                                            break;
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
                                                                                                             mathy::nest_lvl--;
+                                                                                                            auto forall_node = std::get<1>(current_node);
                                                                                                             if(mathy::nest_lvl == 0) {
                                                                                                                 std::cout << "Outermost forall!" << std::endl;
                                                                                                             }
+                                                                                                            else {
+                                                                                                                forall_node.parent = false;
+                                                                                                            }
+                                                                                                            mathy::current_stmt = &(forall_node);
                                                                                                         }
             ;
 

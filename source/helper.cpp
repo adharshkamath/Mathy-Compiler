@@ -231,7 +231,7 @@ namespace mathy {
         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
         if (gen_ptr != NULL) {
-            // gen_ptr->gen_code(output);
+            gen_ptr->gen_code(output);
             traverse(gen_ptr);
         } else if (for_ptr != NULL) {
             for_ptr->gen_code(output);
@@ -299,7 +299,7 @@ namespace mathy {
     }
 
     void traverse(ForAll *genp) {
-        std::cout << "----- Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
+        std::cout << "----- Forall |" << genp->gen_bound.identifier << "| " << std::endl;
         int ttt = (genp->child).index();
         if (ttt == 0) {
             auto tr = std::get<0>(genp->child);
@@ -311,11 +311,10 @@ namespace mathy {
             auto tr = std::get<2>(genp->child);
             traverse(tr);
         } else if (ttt == 3) {
-            std::cout << "Null child of gen" << std::endl;
-            return;
+            std::cout << "Null child of forall" << std::endl;
         }
         int tt = (genp->next).index();
-        std::cout << "----- After Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
+        std::cout << "----- After Forall |" << genp->gen_bound.identifier << "| " << std::endl;
         if (tt == 0) {
             auto t = std::get<0>(genp->next);
             traverse(t);
