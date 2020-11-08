@@ -1,0 +1,11 @@
+∀(x) | 0<=x<=100 {
+    mean[x] = Σ(data[k][x]/100) | 0<=k<=100
+}
+
+∀(t) | 0<=t<=100 {
+    std_dev_temp[t] = Σ(((data[k][t] - mean[t])*(data[k][t] - mean[t]))/99) | 0<=k<=100
+}
+
+∀(p) | 0<=p<=100 {
+    std_dev[p] = √(std_dev_temp[p])
+}
