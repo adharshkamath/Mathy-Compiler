@@ -323,6 +323,9 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             // Assign its address to current_stmt
                                                                                                             // Traverse to all the nest nodes and set parent to false
                                                                                                             mathy::nest_lvl--;
+                                                                                                            if(mathy::nest_lvl == 0) {
+                                                                                                                std::cout << "Outermost forall!" << std::endl;
+                                                                                                            }
                                                                                                         }
             ;
 
