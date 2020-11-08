@@ -20,7 +20,7 @@ void SigmaProd::set_type(int type) {
 
 void SigmaProd::gen_code(std::fstream &m_file) {
     if (this->parent) {
-        m_file << "#pragma omp parallel for" << std::endl;
+        m_file << "#pragma omp for " << std::endl;
     }
     m_file << "for(int " << this->gen_bound.identifier << " = " << this->gen_bound.lower << "; "
            << this->gen_bound.identifier;

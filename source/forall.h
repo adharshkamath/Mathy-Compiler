@@ -23,15 +23,18 @@ namespace mathy {
             this->loop_var = id;
             this->gen_bound = bound;
             switch (nest.index()) {
-                case 0:
+                case 0: {
                     this->child = std::get<0>(nest);
                     break;
-                case 1:
+                }                    
+                case 1: {
                     this->child = std::get<1>(nest);
                     break;
-                case 2:
+                }
+                case 2: {
                     this->child = std::get<2>(nest);
                     break;
+                }
                 default:
                     break;
             }

@@ -6,18 +6,21 @@
 #include <fstream>
 #include <variant>
 #include <regex>
+#include <stack>
 #include <algorithm>
 #include "helper.h"
 
 namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string>> variable_table;
+    int nest_lvl = 0;
     std::string data_type = "float";
     std::string output_name = "output";
     GeneralNode *gen_ptr = NULL;
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
-    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt, root = NULL, previous_stmt = NULL;
+    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, current_root = NULL, previous_stmt = NULL;
+    std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
     std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {
@@ -230,15 +233,14 @@ namespace mathy {
         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
         if (gen_ptr != NULL) {
-            // gen_ptr->gen_code(output);
-            traverse(gen_ptr);
+            gen_ptr->gen_code(output);
+            // traverse(gen_ptr);
         } else if (for_ptr != NULL) {
-            // for_ptr->gen_code(output);
-            std::cout << "----- Forall |" << for_ptr->gen_bound.identifier << "| " << std::endl;
+            for_ptr->gen_code(output);
             // traverse(for_ptr);
         } else if (sp_ptr != NULL) {
             sp_ptr->gen_code(output);
-            traverse(sp_ptr);
+            // traverse(sp_ptr);
         } else {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
@@ -299,7 +301,7 @@ namespace mathy {
     }
 
     void traverse(ForAll *genp) {
-        std::cout << "FOR NODE" << std::endl;
+        std::cout << "----- Forall |" << genp->gen_bound.identifier << "| " << std::endl;
         int ttt = (genp->child).index();
         if (ttt == 0) {
             auto tr = std::get<0>(genp->child);
@@ -311,10 +313,10 @@ namespace mathy {
             auto tr = std::get<2>(genp->child);
             traverse(tr);
         } else if (ttt == 3) {
-            std::cout << "Null child of gen" << std::endl;
-            return;
+            std::cout << "Null child of forall" << std::endl;
         }
         int tt = (genp->next).index();
+        std::cout << "----- After Forall |" << genp->gen_bound.identifier << "| " << std::endl;
         if (tt == 0) {
             auto t = std::get<0>(genp->next);
             traverse(t);
