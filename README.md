@@ -1,21 +1,8 @@
 # Mathy-Compiler
-A compiler to generate OpenMP code for mathematical notations like forall, sigma, etc
 
-Build:
+This is a compiler for a specific language that consists of consisting of mathematical constructs like _Forall_, _Summation_ etc., 
+written in C++ using Bison and Flex.
 
-```
-cd src
+Please refer to the [wiki](https://github.com/adharshkamath/Mathy-Compiler/wiki) for more details about the project.
 
-make
-```
-Then
-```
-./test [-t type] file
-```
-Where type is one of *float*, *long* or *long_double*
-
-To remove files:
-
-```
-make clean         # to delete all build files
-```
+This project was done under the guidance of [Dr.Rupesh Nasre](https://www.cse.iitm.ac.in/~rupesh)
