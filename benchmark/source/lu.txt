@@ -1,12 +1,12 @@
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=100 {
-        lu_u[i][j] = sigma(l[i][k] * u[k][j]) where 0<=k<=i-1
+        lu_u[i][j] = Σ(l[i][k] * u[k][j]) | 0<=k<=i-1
     }
 }
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=100 {
-        lu_l[i][j] = sigma(l[i][k] * u[k][j]) where 0<=k<=j-1
+        lu_l[i][j] = Σ(l[i][k] * u[k][j]) | 0<=k<=j-1
     }
 }
 

@@ -1,17 +1,17 @@
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=150 {
-        ab[i][j] = sigma(a[i][k] * b[k][j]) where 0<=k<=200
+        ab[i][j] = Σ(a[i][k] * b[k][j]) | 0<=k<=200
     }
 }
 
 ∀(i) | 0<=i<=150 {
     ∀(j) | 0<=j<=250 {
-        cd[i][j] = sigma(c[i][k] * d[k][j]) where 0<=k<=300
+        cd[i][j] = Σ(c[i][k] * d[k][j]) | 0<=k<=300
     }
 }
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=250 {
-        abcd[i][j] = sigma(ab[i][k] * cd[k][j]) where 0<=k<=150
+        abcd[i][j] = Σ(ab[i][k] * cd[k][j]) | 0<=k<=150
     }
 }

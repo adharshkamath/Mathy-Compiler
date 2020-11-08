@@ -3,13 +3,13 @@ beta = 3
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=150 {
-        ab[i][j] = sigma(a[i][k] * b[k][j]) where 0<=k<=200
+        ab[i][j] = Σ(a[i][k] * b[k][j]) | 0<=k<=200
     }
 }
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=250 {
-        alpha_abc[i][j] = sigma(alpha * ab[i][k] * c[k][j]) where 0<=k<=150
+        alpha_abc[i][j] = Σ(alpha * ab[i][k] * c[k][j]) | 0<=k<=150
     }
 }
 

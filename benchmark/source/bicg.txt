@@ -1,13 +1,13 @@
-forall(i) where 0<=i<=200 {
-    a_p[i] = sigma(a[i][m] * p[m]) where 0<=m<=100
+∀(i) | 0<=i<=200 {
+    a_p[i] = Σ(a[i][m] * p[m]) | 0<=m<=100
 }
 
-forall(i) where 0<=i<=100 {
-    forall(j) where 0<=j<=200 {
+∀(i) | 0<=i<=100 {
+    ∀(j) | 0<=j<=200 {
         a_t[i][j] = a[j][i]
     }
 }
 
-forall(i) where 0<=i<=200 {
-    a_t_r[i] = sigma(a_t[i][m] * r[m]) where 0<=m<=200
+∀(i) | 0<=i<=200 {
+    a_t_r[i] = Σ(a_t[i][m] * r[m]) | 0<=m<=200
 }
