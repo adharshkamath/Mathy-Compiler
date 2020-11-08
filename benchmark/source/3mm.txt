@@ -1,20 +1,17 @@
-alpha = 2
-beta = 3
-
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=150 {
         ab[i][j] = sigma(a[i][k] * b[k][j]) where 0<=k<=200
     }
 }
 
-∀(i) | 0<=i<=100 {
+∀(i) | 0<=i<=150 {
     ∀(j) | 0<=j<=250 {
-        alpha_abc[i][j] = sigma(alpha * ab[i][k] * c[k][j]) where 0<=k<=150
+        cd[i][j] = sigma(c[i][k] * d[k][j]) where 0<=k<=300
     }
 }
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=250 {
-        e[i][j] = alpha_abc[i][j] + (beta * d[i][j])
+        abcd[i][j] = sigma(ab[i][k] * cd[k][j]) where 0<=k<=150
     }
 }
