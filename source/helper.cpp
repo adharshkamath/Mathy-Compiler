@@ -12,12 +12,13 @@
 namespace mathy {
     std::unordered_map <std::string, std::pair<std::string, std::string>> bounds_table;
     std::unordered_map <std::string, std::vector<std::string>> variable_table;
+    int nest_lvl = 0;
     std::string data_type = "float";
     std::string output_name = "output";
     GeneralNode *gen_ptr = NULL;
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
-    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt, root = NULL, previous_stmt = NULL;
+    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, current_root = NULL, previous_stmt = NULL;
     std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {

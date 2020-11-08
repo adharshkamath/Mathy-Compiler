@@ -13,6 +13,7 @@ namespace mathy {
 
     extern std::string data_type;
     extern std::string output_name;
+    extern int nest_lvl;
 
     extern GeneralNode *gen_ptr;
     extern SigmaProd *sp_ptr;
@@ -20,6 +21,7 @@ namespace mathy {
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> previous_stmt;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> root;
+    extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_root;
     extern std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier);

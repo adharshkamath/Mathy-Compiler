@@ -96,7 +96,46 @@ program :   statements  {
         ;
 
 statements  :   statements statement    {
-                                            
+                                            // If stmts is NULL it means this is the first statement/node, possibly in a list of nodes/statements
+                                            // So assign current_stmt to current_root
+                                            // current_root is used to pass statements as child of ForAll
+                                            // Handling nesting: (when statements is NULL)
+                                            // Use an int to keep track of nesting levels
+                                            // If nesting == 0 and root is NULL assign current_stmt to root
+                                            // If nesting > 0 then we inside a nesting node
+                                            // Increment nesting variable when a for loop starts OR just before `statements`
+                                            // Handling all types of nodes for root:
+                                            // Gen Node, SP Node = nesting will always be 0 and statements will be NULL for the first statement
+                                            // ForAll Node = nesting will be zero only for the outermost node and that will be assigned to root  
+
+                                            if($1.index() == 3) {
+                                                if(mathy::nest_lvl == 0 && root.index() == 3) {
+                                                    mathy::root = mathy::current_stmt;
+                                                }
+                                                else if(mathy::current_root.index() == 3) {
+                                                    mathy::current_root == mathy::current_stmt;
+                                                }
+                                            }
+                                            else if($1.index() == 0) {
+                                                auto general_stmts_yy = std::get<0>($1);
+                                                auto general_stmts = std::get<0>(mathy::previous_stmt);
+                                                general_stmts_yy->next = $2;
+                                                general_stmts->next = mathy::current_stmt;
+                                            }
+                                            else if($1.index() == 1) {
+                                                auto for_stmts_yy = std::get<1>($1);
+                                                auto for_stmts = std::get<1>(mathy::previous_stmt);
+                                                for_stmts_yy->next = $2;
+                                                for_stmts->next = mathy::current_stmt;
+                                            }
+                                            else if($1.index() == 2) {
+                                                auto sp_stmts_yy = std::get<2>($1);
+                                                auto sp_stmts = std::get<2>(mathy::previous_stmt);
+                                                sp_stmts_yy->next = $2;
+                                                sp_stmts->next = mathy::current_stmt;
+                                            }
+                                            mathy::previous_stmt = mathy::current_stmt;
+                                            mathy::current_stmt = NULL;
                                         }
             |   %empty { $$ = NULL; }
             ;
@@ -111,7 +150,28 @@ statement   :   NEWLINE {
                         }
 
             |   expression final    { 
-                                        
+                                        int rhs_index = ($1).index(); 
+                                        if(rhs_index == 0) {
+                                            auto gen_temp = std::get<0>($1);
+                                            $$ = &gen_temp;
+                                            auto gen_temp_t = std::get<0>(mathy::current_node);
+                                            mathy::current_stmt = new GeneralNode(gen_temp_t);
+                                        }
+                                        else if(rhs_index == 1) {
+                                            auto forall_temp = std::get<1>($1);
+                                            $$ = &forall_temp;
+                                            auto forall_temp_t = std::get<1>(mathy::current_node);
+                                            mathy::current_stmt = new ForAll(forall_temp_t);
+                                        } 
+                                        else if(rhs_index == 2) {
+                                            auto sp_temp = std::get<2>($1);
+                                            $$ = &sp_temp;
+                                            auto sp_temp_t = std::get<2>(mathy::current_node);
+                                            mathy::current_stmt = new SigmaProd(sp_temp_t);
+                                        }
+                                        else {
+                                            std::cout << "NULL expression! " << std::endl;
+                                        }                                  
                                     }
             ;
 
@@ -257,9 +317,12 @@ term    :   identifier   { $$ = $1; }
                     }
         ;
 
-forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE statements RIGHTCURLY  {
-                                                                                                            $$ = ForAll($6, $9, $3);
-                                                                                                            
+forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE {  mathy::nest_lvl++;  } statements RIGHTCURLY  {
+                                                                                                            $$ = ForAll($6, $10, $3);
+                                                                                                            // Create new node with current_root as child. 
+                                                                                                            // Assign its address to current_stmt
+                                                                                                            // Traverse to all the nest nodes and set parent to false
+                                                                                                            mathy::nest_lvl--;
                                                                                                         }
             ;
 
