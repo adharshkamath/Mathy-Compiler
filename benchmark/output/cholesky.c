@@ -17,8 +17,6 @@ double clock()
 void kernel()
 {
     static float cholesky[100 + 1][100 + 1] = { 0 }, L[100 + 1][100 + 1] = { 0 }, temp_sum = { 0 };
-    double start = 0.0, end = 0.0;
-    start = clock();
 #pragma omp parallel
     {
 

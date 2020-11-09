@@ -18,8 +18,6 @@ void kernel()
 {
     static float c[150 + 1][250 + 1] = { 0 }, d[100 + 1][250 + 1] = { 0 }, a[100 + 1][200 + 1] =
         { 0 }, temp[100 + 1][150 + 1] = { 0 }, beta = { 0 }, b[200 + 1][150 + 1] = { 0 }, alpha = { 0 };
-    double start = 0.0, end = 0.0;
-    start = clock();
 #pragma omp parallel
     {
 

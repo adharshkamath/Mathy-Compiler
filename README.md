@@ -1,4 +1,4 @@
-# Mathy-Compiler
+# Mathy Compiler
 
 This is a compiler to generate OpenMP programs for equations involving constructs like _Forall_, _Summation_ etc., frequently used in the scientific domain.
 

@@ -18,8 +18,6 @@ void kernel()
 {
     static float x[7000 - 1 + 1] = { 0 }, tmp[5000 - 1 + 1] = { 0 }, A[5000 - 1 + 1][7000 - 1 + 1] =
         { 0 }, y[7000 - 1 + 1] = { 0 };
-    double start = 0.0, end = 0.0;
-    start = clock();
 #pragma omp parallel
     {
 

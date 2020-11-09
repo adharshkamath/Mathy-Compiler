@@ -234,7 +234,6 @@ namespace mathy {
         "(\"Error return from gettimeofday: %d\", stat);\nreturn (Tp.tv_sec + Tp.tv_usec * 1.0e-6);\n}\n" \
                     "\nvoid kernel() {" << std::endl;
         declareVars(output);
-        output << "double start=0.0, end=0.0;" << std::endl << "start = clock();";
         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
 

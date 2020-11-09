@@ -18,8 +18,6 @@ void kernel()
 {
     static float a_t_r[200 + 1] = { 0 }, a_t[100 + 1][200 + 1] = { 0 }, p[100 + 1] = { 0 }, a[200 + 1][100 + 1] =
         { 0 }, r[200 + 1] = { 0 }, a_p[200 + 1] = { 0 };
-    double start = 0.0, end = 0.0;
-    start = clock();
 #pragma omp parallel
     {
 
