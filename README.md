@@ -28,6 +28,10 @@ To generate OpenMP program for the equation:
 ./test filename [-o output_filename] [-t data type for variables]
 ```
 
+The equations in [benchmark/source](./benchmark/source) are some examples of what can be handled by this compiler. 
+
+The OpenMP outputs for these equations can be found in [benchmark/output](benchmark/output). 
+
 Please refer to the [wiki](https://github.com/adharshkamath/Mathy-Compiler/wiki) for the Grammar, Syntax and currently supported features of the project.
 
 This project was done under the guidance of [Dr.Rupesh Nasre](https://www.cse.iitm.ac.in/~rupesh)
