@@ -22,8 +22,6 @@ namespace mathy {
 
         int parse();
 
-        void clear();
-
         void changeInput(std::istream *is);
 
         void increaseLocation(unsigned int loc);

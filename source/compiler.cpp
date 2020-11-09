@@ -23,10 +23,6 @@ int Compiler::parse() {
     return m_parser.parse();
 }
 
-void Compiler::clear() {
-    m_location = 0;
-}
-
 void Compiler::changeInput(std::istream *is) {
     m_scanner.switch_streams(is, NULL);
 }

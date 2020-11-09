@@ -26,7 +26,7 @@ namespace mathy {
                 case 0: {
                     this->child = std::get<0>(nest);
                     break;
-                }                    
+                }
                 case 1: {
                     this->child = std::get<1>(nest);
                     break;

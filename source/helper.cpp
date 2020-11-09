@@ -20,8 +20,8 @@ namespace mathy {
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
     std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, previous_stmt = NULL;
-    std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
-    std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> current_root;
+    std::stack <std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
+    std::stack <std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> current_root;
     std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {
@@ -228,14 +228,15 @@ namespace mathy {
         std::fstream output;
         mathy::output_name += std::string(".c");
         output.open(output_name, std::ios::out);
-        output << "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <omp.h>\n#include <sys/time.h>\n" \
-        "\ndouble clock() {\n struct timeval Tp;\nint stat;\nstat = gettimeofday (&Tp, NULL);\nif (stat != 0)\nprintf (\"Error return from gettimeofday: %d\", stat);" \
-        "return (Tp.tv_sec + Tp.tv_usec * 1.0e-6);\n}\n" \
+        output
+                << "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <omp.h>\n#include <sys/time.h>\n" \
+        "\ndouble clock() {\n struct timeval Tp;\nint stat;\nstat = gettimeofday (&Tp, NULL);\nif (stat != 0)\nprintf "\
+        "(\"Error return from gettimeofday: %d\", stat);\nreturn (Tp.tv_sec + Tp.tv_usec * 1.0e-6);\n}\n" \
                     "\nvoid kernel() {" << std::endl;
         declareVars(output);
         output << "double start=0.0, end=0.0;" << std::endl << "start = clock();";
-         output << "#pragma omp parallel\n\t{\n" << std::endl;
-             
+        output << "#pragma omp parallel\n\t{\n" << std::endl;
+
 
         if (gen_ptr != NULL) {
             gen_ptr->gen_code(output);
@@ -250,8 +251,10 @@ namespace mathy {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
 
-        output << "}\n}\n int main() {" << std::endl << "double start=0.0, end=0.0;" << std::endl << "start = clock();kernel();" << "end = clock();" << std::endl << "printf(\"Total time taken  = %fs\\n\",end-start);"
-                    << std::endl << "return 0;" << std::endl << "}" << std::endl;
+        output << "}\n}\n int main() {" << std::endl << "double start=0.0, end=0.0;" << std::endl
+               << "start = clock();kernel();" << "end = clock();" << std::endl
+               << "printf(\"Total time taken  = %fs\\n\",end-start);"
+               << std::endl << "return 0;" << std::endl << "}" << std::endl;
     }
 
     void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
