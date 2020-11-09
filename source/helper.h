@@ -22,7 +22,7 @@ namespace mathy {
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> previous_stmt;
     extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> root;
-    extern std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_root;
+    extern std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> current_root;
     extern std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
     extern std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 

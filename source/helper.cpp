@@ -19,8 +19,9 @@ namespace mathy {
     GeneralNode *gen_ptr = NULL;
     SigmaProd *sp_ptr = NULL;
     ForAll *for_ptr = NULL;
-    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, current_root = NULL, previous_stmt = NULL;
+    std::variant<GeneralNode *, ForAll *, SigmaProd *, long int> current_stmt = NULL, root = NULL, previous_stmt = NULL;
     std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> temp_prev;
+    std::stack<std::variant<GeneralNode *, ForAll *, SigmaProd *, long int>> current_root;
     std::variant<GeneralNode, ForAll, SigmaProd, long int> current_node;
 
     int newVariable(const std::string &identifier) {

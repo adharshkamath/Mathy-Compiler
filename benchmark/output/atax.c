@@ -5,33 +5,26 @@
 
 int main()
 {
-    static float res[50 + 1][100 + 1] = { 0 }, x[100 + 1] = { 0 }, a_x[100 + 1] = { 0 }, a[200 + 1][100 + 1] =
-        { 0 }, a_t[100 + 1][200 + 1] = { 0 };
+    static float x[1900 - 1 + 1] = { 0 }, tmp[1900 - 1 + 1] = { 0 }, A[1900 - 1 + 1][1900 - 1 + 1] =
+        { 0 }, y[2100 - 1 + 1] = { 0 };
     double start = 0.0, end = 0.0;
     start = omp_get_wtime();
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 200; j++) {
-                a_t[i][j] = a[j][i];
-            }
+        for (int i = 0; i <= 2100 - 1; i++) {
+            y[i] = 0;
         }
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int k = 0; k <= 100; k++) {
-                a_x[i] += a[i][k] * x[k];
+        for (int i = 0; i <= 1900 - 1; i++) {
+            tmp[i] = 0;
+            for (int j = 0; j <= 1900 - 1; j++) {
+                tmp[i] += A[i][j] * x[j];
             }
 
-        }
-#pragma omp for
-        for (int i = 0; i <= 50; i++) {
-            for (int j = 0; j <= 100; j++) {
-                for (int k = 0; k <= 100; k++) {
-                    res[i][j] += a_t[j][k] * a_x[k];
-                }
-
+            for (int k = 0; k <= 2100 - 1; k++) {
+                y[k] = y[k] + (A[i][k] * tmp[i]);
             }
         }
     }

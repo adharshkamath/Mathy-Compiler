@@ -134,7 +134,7 @@ statements  :   statements statement    {
                                                 if(mathy::nest_lvl == 0 && root.index() == 3) {
                                                     mathy::root = mathy::current_stmt;
                                                 }
-                                                mathy::current_root = mathy::current_stmt;
+                                                mathy::current_root.push(mathy::current_stmt);
                                                 $$ = $2;
                                                 mathy::previous_stmt = mathy::current_stmt;
                                             }
@@ -349,8 +349,9 @@ forall_stmt :   FORALL LEFTPAR IDENTIFIER RIGHTPAR WHERE bound LEFTCURLY NEWLINE
                                                                                                             // Create new node with current_root as child. 
                                                                                                             // Assign its address to current_stmt
                                                                                                             // Traverse to all the nest nodes and set parent to false
-                                                                                                            mathy::current_node = ForAll($6, mathy::current_root, $3);
-                                                                                                            auto current_ptr = mathy::current_root;
+                                                                                                            mathy::current_node = ForAll($6, mathy::current_root.top(), $3);
+                                                                                                            auto current_ptr = mathy::current_root.top();
+                                                                                                            mathy::current_root.pop();
                                                                                                             while(current_ptr.index() != 3) {
                                                                                                                 switch(current_ptr.index()) {
                                                                                                                     case 0: {
