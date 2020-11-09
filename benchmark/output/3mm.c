@@ -8,6 +8,8 @@ int main()
     float abcd[100 + 1][250 + 1] = { 0 }, c[150 + 1][300 + 1] = { 0 }, cd[150 + 1][250 + 1] =
         { 0 }, b[200 + 1][150 + 1] = { 0 }, d[300 + 1][250 + 1] = { 0 }, a[100 + 1][200 + 1] =
         { 0 }, ab[100 + 1][150 + 1] = { 0 };
+    double start = 0.0, end = 0.0;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
 
@@ -39,5 +41,7 @@ int main()
             }
         }
     }
+    end = omp_get_wtime();
+    printf("Total time taken  = %fs\n", end - start);
     return 0;
 }

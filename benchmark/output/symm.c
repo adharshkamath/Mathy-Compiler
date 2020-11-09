@@ -7,6 +7,8 @@ int main()
 {
     float c[50 + 1][50 + 1] = { 0 }, c_b[50 + 1][50 + 1] = { 0 }, a[50 + 1][50 + 1] = { 0 }, a_b[50 + 1][50 + 1] =
         { 0 }, beta = { 0 }, c_out[50 + 1][50 + 1] = { 0 }, b[50 + 1][50 + 1] = { 0 }, alpha = { 0 };
+    double start = 0.0, end = 0.0;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
 
@@ -34,5 +36,7 @@ int main()
             }
         }
     }
+    end = omp_get_wtime();
+    printf("Total time taken  = %fs\n", end - start);
     return 0;
 }

@@ -7,6 +7,8 @@ int main()
 {
     float res[50 + 1][100 + 1] = { 0 }, x[100 + 1] = { 0 }, a_x[100 + 1] = { 0 }, a[200 + 1][100 + 1] =
         { 0 }, a_t[100 + 1][200 + 1] = { 0 };
+    double start = 0.0, end = 0.0;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
 
@@ -33,5 +35,7 @@ int main()
             }
         }
     }
+    end = omp_get_wtime();
+    printf("Total time taken  = %fs\n", end - start);
     return 0;
 }

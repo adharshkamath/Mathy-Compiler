@@ -6,6 +6,8 @@
 int main()
 {
     float cholesky[100 + 1][100 + 1] = { 0 }, L[100 + 1][100 + 1] = { 0 }, temp_sum = { 0 };
+    double start = 0.0, end = 0.0;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
 
@@ -28,5 +30,7 @@ int main()
             }
         }
     }
+    end = omp_get_wtime();
+    printf("Total time taken  = %fs\n", end - start);
     return 0;
 }

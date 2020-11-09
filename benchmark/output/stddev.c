@@ -7,6 +7,8 @@ int main()
 {
     float std_dev[100 + 1] = { 0 }, std_dev_temp[100 + 1] = { 0 }, data[100 + 1][100 + 1] = { 0 }, mean[100 + 1] =
         { 0 };
+    double start = 0.0, end = 0.0;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
 
@@ -29,5 +31,7 @@ int main()
             std_dev[p] = sqrt(std_dev_temp[p]);
         }
     }
+    end = omp_get_wtime();
+    printf("Total time taken  = %fs\n", end - start);
     return 0;
 }

@@ -230,7 +230,8 @@ namespace mathy {
         output << "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <omp.h>\n" \
                     "\nint main() {" << std::endl;
         declareVars(output);
-        output << "#pragma omp parallel\n\t{\n" << std::endl;
+        output << "double start=0.0, end=0.0;" << std::endl << "start = omp_get_wtime();";
+         output << "#pragma omp parallel\n\t{\n" << std::endl;
 
         if (gen_ptr != NULL) {
             gen_ptr->gen_code(output);
@@ -245,7 +246,7 @@ namespace mathy {
             std::cout << "ERROR Program is NULL" << std::endl;
         }
 
-        output << "}" << std::endl << "return 0;" << std::endl << "}" << std::endl;
+        output << "}" << std::endl << "end = omp_get_wtime();" << std::endl << "printf(\"Total time taken  = %fs\\n\",end-start);" << std::endl << "return 0;" << std::endl << "}" << std::endl;
     }
 
     void splitTerms(const std::string &str, const std::regex &reg, std::vector <std::string> &res) {
