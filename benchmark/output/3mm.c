@@ -2,14 +2,25 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
+#include <sys/time.h>
 
-int main()
+double clock()
+{
+    struct timeval Tp;
+    int stat;
+    stat = gettimeofday(&Tp, NULL);
+    if (stat != 0)
+        printf("Error return from gettimeofday: %d", stat);
+    return (Tp.tv_sec + Tp.tv_usec * 1.0e-6);
+}
+
+void kernel()
 {
     static float abcd[100 + 1][250 + 1] = { 0 }, c[150 + 1][300 + 1] = { 0 }, cd[150 + 1][250 + 1] =
         { 0 }, b[200 + 1][150 + 1] = { 0 }, d[300 + 1][250 + 1] = { 0 }, a[100 + 1][200 + 1] =
         { 0 }, ab[100 + 1][150 + 1] = { 0 };
     double start = 0.0, end = 0.0;
-    start = omp_get_wtime();
+    start = clock();
 #pragma omp parallel
     {
 
@@ -41,7 +52,14 @@ int main()
             }
         }
     }
-    end = omp_get_wtime();
+}
+
+int main()
+{
+    double start = 0.0, end = 0.0;
+    start = clock();
+    kernel();
+    end = clock();
     printf("Total time taken  = %fs\n", end - start);
     return 0;
 }
