@@ -15,7 +15,7 @@ void GeneralNode::make_parent() {
 void GeneralNode::gen_code(std::fstream &m_file) {
     if (this->node_type == EXPRN_NODE || this->node_type == SQRT_NODE) {
         if (this->expression.length() > 1)
-            m_file << this->expression << ";" << std::endl;
+            m_file << "#pragma omp atomic" << std::endl << this->expression << ";" << std::endl;
         if ((this->next).index() == 0) {
             auto temp = std::get<0>(this->next);
             temp->gen_code(m_file);

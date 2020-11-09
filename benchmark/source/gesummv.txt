@@ -1,0 +1,10 @@
+alpha = 2
+beta = 3
+
+∀(i) | 0<=i<=150 {
+    ∀(j) | 0<=j<=150 {
+        tmp[i] = x[j] * A[i][j] + tmp[i]
+        y[i] = x[j] * B[i][j] + y[i]
+    }
+    y[i] = alpha *tmp[i] + beta * y[i]
+}

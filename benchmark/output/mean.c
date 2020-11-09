@@ -22,9 +22,11 @@ void kernel()
 
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
+#pragma omp atomic
             sum += a[i];
         }
 
+#pragma omp atomic
         sum = sum / 100;
     }
 }

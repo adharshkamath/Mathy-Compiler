@@ -21,12 +21,15 @@ void kernel()
 #pragma omp parallel
     {
 
+#pragma omp atomic
         alpha = 2;
+#pragma omp atomic
         beta = 3;
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 150; j++) {
                 for (int k = 0; k <= 200; k++) {
+#pragma omp atomic
                     temp[i][j] += alpha * a[i][k] * b[k][j];
                 }
 
@@ -35,8 +38,10 @@ void kernel()
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 250; j++) {
+#pragma omp atomic
                 d[i][j] = d[i][j] * beta;
                 for (int k = 0; k <= 150; k++) {
+#pragma omp atomic
                     d[i][j] += temp[i][k] * c[k][j];
                 }
 

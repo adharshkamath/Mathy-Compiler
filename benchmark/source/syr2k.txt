@@ -1,0 +1,11 @@
+alpha = 10
+beta = 2
+
+∀(i) | 0<=i<=150 {
+    ∀(j) | 0<=j<i {
+        C[i][j] = C[i][j] * beta
+    }
+    ∀(k) | 0<=k<=250 {
+        C[i][j] = Σ((B[i][k] * A[j][k] * alpha) + (B[j][k] * A[i][k] * alpha)) | 0<=j<=i
+    }
+}

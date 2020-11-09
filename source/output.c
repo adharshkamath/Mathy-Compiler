@@ -7,31 +7,16 @@ int main()
 {
     float res[50 + 1][100 + 1] = { 0 }, x[100 + 1] = { 0 }, a_x[100 + 1] = { 0 }, a[200 + 1][100 + 1] =
         { 0 }, a_t[100 + 1][200 + 1] = { 0 };
+        float aa[] = {1,2,3,4,5}; float sum = 0, arrr[] = {0,0,0,0,0};
 #pragma omp parallel
     {
 
-#pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 200; j++) {
-                a_t[i][j] = a[j][i];
-            }
-        }
-#pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int k = 0; k <= 100; k++) {
-                a_x[i] += a[i][k] * x[k];
-            }
-
-        }
-#pragma omp for
-        for (int i = 0; i <= 50; i++) {
-            for (int j = 0; j <= 100; j++) {
-                for (int k = 0; k <= 100; k++) {
-                    res[i][j] += a_t[j][k] * a_x[k];
-                }
-
-            }
+#pragma omp for lastprivate(arrr)
+        for (int j = 0; j < 5; j++) {
+            arrr[j] = aa[j];
         }
     }
+    for(int i=0; i<5; i++)
+    printf("Value of arr[%d] = %f\n",i,arrr[i]);
     return 0;
 }

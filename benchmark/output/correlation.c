@@ -24,6 +24,7 @@ void kernel()
 #pragma omp for
         for (int x = 0; x <= 100; x++) {
             for (int k = 0; k <= 100; k++) {
+#pragma omp atomic
                 mean[x] += data[k][x] / 100;
             }
 
@@ -32,6 +33,7 @@ void kernel()
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 100; j++) {
                 for (int k = 0; k <= 100; k++) {
+#pragma omp atomic
                     cov[i][j] += ((data[k][i] - mean[i]) * (data[k][j] - mean[j])) / 99;
                 }
 
@@ -40,17 +42,20 @@ void kernel()
 #pragma omp for
         for (int t = 0; t <= 100; t++) {
             for (int k = 0; k <= 100; k++) {
+#pragma omp atomic
                 std_dev_temp[t] += ((data[k][t] - mean[t]) * (data[k][t] - mean[t])) / 99;
             }
 
         }
 #pragma omp for
         for (int p = 0; p <= 100; p++) {
+#pragma omp atomic
             std_dev[p] = sqrt(std_dev_temp[p]);
         }
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 100; j++) {
+#pragma omp atomic
                 corr[i][j] = cov[i][j] / (std_dev[i] * std_dev[j]);
             }
         }

@@ -23,18 +23,22 @@ void kernel()
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int k = 0; k <= i; k++) {
+#pragma omp atomic
                 temp_sum += L[i][k] * L[i][k];
             }
 
+#pragma omp atomic
             cholesky[i][i] = sqrt(L[i][i] - temp_sum);
         }
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= i; j++) {
                 for (int k = 0; k <= j; k++) {
+#pragma omp atomic
                     temp_sum += L[i][k] * L[j][k];
                 }
 
+#pragma omp atomic
                 cholesky[i][j] = (L[i][i] - temp_sum) / cholesky[j][j];
             }
         }
