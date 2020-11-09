@@ -3,18 +3,13 @@ beta = 3
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=150 {
-        ab[i][j] = Σ(a[i][k] * b[k][j]) | 0<=k<=200
+        temp[i][j] = Σ(alpha * a[i][k] * b[k][j]) | 0<=k<=200
     }
 }
 
 ∀(i) | 0<=i<=100 {
     ∀(j) | 0<=j<=250 {
-        alpha_abc[i][j] = Σ(alpha * ab[i][k] * c[k][j]) | 0<=k<=150
-    }
-}
-
-∀(i) | 0<=i<=100 {
-    ∀(j) | 0<=j<=250 {
-        e[i][j] = alpha_abc[i][j] + (beta * d[i][j])
+        d[i][j] = d[i][j] * beta
+        d[i][j] = Σ(temp[i][k] * c[k][j]) | 0<=k<=150
     }
 }
