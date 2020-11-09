@@ -5,7 +5,7 @@
 
 int main()
 {
-    float a[100 + 1] = { 0 }, sum = { 0 };
+    static float a[100 + 1] = { 0 }, sum = { 0 };
     double start = 0.0, end = 0.0;
     start = omp_get_wtime();
 #pragma omp parallel

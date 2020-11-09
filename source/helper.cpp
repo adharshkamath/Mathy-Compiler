@@ -266,7 +266,7 @@ namespace mathy {
     }
 
     void declareVars(std::fstream &output) {
-        output << "\t" << data_type << " ";
+        output << "static " << data_type << " ";
         auto it = variable_table.begin();
         for (it; it != variable_table.end(); it++) {
             output << it->first;

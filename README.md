@@ -30,7 +30,12 @@ To generate OpenMP program for the equation:
 
 The equations in [benchmark/source](./benchmark/source) are some examples of what can be handled by this compiler. 
 
-The OpenMP outputs for these equations can be found in [benchmark/output](benchmark/output). 
+The OpenMP outputs for these equations can be found in [benchmark/output](benchmark/output).
+
+To compile all the source files in [benchmark](./benchmark/), from the root directory, run
+```
+python3 benchmark.py
+```
 
 Please refer to the [wiki](https://github.com/adharshkamath/Mathy-Compiler/wiki) for the Grammar, Syntax and currently supported features of the project.
 
