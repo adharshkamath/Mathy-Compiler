@@ -16,7 +16,7 @@ double clock()
 
 void kernel()
 {
-    static float a[100 + 1] = { 0 }, sum = { 0 };
+    static float a[100 + 2] = { 0 }, sum = { 0 };
 #pragma omp parallel
     {
 

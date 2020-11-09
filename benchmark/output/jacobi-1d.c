@@ -16,30 +16,19 @@ double clock()
 
 void kernel()
 {
-    static float cholesky[100 + 2][100 + 2] = { 0 }, L[100 + 2][100 + 2] = { 0 }, temp_sum = { 0 };
+    static float A[99 + 2] = { 0 }, B[99 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int k = 0; k <= i; k++) {
+        for (int t = 0; t <= 250; t++) {
+            for (int i = 1; i <= 99; i++) {
 #pragma omp atomic
-                temp_sum += L[i][k] * L[i][k];
+                B[i] = 0.333330 * (A[i] + A[i - 1] + A[i + 1]);
             }
-
+            for (int i = 1; i <= 99; i++) {
 #pragma omp atomic
-            cholesky[i][i] = sqrt(L[i][i] - temp_sum);
-        }
-#pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= i; j++) {
-                for (int k = 0; k <= j; k++) {
-#pragma omp atomic
-                    temp_sum += L[i][k] * L[j][k];
-                }
-
-#pragma omp atomic
-                cholesky[i][j] = (L[i][i] - temp_sum) / cholesky[j][j];
+                A[i] = 0.333330 * (B[i] + B[i - 1] + B[i + 1]);
             }
         }
     }

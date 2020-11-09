@@ -16,7 +16,7 @@ double clock()
 
 void kernel()
 {
-    static float B[250 + 1][100 + 1] = { 0 }, A[50 + 1][250 + 1] = { 0 }, C[50 + 1][100 + 1] = { 0 }, beta =
+    static float B[250 + 2][100 + 2] = { 0 }, A[50 + 2][250 + 2] = { 0 }, C[50 + 2][100 + 2] = { 0 }, beta =
         { 0 }, alpha = { 0 };
 #pragma omp parallel
     {

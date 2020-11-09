@@ -16,30 +16,23 @@ double clock()
 
 void kernel()
 {
-    static float cholesky[100 + 2][100 + 2] = { 0 }, L[100 + 2][100 + 2] = { 0 }, temp_sum = { 0 };
+    static float A[100 - 1 + 2][100 - 1 + 2] = { 0 }, B[100 - 1 + 2][100 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int k = 0; k <= i; k++) {
+        for (int t = 0; t <= 250; t++) {
+            for (int i = 1; i <= 100 - 1; i++) {
+                for (int j = 1; j <= 100 - 1; j++) {
 #pragma omp atomic
-                temp_sum += L[i][k] * L[i][k];
-            }
-
-#pragma omp atomic
-            cholesky[i][i] = sqrt(L[i][i] - temp_sum);
-        }
-#pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= i; j++) {
-                for (int k = 0; k <= j; k++) {
-#pragma omp atomic
-                    temp_sum += L[i][k] * L[j][k];
+                    B[i][j] = 0.200000 * (A[i][j] + A[i][j - 1] + A[i][1 + j] + A[1 + i][j] + A[i - 1][j]);
                 }
-
+            }
+            for (int p = 1; p <= 100 - 1; p++) {
+                for (int q = 1; q <= 100 - 1; q++) {
 #pragma omp atomic
-                cholesky[i][j] = (L[i][i] - temp_sum) / cholesky[j][j];
+                    A[p][q] = 0.200000 * (B[p][q] + B[p][q - 1] + B[p][1 + q] + B[1 + p][q] + B[p - 1][q]);
+                }
             }
         }
     }

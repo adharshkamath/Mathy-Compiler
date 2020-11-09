@@ -16,7 +16,7 @@ double clock()
 
 void kernel()
 {
-    static float data[100 + 1][100 + 1] = { 0 }, cov[100 + 1][100 + 1] = { 0 }, mean[100 + 1] = { 0 };
+    static float data[100 + 2][100 + 2] = { 0 }, cov[100 + 2][100 + 2] = { 0 }, mean[100 + 2] = { 0 };
 #pragma omp parallel
     {
 

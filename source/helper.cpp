@@ -132,7 +132,7 @@ namespace mathy {
                 }
             }
         }
-        res += "+1";
+        res += "+2";
         variable_table[identifier].push_back(res);
         return 0;
     }
