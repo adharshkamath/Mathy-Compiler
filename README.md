@@ -1,7 +1,8 @@
 # Mathy-Compiler
 
-This is a compiler for a specific language that consists of consisting of mathematical constructs like _Forall_, _Summation_ etc., 
-written in C++ using Bison and Flex.
+This is a compiler to generate OpenMP programs for equations involving constructs like _Forall_, _Summation_ etc., frequently used in the scientific domain.
+
+This project is written in C++ using Bison and Flex.
 
 ## How to use
 
@@ -24,7 +25,7 @@ mean = Σ(a[i]/100) | 0<=i<=100
 
 To generate OpenMP program for the equation:
 ```
-./test filename [-o output_filename] [-t data tpe for variables]
+./test filename [-o output_filename] [-t data type for variables]
 ```
 
 Please refer to the [wiki](https://github.com/adharshkamath/Mathy-Compiler/wiki) for the Grammar, Syntax and currently supported features of the project.
