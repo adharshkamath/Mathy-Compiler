@@ -26,7 +26,7 @@ void kernel()
             sum += a[i];
         }
 
-#pragma omp atomic
+#pragma omp atomic write
         sum = sum / 100;
     }
 }

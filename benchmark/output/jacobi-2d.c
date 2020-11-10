@@ -24,13 +24,13 @@ void kernel()
         for (int t = 0; t <= 250; t++) {
             for (int i = 1; i <= 100 - 1; i++) {
                 for (int j = 1; j <= 100 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     B[i][j] = 0.200000 * (A[i][j] + A[i][j - 1] + A[i][1 + j] + A[1 + i][j] + A[i - 1][j]);
                 }
             }
             for (int p = 1; p <= 100 - 1; p++) {
                 for (int q = 1; q <= 100 - 1; q++) {
-#pragma omp atomic
+#pragma omp atomic write
                     A[p][q] = 0.200000 * (B[p][q] + B[p][q - 1] + B[p][1 + q] + B[1 + p][q] + B[p - 1][q]);
                 }
             }

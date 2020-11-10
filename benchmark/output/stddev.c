@@ -38,7 +38,7 @@ void kernel()
         }
 #pragma omp for
         for (int p = 0; p <= 100; p++) {
-#pragma omp atomic
+#pragma omp atomic write
             std_dev[p] = sqrt(std_dev[p]);
         }
     }

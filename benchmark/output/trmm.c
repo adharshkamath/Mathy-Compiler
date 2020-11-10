@@ -20,7 +20,7 @@ void kernel()
 #pragma omp parallel
     {
 
-#pragma omp atomic
+#pragma omp atomic write
         alpha = 10;
 #pragma omp for
         for (int i = 0; i <= 150 - 1; i++) {
@@ -30,7 +30,7 @@ void kernel()
                     B[i][j] += A[k][i] * B[k][j];
                 }
 
-#pragma omp atomic
+#pragma omp atomic write
                 B[i][j] = alpha * B[i][j];
             }
         }

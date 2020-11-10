@@ -27,10 +27,10 @@ void kernel()
                 norm += A[i][k] * A[i][k];
             }
 
-#pragma omp atomic
+#pragma omp atomic write
             R[k][k] = sqrt(norm);
             for (int k = 0; k <= 150; k++) {
-#pragma omp atomic
+#pragma omp atomic write
                 Q[i][k] = A[j][k] / R[k][k];
             }
             for (int j = k + 1; j <= 150; j++) {
@@ -39,7 +39,7 @@ void kernel()
                     R[k][j] += Q[i][k] * A[i][j];
                 }
 
-#pragma omp atomic
+#pragma omp atomic write
                 A[i][j] = A[i][j] - Q[i][k] * R[k][j];
             }
         }

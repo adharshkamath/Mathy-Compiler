@@ -21,19 +21,19 @@ void kernel()
 #pragma omp parallel
     {
 
-#pragma omp atomic
+#pragma omp atomic write
         alpha = 10;
-#pragma omp atomic
+#pragma omp atomic write
         beta = 2;
 #pragma omp for
         for (int i = 0; i <= 50; i++) {
             for (int j = 0; j <= 100; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 C[i][j] = C[i][j] * beta;
             }
             for (int k = 0; k <= 250; k++) {
                 for (int j = 0; j <= 100; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     C[i][j] = C[i][j] + alpha * A[i][k] * B[k][j];
                 }
             }

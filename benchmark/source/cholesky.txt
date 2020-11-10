@@ -1,11 +1,12 @@
-∀(i) | 0<=i<=100 {
-    temp_sum = Σ(L[i][k] * L[i][k]) | 0<=k<=i
-    cholesky[i][i] = √(L[i][i] - temp_sum)
-}
-
-∀(i) | 0<=i<=100 {
-    ∀(j) | 0<=j<=i {
-        temp_sum = Σ(L[i][k] * L[j][k]) | 0<=k<=j
-        cholesky[i][j] = (L[i][i] - temp_sum)/cholesky[j][j]
-    }    
+∀(i) | 0<=i<200 {
+    ∀(j) | 0<=j<i {
+        ∀(k) | 0<=k<j {
+            A[i][j] = A[i][j] - A[i][k] * A[j][k]
+        }
+        A[i][j] = A[i][j]/A[j][j]
+    }
+    ∀(k) | 0<=k<i {
+        A[i][i] = A[i][i] - A[i][k] * A[i][k]
+    }
+    A[i][i] = √(A[i][i])
 }

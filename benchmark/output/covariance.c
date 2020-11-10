@@ -36,7 +36,7 @@ void kernel()
                     cov[i][j] += ((data[k][i] - mean[i]) * (data[k][j] - mean[j])) / 99;
                 }
 
-#pragma omp atomic
+#pragma omp atomic write
                 cov[j][i] = cov[i][j];
             }
         }

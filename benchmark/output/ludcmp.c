@@ -24,46 +24,46 @@ void kernel()
 #pragma omp for
         for (int i = 0; i <= 250; i++) {
             for (int j = 0; j <= i - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 w = A[i][j];
                 for (int k = 0; k <= j - 1; k++) {
-#pragma omp atomic
+#pragma omp atomic write
                     w = w - (A[i][k] * A[k][j]);
                 }
-#pragma omp atomic
+#pragma omp atomic write
                 A[i][j] = w / A[j][j];
             }
             for (int j = i; j <= 250; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 w = A[i][j];
                 for (int k = 0; k <= i - 1; k++) {
-#pragma omp atomic
+#pragma omp atomic write
                     w = w - (A[i][k] * A[k][j]);
                 }
-#pragma omp atomic
+#pragma omp atomic write
                 A[i][j] = w;
             }
         }
 #pragma omp for
         for (int i = 0; i <= 250; i++) {
-#pragma omp atomic
+#pragma omp atomic write
             w = b[i];
             for (int j = 0; j <= i - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 w = w - A[i][j] * y[j];
             }
-#pragma omp atomic
+#pragma omp atomic write
             y[i] = w;
         }
 #pragma omp for
         for (int i = 0; i <= 250 - 1; i++) {
-#pragma omp atomic
+#pragma omp atomic write
             w = y[250 - 1 - i];
             for (int j = 250 - i; j <= 250 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 w = w - A[249 - i][j] * x[j];
             }
-#pragma omp atomic
+#pragma omp atomic write
             x[250 - 1 - i] = w / A[250 - 1 - i][250 - 1 - i];
         }
     }

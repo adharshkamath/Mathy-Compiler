@@ -16,8 +16,8 @@ double clock()
 
 void kernel()
 {
-    static float corr[100 + 2][100 + 2] = { 0 }, std_dev[100 + 2] = { 0 }, std_dev_temp[100 + 2] =
-        { 0 }, data[100 + 2][100 + 2] = { 0 }, cov[100 + 2][100 + 2] = { 0 }, mean[100 + 2] = { 0 };
+    static float corr[100 + 2][100 + 2] = { 0 }, std_dev[100 + 2] = { 0 }, data[100 + 2][100 + 2] =
+        { 0 }, cov[100 + 2][100 + 2] = { 0 }, mean[100 + 2] = { 0 };
 #pragma omp parallel
     {
 
@@ -43,19 +43,19 @@ void kernel()
         for (int t = 0; t <= 100; t++) {
             for (int k = 0; k <= 100; k++) {
 #pragma omp atomic
-                std_dev_temp[t] += ((data[k][t] - mean[t]) * (data[k][t] - mean[t])) / 99;
+                std_dev[t] += ((data[k][t] - mean[t]) * (data[k][t] - mean[t])) / 99;
             }
 
         }
 #pragma omp for
         for (int p = 0; p <= 100; p++) {
-#pragma omp atomic
-            std_dev[p] = sqrt(std_dev_temp[p]);
+#pragma omp atomic write
+            std_dev[p] = sqrt(std_dev[p]);
         }
 #pragma omp for
         for (int i = 0; i <= 100; i++) {
             for (int j = 0; j <= 100; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 corr[i][j] = cov[i][j] / (std_dev[i] * std_dev[j]);
             }
         }

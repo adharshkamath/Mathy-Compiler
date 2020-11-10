@@ -16,31 +16,26 @@ double clock()
 
 void kernel()
 {
-    static float cholesky[100 + 2][100 + 2] = { 0 }, L[100 + 2][100 + 2] = { 0 }, temp_sum = { 0 };
+    static float A[200 - 1 + 2][200 - 1 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int k = 0; k <= i; k++) {
-#pragma omp atomic
-                temp_sum += L[i][k] * L[i][k];
-            }
-
-#pragma omp atomic
-            cholesky[i][i] = sqrt(L[i][i] - temp_sum);
-        }
-#pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= i; j++) {
-                for (int k = 0; k <= j; k++) {
-#pragma omp atomic
-                    temp_sum += L[i][k] * L[j][k];
+        for (int i = 0; i <= 200 - 1; i++) {
+            for (int j = 0; j <= i - 1; j++) {
+                for (int k = 0; k <= j - 1; k++) {
+#pragma omp atomic write
+                    A[i][j] = A[i][j] - A[i][k] * A[j][k];
                 }
-
-#pragma omp atomic
-                cholesky[i][j] = (L[i][i] - temp_sum) / cholesky[j][j];
+#pragma omp atomic write
+                A[i][j] = A[i][j] / A[j][j];
             }
+            for (int k = 0; k <= i - 1; k++) {
+#pragma omp atomic write
+                A[i][i] = A[i][i] - A[i][k] * A[i][k];
+            }
+#pragma omp atomic write
+            A[i][i] = sqrt(A[i][i]);
         }
     }
 }

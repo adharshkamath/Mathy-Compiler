@@ -31,7 +31,7 @@ void kernel()
 
                 }
                 for (int k = 0; k <= 350; k++) {
-#pragma omp atomic
+#pragma omp atomic write
                     A[i][j][k] = sum[k];
                 }
             }

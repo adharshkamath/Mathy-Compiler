@@ -22,13 +22,13 @@ void kernel()
 
 #pragma omp for
         for (int i = 0; i <= 250; i++) {
-#pragma omp atomic
+#pragma omp atomic write
             x[i] = b[i];
             for (int j = 0; j <= i - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 x[i] = x[i] - L[i][j] * x[j];
             }
-#pragma omp atomic
+#pragma omp atomic write
             x[i] = x[i] / L[i][i];
         }
     }

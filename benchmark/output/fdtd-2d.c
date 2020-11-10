@@ -24,24 +24,24 @@ void kernel()
 #pragma omp for
         for (int t = 0; t <= 250; t++) {
             for (int j = 1; j <= 100 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                 ey[0][j] = _fict_[t];
             }
             for (int i = 1; i <= 150 - 1; i++) {
                 for (int j = 0; j <= 100 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     ey[i][j] = ey[i][j] - 0.500000 * (hz[i][j] - hz[i - 1][j]);
                 }
             }
             for (int i = 0; i <= 150 - 1; i++) {
                 for (int j = 1; j <= 100 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     ex[i][j] = ex[i][j] - 0.500000 * (hz[i][j] - hz[i][j - 1]);
                 }
             }
             for (int i = 0; i <= 149 - 1; i++) {
                 for (int j = 0; j <= 99 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     hz[i][j] = hz[i][j] - 0.700000 * (ex[i][j + 1] - ex[i][j] + ey[i + 1][j] - ey[i][j]);
                 }
             }

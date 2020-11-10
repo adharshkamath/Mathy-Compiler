@@ -24,7 +24,7 @@ void kernel()
         for (int t = 0; t <= 250; t++) {
             for (int i = 1; i <= 100 - 1; i++) {
                 for (int j = 1; j <= 100 - 1; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     A_t[i][j] =
                         (A[i][j] + A[i - 1][j - 1] + A[i - 1][j] + A[i - 1][j + 1] + A[i][j - 1] + A[i][j + 1] +
                          A[i + 1][j - 1] + A[i + 1][j] + A[i + 1][j + 1]) / 9.000000;
@@ -32,7 +32,7 @@ void kernel()
             }
             for (int i = 1; i <= 100; i++) {
                 for (int j = 1; j <= 100; j++) {
-#pragma omp atomic
+#pragma omp atomic write
                     A[i][j] = A_t[i][j];
                 }
             }
