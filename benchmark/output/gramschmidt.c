@@ -16,31 +16,34 @@ double clock()
 
 void kernel()
 {
-    static float Q[250 + 2][150 + 2] = { 0 }, R[150 + 2][150 + 2] = { 0 }, A[250 + 2][150 + 2] = { 0 }, norm = { 0 };
+    static float Q[2000 - 1 + 2][2600 - 1 + 2] = { 0 }, R[2600 - 1 + 2][2600 - 1 + 2] =
+        { 0 }, A[2000 - 1 + 2][2600 - 1 + 2] = { 0 }, norm = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int k = 0; k <= 150; k++) {
-            for (int i = 0; i <= 250; i++) {
+        for (int k = 0; k <= 2600 - 1; k++) {
+            for (int i = 0; i <= 2000 - 1; i++) {
 #pragma omp atomic
                 norm += A[i][k] * A[i][k];
             }
 
 #pragma omp atomic write
             R[k][k] = sqrt(norm);
-            for (int k = 0; k <= 150; k++) {
+            for (int i = 0; i <= 2000 - 1; i++) {
 #pragma omp atomic write
-                Q[i][k] = A[j][k] / R[k][k];
+                Q[i][k] = A[i][k] / R[k][k];
             }
-            for (int j = k + 1; j <= 150; j++) {
-                for (int i = 0; i <= 250; i++) {
+            for (int j = k + 1; j <= 2600 - 1; j++) {
+                for (int i = 0; i <= 2000 - 1; i++) {
 #pragma omp atomic
                     R[k][j] += Q[i][k] * A[i][j];
                 }
 
+                for (int i = 0; i <= 2000 - 1; i++) {
 #pragma omp atomic write
-                A[i][j] = A[i][j] - Q[i][k] * R[k][j];
+                    A[i][j] = A[i][j] - Q[i][k] * R[k][j];
+                }
             }
         }
     }

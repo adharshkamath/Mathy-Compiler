@@ -16,17 +16,17 @@ double clock()
 
 void kernel()
 {
-    static float A[99 + 2] = { 0 }, B[99 + 2] = { 0 };
+    static float A[3999 - 1 + 2] = { 0 }, B[3999 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int t = 0; t <= 250; t++) {
-            for (int i = 1; i <= 99; i++) {
+        for (int t = 0; t <= 1000 - 1; t++) {
+            for (int i = 1; i <= 3999 - 1; i++) {
 #pragma omp atomic write
                 B[i] = 0.333330 * (A[i] + A[i - 1] + A[i + 1]);
             }
-            for (int i = 1; i <= 99; i++) {
+            for (int i = 1; i <= 3999 - 1; i++) {
 #pragma omp atomic write
                 A[i] = 0.333330 * (B[i] + B[i - 1] + B[i + 1]);
             }

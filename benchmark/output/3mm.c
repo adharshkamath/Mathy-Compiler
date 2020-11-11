@@ -16,16 +16,17 @@ double clock()
 
 void kernel()
 {
-    static float abcd[100 + 2][250 + 2] = { 0 }, c[150 + 2][300 + 2] = { 0 }, cd[150 + 2][250 + 2] =
-        { 0 }, b[200 + 2][150 + 2] = { 0 }, d[300 + 2][250 + 2] = { 0 }, a[100 + 2][200 + 2] =
-        { 0 }, ab[100 + 2][150 + 2] = { 0 };
+    static float abcd[1600 - 1 + 2][2200 - 1 + 2] = { 0 }, c[1800 - 1 + 2][2400 - 1 + 2] =
+        { 0 }, cd[1800 - 1 + 2][2200 - 1 + 2] = { 0 }, b[2000 - 1 + 2][1800 - 1 + 2] =
+        { 0 }, d[2400 - 1 + 2][2200 - 1 + 2] = { 0 }, a[1600 - 1 + 2][2000 - 1 + 2] =
+        { 0 }, ab[1600 - 1 + 2][1800 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 150; j++) {
-                for (int k = 0; k <= 200; k++) {
+        for (int i = 0; i <= 1600 - 1; i++) {
+            for (int j = 0; j <= 1800 - 1; j++) {
+                for (int k = 0; k <= 2000 - 1; k++) {
 #pragma omp atomic
                     ab[i][j] += a[i][k] * b[k][j];
                 }
@@ -33,9 +34,9 @@ void kernel()
             }
         }
 #pragma omp for
-        for (int i = 0; i <= 150; i++) {
-            for (int j = 0; j <= 250; j++) {
-                for (int k = 0; k <= 300; k++) {
+        for (int i = 0; i <= 1800 - 1; i++) {
+            for (int j = 0; j <= 2200 - 1; j++) {
+                for (int k = 0; k <= 2400 - 1; k++) {
 #pragma omp atomic
                     cd[i][j] += c[i][k] * d[k][j];
                 }
@@ -43,9 +44,9 @@ void kernel()
             }
         }
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 250; j++) {
-                for (int k = 0; k <= 150; k++) {
+        for (int i = 0; i <= 1600 - 1; i++) {
+            for (int j = 0; j <= 2200 - 1; j++) {
+                for (int k = 0; k <= 1800 - 1; k++) {
 #pragma omp atomic
                     abcd[i][j] += ab[i][k] * cd[k][j];
                 }

@@ -16,15 +16,15 @@ double clock()
 
 void kernel()
 {
-    static float A[100 - 1 + 2][100 - 1 + 2][100 - 1 + 2] = { 0 }, B[100 - 1 + 2][100 - 1 + 2][100 - 1 + 2] = { 0 };
+    static float A[199 - 1 + 2][199 - 1 + 2][199 - 1 + 2] = { 0 }, B[199 - 1 + 2][199 - 1 + 2][199 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int t = 0; t <= 250; t++) {
-            for (int i = 1; i <= 100 - 1; i++) {
-                for (int j = 1; j <= 100 - 1; j++) {
-                    for (int k = 1; k <= 100 - 1; k++) {
+        for (int t = 0; t <= 1000; t++) {
+            for (int i = 1; i <= 199 - 1; i++) {
+                for (int j = 1; j <= 199 - 1; j++) {
+                    for (int k = 1; k <= 199 - 1; k++) {
 #pragma omp atomic write
                         B[i][j][k] =
                             A[i][j][k] + 0.125000 * (A[i + 1][j][k] - 2.000000 * A[i][j][k] + A[i - 1][j][k]) +
@@ -33,9 +33,9 @@ void kernel()
                     }
                 }
             }
-            for (int i = 1; i <= 100 - 1; i++) {
-                for (int j = 1; j <= 100 - 1; j++) {
-                    for (int k = 1; k <= 100 - 1; k++) {
+            for (int i = 1; i <= 199 - 1; i++) {
+                for (int j = 1; j <= 199 - 1; j++) {
+                    for (int k = 1; k <= 199 - 1; k++) {
 #pragma omp atomic write
                         A[i][j][k] =
                             B[i][j][k] + 0.125000 * (B[i + 1][j][k] - 2.000000 * B[i][j][k] + B[i - 1][j][k]) +

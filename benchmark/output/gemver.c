@@ -16,40 +16,40 @@ double clock()
 
 void kernel()
 {
-    static float w[150 + 2][150 + 2] = { 0 }, z[150 + 2] = { 0 }, x[150 + 2] = { 0 }, v2[150 + 2] = { 0 }, u2[150 + 2] =
-        { 0 }, v1[150 + 2] = { 0 }, u1[150 + 2] = { 0 }, y[150 + 2] = { 0 }, A[150 + 2][150 + 2] = { 0 }, beta =
-        { 0 }, alpha = { 0 };
+    static float w[4000 - 1 + 2][4000 - 1 + 2] = { 0 }, z[4000 - 1 + 2] = { 0 }, x[4000 - 1 + 2] =
+        { 0 }, v2[4000 - 1 + 2] = { 0 }, u2[4000 - 1 + 2] = { 0 }, v1[4000 - 1 + 2] = { 0 }, u1[4000 - 1 + 2] =
+        { 0 }, y[4000 - 1 + 2] = { 0 }, A[4000 - 1 + 2][4000 - 1 + 2] = { 0 }, beta = { 0 }, alpha = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp atomic write
-        alpha = 2;
+        alpha = 1.500000;
 #pragma omp atomic write
-        beta = 3;
+        beta = 1.200000;
 #pragma omp for
-        for (int i = 0; i <= 150; i++) {
-            for (int j = 0; j <= 150; j++) {
+        for (int i = 0; i <= 4000 - 1; i++) {
+            for (int j = 0; j <= 4000 - 1; j++) {
 #pragma omp atomic
                 A[i][j] += u1[i] * v1[j] + u2[i] * v2[j];
             }
 
         }
 #pragma omp for
-        for (int i = 0; i <= 150; i++) {
-            for (int j = 0; j <= 150; j++) {
+        for (int i = 0; i <= 4000 - 1; i++) {
+            for (int j = 0; j <= 4000 - 1; j++) {
 #pragma omp atomic
                 x[i] += beta * A[j][i] * y[j];
             }
 
         }
 #pragma omp for
-        for (int i = 0; i <= 150; i++) {
+        for (int i = 0; i <= 4000 - 1; i++) {
 #pragma omp atomic write
             x[i] = x[i] + z[i];
         }
 #pragma omp for
-        for (int i = 0; i <= 150; i++) {
-            for (int j = 0; j <= 150; j++) {
+        for (int i = 0; i <= 4000 - 1; i++) {
+            for (int j = 0; j <= 4000 - 1; j++) {
 #pragma omp atomic
                 w[i][j] += alpha * A[i][j] * x[i];
             }

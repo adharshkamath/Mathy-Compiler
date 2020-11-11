@@ -16,24 +16,25 @@ double clock()
 
 void kernel()
 {
-    static float data[100 + 2][100 + 2] = { 0 }, cov[100 + 2][100 + 2] = { 0 }, mean[100 + 2] = { 0 };
+    static float data[3000 - 1 + 2][2600 - 1 + 2] = { 0 }, cov[2600 - 1 + 2][2600 - 1 + 2] = { 0 }, mean[2600 - 1 + 2] =
+        { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int x = 0; x <= 100; x++) {
-            for (int k = 0; k <= 100; k++) {
+        for (int x = 0; x <= 2600 - 1; x++) {
+            for (int k = 0; k <= 3000 - 1; k++) {
 #pragma omp atomic
-                mean[x] += data[k][x] / 100;
+                mean[x] += data[k][x] / 3000;
             }
 
         }
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = i; j <= 100; j++) {
-                for (int k = 0; k <= 100; k++) {
+        for (int i = 0; i <= 2600 - 1; i++) {
+            for (int j = i; j <= 2600 - 1; j++) {
+                for (int k = 0; k <= 3000 - 1; k++) {
 #pragma omp atomic
-                    cov[i][j] += ((data[k][i] - mean[i]) * (data[k][j] - mean[j])) / 99;
+                    cov[i][j] += ((data[k][i] - mean[i]) * (data[k][j] - mean[j])) / 2999;
                 }
 
 #pragma omp atomic write

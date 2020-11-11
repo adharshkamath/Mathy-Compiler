@@ -16,19 +16,19 @@ double clock()
 
 void kernel()
 {
-    static float x[24000 - 1 + 2] = { 0 }, y[24000 - 1 + 2] = { 0 }, A[20000 - 1 + 2][24000 - 1 + 2] =
-        { 0 }, tmp[20000 - 1 + 2] = { 0 };
+    static float x[2200 - 1 + 2] = { 0 }, y[2200 - 1 + 2] = { 0 }, A[1800 - 1 + 2][2200 - 1 + 2] =
+        { 0 }, tmp[1800 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int i = 0; i <= 20000 - 1; i++) {
-            for (int j = 0; j <= 24000 - 1; j++) {
+        for (int i = 0; i <= 1800 - 1; i++) {
+            for (int j = 0; j <= 2200 - 1; j++) {
 #pragma omp atomic
                 tmp[i] += A[i][j] * x[j];
             }
 
-            for (int k = 0; k <= 24000 - 1; k++) {
+            for (int k = 0; k <= 2200 - 1; k++) {
 #pragma omp atomic
                 y[k] += A[i][k] * tmp[i];
             }

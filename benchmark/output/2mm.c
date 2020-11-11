@@ -16,19 +16,19 @@ double clock()
 
 void kernel()
 {
-    static float c[150 + 2][250 + 2] = { 0 }, d[100 + 2][250 + 2] = { 0 }, a[100 + 2][200 + 2] =
-        { 0 }, temp[100 + 2][150 + 2] = { 0 }, beta = { 0 }, b[200 + 2][150 + 2] = { 0 }, alpha = { 0 };
+    static float c[1800 + 2][2400 + 2] = { 0 }, d[1600 + 2][2400 + 2] = { 0 }, a[1600 - 1 + 2][2200 + 2] =
+        { 0 }, temp[1600 - 1 + 2][1800 + 2] = { 0 }, beta = { 0 }, b[2200 + 2][1800 + 2] = { 0 }, alpha = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp atomic write
-        alpha = 2;
+        alpha = 1.500000;
 #pragma omp atomic write
-        beta = 3;
+        beta = 1.200000;
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 150; j++) {
-                for (int k = 0; k <= 200; k++) {
+        for (int i = 0; i <= 1600 - 1; i++) {
+            for (int j = 0; j <= 1800; j++) {
+                for (int k = 0; k <= 2200; k++) {
 #pragma omp atomic
                     temp[i][j] += alpha * a[i][k] * b[k][j];
                 }
@@ -36,11 +36,11 @@ void kernel()
             }
         }
 #pragma omp for
-        for (int i = 0; i <= 100; i++) {
-            for (int j = 0; j <= 250; j++) {
+        for (int i = 0; i <= 1600; i++) {
+            for (int j = 0; j <= 2400; j++) {
 #pragma omp atomic write
                 d[i][j] = d[i][j] * beta;
-                for (int k = 0; k <= 150; k++) {
+                for (int k = 0; k <= 1800; k++) {
 #pragma omp atomic
                     d[i][j] += temp[i][k] * c[k][j];
                 }

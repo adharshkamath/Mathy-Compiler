@@ -16,31 +16,31 @@ double clock()
 
 void kernel()
 {
-    static float hz[150 - 1 + 2][100 - 1 + 2] = { 0 }, _fict_[250 + 2] = { 0 }, ex[150 - 1 + 2][100 - 1 + 2] =
-        { 0 }, ey[0 + 2][100 - 1 + 2] = { 0 };
+    static float hz[60 - 1 + 2][80 - 1 + 2] = { 0 }, _fict_[40 - 1 + 2] = { 0 }, ex[60 - 1 + 2][80 - 1 + 2] =
+        { 0 }, ey[0 + 2][80 - 1 + 2] = { 0 };
 #pragma omp parallel
     {
 
 #pragma omp for
-        for (int t = 0; t <= 250; t++) {
-            for (int j = 1; j <= 100 - 1; j++) {
+        for (int t = 0; t <= 40 - 1; t++) {
+            for (int j = 1; j <= 80 - 1; j++) {
 #pragma omp atomic write
                 ey[0][j] = _fict_[t];
             }
-            for (int i = 1; i <= 150 - 1; i++) {
-                for (int j = 0; j <= 100 - 1; j++) {
+            for (int i = 1; i <= 60 - 1; i++) {
+                for (int j = 0; j <= 80 - 1; j++) {
 #pragma omp atomic write
                     ey[i][j] = ey[i][j] - 0.500000 * (hz[i][j] - hz[i - 1][j]);
                 }
             }
-            for (int i = 0; i <= 150 - 1; i++) {
-                for (int j = 1; j <= 100 - 1; j++) {
+            for (int i = 0; i <= 60 - 1; i++) {
+                for (int j = 1; j <= 80 - 1; j++) {
 #pragma omp atomic write
                     ex[i][j] = ex[i][j] - 0.500000 * (hz[i][j] - hz[i][j - 1]);
                 }
             }
-            for (int i = 0; i <= 149 - 1; i++) {
-                for (int j = 0; j <= 99 - 1; j++) {
+            for (int i = 0; i <= 59 - 1; i++) {
+                for (int j = 0; j <= 79 - 1; j++) {
 #pragma omp atomic write
                     hz[i][j] = hz[i][j] - 0.700000 * (ex[i][j + 1] - ex[i][j] + ey[i + 1][j] - ey[i][j]);
                 }
