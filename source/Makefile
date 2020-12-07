@@ -42,7 +42,7 @@ $(SCANNER).o: $(SCANNER).l $(SCANNER).h $(patsubst %, %.h, $(ADD_HEADERS))
 
 $(PARSER).o: $(PARSER).yy $(patsubst %, %.h, $(ADD_HEADERS))
 		@echo "----- Building parser -----"
-		@$(PARSE_TOOL) $(BISON_DEBUG) -o $(PARSER).$(LANG) $(PARSER).yy
+		@$(PARSE_TOOL) -o $(PARSER).$(LANG) $(PARSER).yy
 		@$(CXX) $(CFLAGS) $(PARSER).$(LANG) -o $@
 
 $(OBJ): %.o: %.h %.cpp
