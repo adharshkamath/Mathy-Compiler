@@ -1,3 +1,2 @@
 apt-get update
 apt-get install libstdc++6
-apt-get install bison flex
