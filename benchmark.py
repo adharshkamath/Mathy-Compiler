@@ -1,3 +1,9 @@
+"""
+    This script is used to generate outputs for all PolyBench/C programs.
+    The inputs are taken from benchmark/source and the outputs will be 
+    written to benchmark/build
+"""
+
 import os
 import subprocess
 

@@ -1,3 +1,14 @@
+/*
+    This file contains the definition of some of the methods of
+    the class ForAll which represents a Forall statement
+    Eg., 
+        ∀(i) | 0<i<100 {
+            a[i] = i+1
+        }
+    You can also replace the unicode characters with `forall` for ∀,
+    and `where` for |.
+*/
+
 #include <fstream>
 #include "gen_node.h"
 #include "forall.h"
@@ -16,6 +27,12 @@ void ForAll::set_child(ForAll &nest) {
 void ForAll::set_child(SigmaProd &nest) {
     this->child = &nest;
 }
+
+/*
+    This is the important funtion that writes to the output file.
+    For every forall node in the 'AST' (It's not a sophisticated syntax tree, hence the quotes)
+    this function generates a for loop accordingly
+*/
 
 void ForAll::gen_code(std::fstream &m_file) {
     if (this->parent) {

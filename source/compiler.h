@@ -1,3 +1,10 @@
+/*
+    This file contains the declaration of the class Compiler 
+    which is instantiated in main(), to scan and parse the input.
+    The Compiler class contains a Scanner (Lexer) and a Parser.
+*/
+
+
 #ifndef COMPILER_H
 #define COMPILER_H
 
@@ -22,9 +29,9 @@ namespace mathy {
 
         int parse();
 
-        void changeInput(std::istream *is);
+        void changeInput(std::istream *is);             // To be used in future for multiple file input support
 
-        void increaseLocation(unsigned int loc);
+        void increaseLocation(unsigned int loc);        // To be used in future for improved error messages
 
         unsigned int location() const;
 

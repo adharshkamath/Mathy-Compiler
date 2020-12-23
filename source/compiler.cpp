@@ -1,3 +1,9 @@
+/*
+    This file contains the definition of the class Compiler 
+    which is instantiated in main(), to scan and parse the input.
+    The Compiler class contains a Scanner (Lexer) and a Parser.
+*/
+
 #include "compiler.h"
 #include <iostream>
 #include <string>

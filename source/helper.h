@@ -1,3 +1,10 @@
+/*
+    This file contains the declarations of all the helper functions used 
+    once the input is parsed and the AST is constructed.
+    Some of these functions are also used while constructing the AST.
+*/
+
+
 #ifndef HELPER_H
 #define HELPER_H
 

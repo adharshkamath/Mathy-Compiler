@@ -1,3 +1,14 @@
+/*
+    This file contains the declaration of class ForAll
+    and definitions of some of the methods of the 
+    class ForAll which represents a Forall statement
+    Eg., 
+        forall(i) where 0<i<100 {
+            a[i] = i*i
+        }
+*/
+
+
 #ifndef FORALL_H
 #define FORALL_H
 

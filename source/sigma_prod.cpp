@@ -1,3 +1,13 @@
+/*
+    This file contains the definitions of the SigmaProd class
+    which can be used to represent a Sigma stamenent like
+        a = Σ(b[i]) | 0<i<100
+    or a Product statement like
+        p = Π(q[j]) | 10<=j<=120
+    You can also replace the unicode characters with `sigma` for Σ,
+    `product` for Π, and `where` for |.
+*/
+
 #include <string>
 #include <fstream>
 #include "gen_node.h"

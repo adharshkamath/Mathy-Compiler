@@ -1,3 +1,11 @@
+/*
+    This file contains the definition of some of the methods of
+    the super-class GeneralNode which is the parent class of 
+    ForAll, SigmaProd classes. This class can be used to represent 
+    simple exprssions like
+        a = b+1
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>

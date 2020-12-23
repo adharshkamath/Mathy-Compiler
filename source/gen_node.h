@@ -1,3 +1,11 @@
+/*
+    This file contains the declaration of the GeneralNode class
+    and definitions of some of its methods. This class is the parent class of 
+    ForAll, SigmaProd classes. This class can be used to represent 
+    simple exprssions like
+        a = 100
+*/
+
 #ifndef GEN_NODE_H
 #define GEN_NODE_H
 

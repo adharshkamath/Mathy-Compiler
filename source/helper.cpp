@@ -1,3 +1,13 @@
+/*
+    This file contains the definitions of all the helper functions used 
+    once the input is parsed and the AST is constructed.
+    Some of these functions are also used for maintaining the life cycle 
+    of variables throughtout the program.
+    The traverse function defined here is used only for debugging purposes.
+    The unordered maps used to maintain the active variables and bounds are also declared here.
+*/
+
+
 #include <iostream>
 #include <string>
 #include <unordered_map>

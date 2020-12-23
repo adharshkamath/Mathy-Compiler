@@ -1,3 +1,10 @@
+/*
+    This file contains the definition of the class Files 
+    which was meant to be used to store the details of all 
+    the input files I haven't used this class effectively yet, 
+    since multiple file input isn't handled properly.
+*/
+
 #ifndef FILES_H
 #define FILES_H
 

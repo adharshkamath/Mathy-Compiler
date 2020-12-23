@@ -1,3 +1,9 @@
+/*
+    This file is the main file that instantiates the Compiler class.
+    Once the output is generated, I'm using the 'indent' tool
+    to format the code. It's only for neatness :)
+*/
+
 #include <iostream>
 #include <fstream>
 #include <getopt.h>

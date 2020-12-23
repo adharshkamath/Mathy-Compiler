@@ -1,3 +1,13 @@
+/*
+    This file contains the declaration of the Scanner class.
+    This Scanner class inherits from the class yyFlexLexer
+    which is provided to us by Flex.
+    I've tried overloadin yywrap() to  handle multiple inputs
+    but for some reason, it won't work. Feel free to make 
+    a PR if you know/figure out why. Who knows, maybe it will
+    score you some brownie points when the machines take over :)
+*/
+
 #ifndef SCANNER_H
 #define SCANNER_H
 
