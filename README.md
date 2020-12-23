@@ -22,6 +22,11 @@ Or if you like Unicode characters,
 ```
 mean = Σ(a[i]/100) | 0<=i<=100
 ```
+The above equation, when compiled using the above mentioned compiler, will output an OpenMP program that will 
+
+- Declare an array `a` of 101 floats
+- Calculate the mean of those 101 elements and store it in the variable `mean`
+- Calculate the time taken to do the above work, including the time for function call
 
 To generate OpenMP program for the equation:
 ```
