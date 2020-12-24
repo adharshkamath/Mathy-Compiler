@@ -2,7 +2,9 @@
 
 This is a compiler to generate OpenMP programs for equations involving constructs like _Forall_, _Summation_ etc., frequently used in the scientific domain.
 
-This project is written in C++ using Bison and Flex.
+This project is written in C++ using Bison and Flex. 
+
+Feel free to make a PR or raise an issue if you find any bugs, or if you're interested in making improvements.
 
 ## How to use
 
